@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="PromptTemplates">
+    <option name="builtInPromptOverrides">
+      <list>
+        <BuiltInPromptOverride>
+          <option name="groupId" value="rules" />
+          <option name="promptId" value="project" />
+          <option name="text" value="# 細則&#10;- 私への質問や回答などの対応は、日本語で行ってください。" />
+        </BuiltInPromptOverride>
+      </list>
+    </option>
+  </component>
+</project>
