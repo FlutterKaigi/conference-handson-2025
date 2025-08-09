@@ -16,7 +16,8 @@ riverpod で状態値のグローバルアクセスおよび UI更新を行い�
   - Android Studio Narwhal Feature Drop  
     https://developer.android.com/studio
   - Android Studio Narwhal Feature Drop | 2025.1.2  
-    https://developer.android.com/studio/releases
+    https://developer.android.com/studio/releases  
+    https://developer.android.com/studio/releases#rules
   - ~~Android Studio Narwhal Feature Drop | 2025.1.3 Canary 3~~  
     ~~https://developer.android.com/studio/preview~~
   - Agent mode  
