@@ -11,10 +11,14 @@ riverpod で状態値のグローバルアクセスおよび UI更新を行い�
 - ios/Android アプリをビルドする必要性から macOS を想定しています。
 
 ### 開発環境 IDE
-- Gemini in Android Studio で Agent mode が使えるよう、  
-  最新の Android Studio Narwhal Feature Drop Canary の利用を想定しています。  
-  - Android Studio Narwhal Feature Drop | 2025.1.3 Canary 3  
-    https://developer.android.com/studio/preview
+- Gemini in Android Studio で Agent mode (preview) が使えるよう、  
+  最新の Android Studio Narwhal Feature Drop の利用を想定しています。  
+  - Android Studio Narwhal Feature Drop  
+    https://developer.android.com/studio
+  - Android Studio Narwhal Feature Drop | 2025.1.2  
+    https://developer.android.com/studio/releases
+  - ~~Android Studio Narwhal Feature Drop | 2025.1.3 Canary 3~~  
+    ~~https://developer.android.com/studio/preview~~
   - Agent mode  
     https://developer.android.com/studio/gemini/agent-mode
   - Save and manage prompts with the Prompt Library  
