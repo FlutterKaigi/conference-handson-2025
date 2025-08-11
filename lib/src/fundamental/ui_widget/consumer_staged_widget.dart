@@ -135,8 +135,8 @@ abstract class ConsumerStagedWidget<R, T> extends StatefulWidget {
   /// - [value] : [provider]が返した状態値
   ///
   /// - [builders] : ビルド種別ごとのビルド・メソッド一覧<br/>
-  /// _index は、0〜4 までしか対応していません。_<br/>
-  /// _0〜4 ⇒ [build],[build2]〜[build5] メソッド_
+  /// _index は、0〜19 までしか対応していません。_<br/>
+  /// _0〜19 ⇒ [build],[build2]〜[build20] メソッド_
   ConsumerStagedBuild<R, T> selectBuild(
     List<ConsumerStagedBuild<R, T>> builders,
     R value,
@@ -181,6 +181,111 @@ abstract class ConsumerStagedWidget<R, T> extends StatefulWidget {
   Widget build5(BuildContext context, WidgetRef ref, R value, T? state) =>
       const Offstage();
 
+  /// [selectBuild] が返しうる、ビルド種別 index 6番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build6(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 7番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build7(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 8番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build8(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 9番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build9(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 10番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build10(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 11番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build11(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 12番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build12(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 13番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build13(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 14番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build14(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 15番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build15(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 16番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build16(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 17番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build17(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 18番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build18(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 19番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build19(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
+  /// [selectBuild] が返しうる、ビルド種別 index 20番目に対応する build メソッド
+  ///
+  /// - [value] : [provider] により提供された状態値オブジェクト(VO)
+  /// - [state] : Widget 内部の状態
+  Widget build20(BuildContext context, WidgetRef ref, R value, T? state) =>
+      const Offstage();
+
   /// [selectBuild] が返しうる、ビルド種別 index 並びに対応する build関数一覧
   List<ConsumerStagedBuild<R, T>> get buildList => <ConsumerStagedBuild<R, T>>[
     build,
@@ -188,6 +293,21 @@ abstract class ConsumerStagedWidget<R, T> extends StatefulWidget {
     build3,
     build4,
     build5,
+    build6,
+    build7,
+    build8,
+    build9,
+    build10,
+    build11,
+    build12,
+    build13,
+    build14,
+    build15,
+    build16,
+    build17,
+    build18,
+    build19,
+    build20,
   ];
 
   /// アプリがフォアグラウンドに戻った時に実行されます。
