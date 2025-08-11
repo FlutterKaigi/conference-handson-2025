@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../fundamental/ui_widget/consumer_staged_widget.dart';
 import '../model/my_counter_value_object.dart';
@@ -38,7 +39,12 @@ class ConsumerCounterText
 
   @override
   /// [CountValueObject.isResetting] == false の場合のカウント表示
-  Widget build(BuildContext context, CountValueObject value, Object? state) {
+  Widget build(
+    BuildContext context,
+    WidgetRef ref,
+    CountValueObject value,
+    Object? state,
+  ) {
     return Text(
       '${value.count}',
       style: Theme.of(context).textTheme.headlineMedium,
@@ -48,7 +54,12 @@ class ConsumerCounterText
 
   @override
   /// [CountValueObject.isResetting] == true の場合のカウント表示
-  Widget build2(BuildContext context, CountValueObject value, Object? state) {
+  Widget build2(
+    BuildContext context,
+    WidgetRef ref,
+    CountValueObject value,
+    Object? state,
+  ) {
     return Text(
       '<<< ${value.count} >>>',
       style: Theme.of(context).textTheme.headlineMedium,
