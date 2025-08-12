@@ -41,7 +41,7 @@ AI Agent の教本となるプロジェクトコードがない状況で、独�
 コードファイル [lib/src/presentation/model/reading/reading_books_view_model.dart](../lib/src/presentation/model/reading/reading_books_view_model.dart) の追加まで行っています。
 
 これらにより `CurrentlyTasksWidget` は、[ConsumerStagedWidget](../lib/src/fundamental/ui_widget/consumer_staged_widget.dart) 派生にリライトされ、  
-`HomePage` ウイジェットも `riverpod - ConsumerWidget` に手動リライトしています。
+`HomePage` ウイジェットも `riverpod - ConsumerWidget` 派生に手動リライトしています。
 
 _`ホーム画面`だけでなく、読書中書籍情報の`設定画面`や`編集画面`もまた、  
 `ViewModel` および `Provider関数` の手動作成および、`riverpod - ConsumerWidget` 対応に手動リライトしています。_
@@ -101,5 +101,4 @@ _`ホーム画面`だけでなく、読書中書籍情報の`設定画面`や`�
     - 読書状況更新ボタン
     - 書籍削除ボタン
 ```
-
 
