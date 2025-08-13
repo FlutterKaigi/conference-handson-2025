@@ -32,21 +32,21 @@ CounterDomain counterDomainProvider(
 }
 
 /// アプリケーションスコープで共有されるカウンターの状態を操作する Domainモデルクラス。
-class CounterDomain extends DomainObject<int, CountState> {
-  CounterDomain({required CountState stateModel}): _stateModel = stateModel;
+class CounterDomain extends DomainObject<CountState> {
+  CounterDomain({required CountState stateModel}) : _stateModel = stateModel;
 
   final CountState _stateModel;
 
   @override
-  CountState? get stateModel => _stateModel;
+  CountState get stateModel => _stateModel;
 
   void increment() {
-    int value = _stateModel.value;
-    _stateModel.update(++value);
+    int count = _stateModel.valueObject.count;
+    _stateModel.update(_stateModel.valueObject.copyWith(count: ++count));
   }
 
   void reset() {
-    _stateModel.update(0);
+    _stateModel.update(_stateModel.valueObject.copyWith(count: 0));
   }
 
   @override
