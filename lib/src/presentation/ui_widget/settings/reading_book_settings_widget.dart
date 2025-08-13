@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Required for FilteringTextInputFormatter
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../fundamental/debug/debug_logger.dart';
 import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
 import '../../model/reading/reading_book_value_object.dart';
 import '../../model/reading/reading_books_view_model.dart';
@@ -45,21 +44,6 @@ class ReadingBookSettingsWidget
       state.formKey.currentState?.reset();
     }
     super.disposeState(state);
-  }
-
-  @override
-  /// デバッグのため [selectBuilder] をオーバーライド
-  ConsumerStagedBuild<ReadingBookValueObject, ReadingBookSettingsState>
-  selectBuild(
-    List<ConsumerStagedBuild<ReadingBookValueObject, ReadingBookSettingsState>>
-    builders,
-    ReadingBookValueObject value,
-  ) {
-    debugLog(
-      'debug - ReadingBookSettingsWidget.selectBuild - name=${value.name}',
-    );
-    // （デフォルト）ビルド・メソッドのみ
-    return builders[0];
   }
 
   void _submitForm(
