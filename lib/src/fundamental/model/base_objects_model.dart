@@ -86,12 +86,12 @@ abstract class ApplicationObject {
 ///
 /// 内部状態を特定の状況に保てるのであれば、派生クラスで任意の入出力関数を追加することができます。
 ///
-/// [S] 状態値型, [T] 状態モデル型
-abstract class DomainObject<S, T extends StateObject<S>> {
+/// [S] 状態モデル型
+abstract class DomainObject<S extends StateObject<ValueObject>> {
   DomainObject();
 
   /// 状態モデルオブジェクト
-  T? get stateModel;
+  S get stateModel;
 
   /// 状態生成＆初期化
   ///
@@ -108,39 +108,39 @@ abstract class DomainObject<S, T extends StateObject<S>> {
 ///
 /// 状態値オブジェクトは、永続化するデータの整合性を保つ責務を持つ **状態モデル** です。
 ///
-/// 内部状態の整合性を保つため、入出力インターフェースは、[value] と [update] のみに限定しますが、
+/// 内部状態の整合性を保つため、入出力インターフェースは、[valueObject] と [update] のみに限定しますが、
 /// 内部状態の整合性を保てるのであれば、派生クラスで任意の入出力関数を追加することができます。
 ///
-/// - [value] プロパティ：内部状態状況の状態値を外部へ返します。
+/// - [valueObject] プロパティ：内部状態状況の状態値を外部へ返します。
 /// - [update] メソッド：内部状態を変更します。
 ///
-/// [S] 状態値型
-abstract class StateObject<S> {
+/// [V] 値型
+abstract class StateObject<V extends ValueObject> {
   StateObject();
 
   /// 状態値更新シリアルナンバー
   int get serialNumber;
 
-  /// 状態値
-  S get value;
+  /// 状態値オブジェクト
+  V get valueObject;
 
   /// 状態値オブジェクト生成＆初期化
   ///
   /// _状態値オブジェクトの生成＆初期化処理を実装してください。_
   /// ```dart
   ///   late int _serialNumber;
-  ///   late int? _value;
+  ///   late V? _valueObject;
   ///
   ///   @override
   ///   int get serialNumber;
   ///
   ///   @override
-  ///   int get value => _value!;
+  ///   V get valueObject => _valueObject!;
   ///
   ///   @override
   ///   void init() {
   ///     _serialNumber = 0;
-  ///     _value = 0;
+  ///     _valueObject = const V 値型オブジェクト生成;
   ///   }
   /// ```
   void init();
@@ -150,18 +150,18 @@ abstract class StateObject<S> {
   /// _状態値オブジェクトの破棄処理を実装してください。_
   /// ```dart
   ///   late int _serialNumber;
-  ///   late int? _value;
+  ///   late V? _valueObject;
   ///
   ///   @override
   ///   int get serialNumber;
   ///
   ///   @override
-  ///   int get value => _value!;
+  ///   V get valueObject => _valueObject!;
   ///
   ///   @override
   ///   void dispose() {
   ///     _serialNumber = 0;
-  ///     _count = null;
+  ///     _valueObject = null;
   ///   }
   /// ```
   void dispose();
@@ -171,21 +171,21 @@ abstract class StateObject<S> {
   /// _状態値オブジェクトの更新処理を実装してください。_
   /// ```dart
   ///   late int _serialNumber;
-  ///   late int? _value;
+  ///   late V? _valueObject;
   ///
   ///   @override
   ///   int get serialNumber;
   ///
   ///   @override
-  ///   int get value => _value!;
+  ///   V get valueObject => _valueObject!;
   ///
   ///   @override
-  ///   void update(int value) {
-  ///     _value = value;
+  ///   void update(V value) {
+  ///     _valueObject = value;
   ///     _serialNumber++;
   ///   }
   /// ```
-  void update(S value);
+  void update(V value);
 }
 
 /// （プレゼンテーションスコープ）不変：値オブジェクトの基底クラス
@@ -197,10 +197,11 @@ abstract class StateObject<S> {
 /// 派生クラスのデータモデルは、任意の扱いやすいデータ構造にすることができます。
 ///
 /// ```dart
+/// import 'package:flutter/foundation.dart';
 /// import '../domain/model/equatable_utils.dart';
 ///
 /// @immutable
-/// class PersonValueObject extends ValueObject<int> {
+/// class PersonValueObject extends ValueObject {
 ///   const PersonValueObject({
 ///     required super.stateType,
 ///     required this.name,
