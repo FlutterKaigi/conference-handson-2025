@@ -6,25 +6,48 @@ import '../../fundamental/model/equatable_utils.dart';
 /// カウンタ用の不変のカウント値を表す Value Object クラス。
 @immutable
 class CountValueObject extends ValueObject {
-  const CountValueObject({required super.stateType, required this.count});
+  const CountValueObject({
+    required super.stateType,
+    required this.count,
+    bool? isResetting,
+  }) : _isResetting = isResetting ?? false;
 
   factory CountValueObject.fromJson(Map<String, dynamic> json) {
     return CountValueObject(
       stateType: json['stateType'] as Type,
       count: json['count'] as int,
+      isResetting: json['isResetting'] as bool,
     );
   }
 
   final int count;
+  final bool _isResetting;
+
+  bool get isResetting => _isResetting;
+
+  // 今後の拡張のために copyWith や fromJson/toJson の追加、
+  // および hashCode や == オペレーターのオーバーライドをしています。
 
   Map<String, dynamic> toJson() {
-    return <String, dynamic>{'stateType': stateType, 'count': count};
+    return <String, dynamic>{
+      'stateType': stateType,
+      'count': count,
+      'isResetting': isResetting,
+    };
   }
 
-  CountValueObject copyWith({Type? stateType, int? count}) {
+  // `hashCode` や `operator ==(Object other)` のオーバライドのため、
+  // 実装ロジックの勉強のため equatable パッケージのユーティリティ関数のコピーを利用してます。
+  //
+  // 手軽に実装したい場合は、equatable パッケージを利用すると良いでしょう。
+  // - equatable
+  //   https://pub.dev/packages/equatable
+
+  CountValueObject copyWith({Type? stateType, int? count, bool? isLoading}) {
     return CountValueObject(
       stateType: stateType ?? this.stateType,
       count: count ?? this.count,
+      isResetting: isLoading ?? isResetting,
     );
   }
 
@@ -40,5 +63,5 @@ class CountValueObject extends ValueObject {
   }
 
   @override
-  List<Object> get props => <Object>[count];
+  List<Object> get props => <Object>[stateType, count, isResetting];
 }

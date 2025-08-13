@@ -1,5 +1,5 @@
 import '../../fundamental/model/base_objects_model.dart';
-import '../../presentation/model/my_counter_value_object.dart';
+import 'my_counter_value_object.dart';
 
 /// アプリケーションスコープで共有されるカウンターの状態をカプセル化する状態モデルクラス。
 class CountState extends StateObject<CountValueObject> {

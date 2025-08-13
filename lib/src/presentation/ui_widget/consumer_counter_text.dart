@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../domain/model/my_counter_value_object.dart';
 import '../../fundamental/ui_widget/consumer_staged_widget.dart';
-import '../model/my_counter_value_object.dart';
 
 /// [provider] が返す状態値の [CountValueObject.isResetting] フラグで、
 /// カウント表現を切り替えるウイジェットです。

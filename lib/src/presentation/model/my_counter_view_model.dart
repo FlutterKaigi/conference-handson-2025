@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/model/my_counter_domain_model.dart';
-import 'my_counter_value_object.dart';
+import '../../domain/model/my_counter_value_object.dart';
 
 final NotifierProvider<CounterViewModel, CountValueObject> counterProvider =
     NotifierProvider<CounterViewModel, CountValueObject>(

@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../presentation/model/my_counter_value_object.dart';
+import '../../domain/model/my_counter_value_object.dart';
 import '../../presentation/model/my_counter_view_model.dart';
 import '../../presentation/ui_widget/consumer_counter_text.dart';
 import '../../routing/app_router.dart';
