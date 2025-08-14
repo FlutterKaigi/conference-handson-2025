@@ -42,7 +42,7 @@ class ReadingBooksState extends StateObject<ReadingBooksValueObject> {
         List<String>.generate(20, (int index) => '読書中書籍 ${index + 1}')
             .map(
               (String name) => ReadingBookValueObject(
-                stateType: Object,
+                stateType: ReadingBookValueObject,
                 name: name,
                 totalPages: 100,
               ),

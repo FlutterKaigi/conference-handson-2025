@@ -15,7 +15,7 @@ class ReadingBooksValueObject extends ValueObject {
 
   factory ReadingBooksValueObject.fromJson(Map<String, dynamic> json) {
     return ReadingBooksValueObject(
-      stateType: ReadingBooksValueObject,
+      stateType: json['stateType'] as Type,
       readingBooks: json['readingBooks'] as List<ReadingBookValueObject>,
     );
   }

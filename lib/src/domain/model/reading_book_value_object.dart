@@ -28,9 +28,7 @@ class ReadingBookValueObject extends ValueObject {
 
   factory ReadingBookValueObject.fromJson(Map<String, dynamic> json) {
     return ReadingBookValueObject(
-      // TODO 現状では、読書中書籍のCRUDを担当する編集オブジェクトがないので仮設定する。
-      // stateType: json['stateType'] as Type,
-      stateType: ReadingBookValueObject,
+      stateType: json['stateType'] as Type,
       name: json['name'] as String,
       totalPages: json['totalPages'] as int,
       readingPageNum: json['readingPageNum'] as int,
