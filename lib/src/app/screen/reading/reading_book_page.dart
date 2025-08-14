@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../domain/model/reading_books_domain_model.dart';
 import '../../../presentation/model/reading/reading_books_view_model.dart';
 import '../../../presentation/ui_widget/reading/reading_book_widget.dart';
 

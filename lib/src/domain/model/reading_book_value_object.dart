@@ -1,8 +1,7 @@
-/*
 import 'package:flutter/foundation.dart';
 
-import '../../../fundamental/model/base_objects_model.dart';
-import '../../../fundamental/model/equatable_utils.dart';
+import '../../fundamental/model/base_objects_model.dart';
+import '../../fundamental/model/equatable_utils.dart';
 
 /// 読書状態
 enum ReadingState {
@@ -16,7 +15,7 @@ enum ReadingState {
   complete,
 }
 
-/// プレゼンテーションスコープで UIと ViewModelとで共有される、読書中書籍の状態値(VO)となるクラス。
+/// 読書中書籍・読書状況の状態値(VO)を表す Value Object 不変クラス。
 @immutable
 class ReadingBookValueObject extends ValueObject {
   const ReadingBookValueObject({
@@ -117,4 +116,3 @@ class ReadingBookValueObject extends ValueObject {
     bookReview,
   ];
 }
-*/

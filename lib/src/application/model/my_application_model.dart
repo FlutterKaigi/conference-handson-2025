@@ -1,4 +1,5 @@
 import '../../domain/model/my_counter_domain_model.dart';
+import '../../domain/model/reading_books_domain_model.dart';
 import '../../fundamental/model/base_objects_model.dart';
 
 // アプリケーションモデルクラス。
@@ -16,6 +17,7 @@ class MyApplicationModel extends ApplicationObject {
       cycle: ModelCycle.init,
       overrideModel: overrideCounterDomain,
     );
+    readingBooksDomainModelProvider(this, cycle: ModelCycle.init);
   }
 
   @override
@@ -23,5 +25,6 @@ class MyApplicationModel extends ApplicationObject {
     // ドメインモデルを破棄する
     // アプリの強制終了には対応できないため、破棄処理が不要な設計をしてください。
     counterDomainProvider(this, cycle: ModelCycle.dispose);
+    readingBooksDomainModelProvider(this, cycle: ModelCycle.dispose);
   }
 }

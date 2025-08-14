@@ -1,10 +1,11 @@
+import 'package:conference_handson_2025/src/domain/model/reading_books_domain_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../domain/model/reading_book_value_object.dart';
 import '../../../fundamental/debug/debug_logger.dart';
 import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
-import '../../../presentation/model/reading/reading_book_value_object.dart';
 import '../../../presentation/model/reading/reading_books_view_model.dart';
 
 class ReadingBookWidget
@@ -63,15 +64,13 @@ class ReadingBookWidget
           int.tryParse(state.readingPageNumController.text) ?? 0;
       final String bookReview = state.bookReviewController.text;
 
-      final Type stateType = readingBook.stateType;
-
-      final ReadingBookValueObject editedReadingBook = readingBook.copyWith(
-        stateType: stateType,
-        name: name,
-        totalPages: totalPages,
-        readingPageNum: readingPageNum,
-        bookReview: bookReview,
-      );
+      final ReadingBookValueObject editedReadingBook = readingBooksViewModel
+          .updateReadingBook(
+            name: name,
+            totalPages: totalPages,
+            readingPageNum: readingPageNum,
+            bookReview: bookReview,
+          );
       readingBooksViewModel.commitReadingBook(editedReadingBook);
 
       Navigator.pop(context, editedReadingBook); // 結果を前の画面に返す

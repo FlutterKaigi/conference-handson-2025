@@ -13,7 +13,7 @@ class SettingsPage extends ConsumerWidget {
       appBar: AppBar(title: const Text('読書書籍設定')),
       body: ReadingBookSettingsWidget(
         provider: (WidgetRef ref) =>
-            ref.watch(readingBooksProvider.notifier).currentEditReadingBook!,
+            ref.read(readingBooksProvider.notifier).createReadingBook(),
       ),
     );
   }

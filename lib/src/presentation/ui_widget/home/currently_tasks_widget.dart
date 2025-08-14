@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../domain/model/reading_books_value_object.dart';
 import '../../../fundamental/debug/debug_logger.dart';
 import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
 import '../../../routing/app_router.dart';
-import '../../model/reading/reading_book_value_object.dart';
 import '../../model/reading/reading_books_view_model.dart';
 
 class CurrentlyTasksWidget
-    extends
-        ConsumerStagedWidget<List<ReadingBookValueObject>, ScrollController> {
+    extends ConsumerStagedWidget<ReadingBooksValueObject, ScrollController> {
   /// コンストラクタ
   ///
   /// - [provider] : 引数の Riverpod ref を使って状態値を取得する関数。
@@ -40,7 +39,7 @@ class CurrentlyTasksWidget
   Widget build(
     BuildContext context,
     WidgetRef ref,
-    List<ReadingBookValueObject> value,
+    ReadingBooksValueObject value,
     ScrollController? state,
   ) {
     // CurrentlyTasksWidget ウイジェットの内部状態
@@ -51,9 +50,9 @@ class CurrentlyTasksWidget
       thumbVisibility: true, // スクロールバーを常に表示（任意）
       child: ListView.builder(
         controller: scrollController,
-        itemCount: value.length,
+        itemCount: value.readingBooks.length,
         itemBuilder: (BuildContext context, int index) {
-          final String title = value[index].name;
+          final String title = value.readingBooks[index].name;
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             child: ListTile(

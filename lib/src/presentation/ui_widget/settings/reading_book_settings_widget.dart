@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Required for FilteringTextInputFormatter
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../domain/model/reading_book_value_object.dart';
 import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
-import '../../model/reading/reading_book_value_object.dart';
 import '../../model/reading/reading_books_view_model.dart';
 
 class ReadingBookSettingsWidget
-    extends
-        ConsumerStagedWidget<ReadingBookValueObject, ReadingBookSettingsState> {
+    extends ConsumerStagedWidget<Object?, ReadingBookSettingsState> {
   /// コンストラクタ
   ///
   /// - [provider] : 引数の Riverpod ref を使って状態値を取得する関数。
@@ -48,7 +47,6 @@ class ReadingBookSettingsWidget
 
   void _submitForm(
     BuildContext context,
-    ReadingBookValueObject readingBook,
     ReadingBooksViewModel readingBooksViewModel,
     ReadingBookSettingsState state,
   ) {
@@ -70,9 +68,9 @@ class ReadingBookSettingsWidget
 
   TextFormField _buildNameField(
     BuildContext context,
-    ReadingBookValueObject readingBook,
     ReadingBookSettingsState state,
   ) {
+    // 新規追加する書籍情報を入力するフィールドのため書籍タイトルの初期値は空です。
     return TextFormField(
       controller: state.nameController,
       decoration: const InputDecoration(
@@ -91,9 +89,9 @@ class ReadingBookSettingsWidget
 
   TextFormField _buildTotalPagesField(
     BuildContext context,
-    ReadingBookValueObject readingBook,
     ReadingBookSettingsState state,
   ) {
+    // 新規追加する書籍情報を入力するフィールドのため書籍そーページの初期値は空です。
     return TextFormField(
       controller: state.totalPagesController,
       decoration: const InputDecoration(
@@ -136,7 +134,7 @@ class ReadingBookSettingsWidget
   Widget build(
     BuildContext context,
     WidgetRef ref,
-    ReadingBookValueObject value,
+    Object? value,
     ReadingBookSettingsState? state,
   ) {
     final ReadingBooksViewModel vm = ref.read(readingBooksProvider.notifier);
@@ -149,12 +147,12 @@ class ReadingBookSettingsWidget
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
-            _buildNameField(context, value, controllers),
+            _buildNameField(context, controllers),
             _middleSpacer(),
-            _buildTotalPagesField(context, value, controllers),
+            _buildTotalPagesField(context, controllers),
             _largeSpacer(),
             ElevatedButton(
-              onPressed: () => _submitForm(context, value, vm, controllers),
+              onPressed: () => _submitForm(context, vm, controllers),
               style: ElevatedButton.styleFrom(
                 padding: _middleEdgeInsetsSymmetric(),
                 textStyle: _middleTextStyle(),

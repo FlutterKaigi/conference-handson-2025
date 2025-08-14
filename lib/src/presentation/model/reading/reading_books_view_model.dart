@@ -1,152 +1,79 @@
+import 'package:conference_handson_2025/src/domain/model/reading_books_domain_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'reading_book_value_object.dart';
+import '../../../domain/model/reading_book_value_object.dart';
+import '../../../domain/model/reading_books_value_object.dart';
 
-final NotifierProvider<ReadingBooksViewModel, List<ReadingBookValueObject>>
+final NotifierProvider<ReadingBooksViewModel, ReadingBooksValueObject>
 readingBooksProvider =
-    NotifierProvider<ReadingBooksViewModel, List<ReadingBookValueObject>>(
-      // TODO 後日、アプリモデルから正式な初期データを取得できるようにすること。
-      () => ReadingBooksViewModel.withDummyData(),
+    NotifierProvider<ReadingBooksViewModel, ReadingBooksValueObject>(
+      () => ReadingBooksViewModel(),
     );
 
-/// 読書中書籍・編集モード
-enum ReadingBookEditMode {
-  /// 新規作成中
-  create,
-
-  /// 編集中
-  edit,
-
-  /// 削除中
-  delete,
-
-  /// 不定
-  undecided,
-}
-
 /// 読書中書籍一覧・読書状況 ViewModel
-class ReadingBooksViewModel extends Notifier<List<ReadingBookValueObject>> {
+class ReadingBooksViewModel extends Notifier<ReadingBooksValueObject> {
   /// デフォルト・コンストラクタ
-  ReadingBooksViewModel() : this.init();
-
-  /// 初期化指定付・コンストラクタ
-  ///
-  /// - [readingBooks] : （オプション）読書中書籍一覧
-  ReadingBooksViewModel.init({List<ReadingBookValueObject>? readingBooks}) {
-    _readingBooks = readingBooks ?? <ReadingBookValueObject>[];
-  }
-
-  // ダミーデータを生成するファクトリメソッド
-  factory ReadingBooksViewModel.withDummyData() {
-    final List<ReadingBookValueObject> readingBooks =
-        List<String>.generate(20, (int index) => '読書中書籍 ${index + 1}')
-            .map(
-              (String name) => ReadingBookValueObject(
-                stateType: Object,
-                name: name,
-                totalPages: 100,
-              ),
-            )
-            .toList();
-    return ReadingBooksViewModel.init(readingBooks: readingBooks);
-  }
+  ReadingBooksViewModel();
 
   /// 読書中書籍一覧
-  late final List<ReadingBookValueObject> _readingBooks;
-
-  /// 編集中書籍・編集モード
-  // ignore: prefer_final_fields
-  ReadingBookEditMode _currentEditMode = ReadingBookEditMode.undecided;
-
-  /// 編集中書籍・index
-  // ignore: prefer_final_fields
-  int? _currentEditIndex;
-
-  /// 編集中書籍
-  // ignore: prefer_final_fields
-  ReadingBookValueObject? _currentEditReadingBook;
+  late final ReadingBooksDomainModel _domainModel;
 
   // 将来的には読書進捗などもここに追加します
 
   @override
-  List<ReadingBookValueObject> build() {
+  ReadingBooksValueObject build() {
+    // 外部定義されたアプリ全体共有の 読書中書籍一覧 オブジェクトを参照して VO の初期化を行う。
     // riverpod が管理する state 変数内容 ⇒ VO の初期値を生成して返却する。
-    // ここでは、VO ⇒ ValueObject として読書中書籍一覧の初期値を設定する。
-    return readingBooks;
+    _domainModel = readingBooksDomainModelProvider(this);
+    return _domainModel.stateModel.valueObject;
   }
 
   /// 読書中書籍一覧
-  List<ReadingBookValueObject> get readingBooks =>
-      List<ReadingBookValueObject>.unmodifiable(_readingBooks);
+  List<ReadingBookValueObject> get readingBooks => _domainModel.readingBooks;
 
   /// 編集モード
-  ReadingBookEditMode get currentEditMode => _currentEditMode;
+  ReadingBookEditMode get currentEditMode => _domainModel.currentEditMode;
 
   /// 編集モード
-  ReadingBookValueObject? get currentEditReadingBook => _currentEditReadingBook;
+  ReadingBookValueObject? get currentEditReadingBook =>
+      _domainModel.currentEditReadingBook;
 
   /// 編集モード・書籍選択
-  void selectReadingBook({required int index}) {
-    _currentEditIndex = index;
-    _currentEditReadingBook = _readingBooks[index];
-    _currentEditMode = ReadingBookEditMode.edit;
-  }
+  void selectReadingBook({required int index}) =>
+      _domainModel.selectReadingBook(index: index);
+
+  /// 編集モード：新規追加用・テンプレート書籍作成
+  void createReadingBook() => _domainModel.createReadingBook();
 
   /// 編集モード：新規追加中
   ReadingBookValueObject addReadingBook({
     required String name,
     required int totalPages,
-  }) {
-    _currentEditReadingBook = ReadingBookValueObject(
-      stateType: ReadingBookValueObject,
-      name: name,
-      totalPages: totalPages,
-    );
-    _currentEditIndex = null;
-    _currentEditMode = ReadingBookEditMode.create;
-    return _currentEditReadingBook!;
-  }
+  }) => _domainModel.addReadingBook(name: name, totalPages: totalPages);
 
   /// 編集モード・読書状況更新中
   ReadingBookValueObject updateReadingBook({
+    String? name,
+    int? totalPages,
     int? readingPageNum,
     String? bookReview,
-  }) {
-    _currentEditReadingBook = _readingBooks[_currentEditIndex!].copyWith(
-      readingPageNum: readingPageNum,
-      bookReview: bookReview,
-    );
-    _currentEditMode = ReadingBookEditMode.edit;
-    return _currentEditReadingBook!;
-  }
+  }) => _domainModel.updateReadingBook(
+    name: name,
+    totalPages: totalPages,
+    readingPageNum: readingPageNum,
+    bookReview: bookReview,
+  );
 
   /// 編集モード・削除中
-  ReadingBookValueObject removeReadingBook() {
-    _currentEditReadingBook = readingBooks[_currentEditIndex!];
-    _currentEditMode = ReadingBookEditMode.delete;
-    return _currentEditReadingBook!;
-  }
+  ReadingBookValueObject removeReadingBook() =>
+      _domainModel.removeReadingBook();
 
   /// 編集モード・完了
   void commitReadingBook(ReadingBookValueObject readingBook) {
-    _updateState(readingBook);
-    _currentEditReadingBook = null;
-    _currentEditIndex = null;
-    _currentEditMode = ReadingBookEditMode.undecided;
-  }
-
-  /// riverpod の state 更新
-  void _updateState(ReadingBookValueObject readingBook) {
-    switch (_currentEditMode) {
-      case ReadingBookEditMode.create:
-        _readingBooks.add(readingBook);
-      case ReadingBookEditMode.edit:
-        _readingBooks[_currentEditIndex!] = readingBook;
-      case ReadingBookEditMode.delete:
-        _readingBooks.removeAt(_currentEditIndex!);
-      case ReadingBookEditMode.undecided:
-        break;
-    }
-    state = readingBooks;
+    _domainModel.commitReadingBook(readingBook);
+    // 【注意】エレガントではありませんが、
+    // 　　　　ドメインモデルは、riverpod を関知していないので、
+    // 　　　　ViewModel が riverpod state を更新して画面反映させること。
+    state = _domainModel.stateModel.valueObject;
   }
 }
