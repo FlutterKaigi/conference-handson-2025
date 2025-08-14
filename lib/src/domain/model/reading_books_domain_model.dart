@@ -1,7 +1,7 @@
 import 'package:conference_handson_2025/src/domain/model/reading_books_state_model.dart';
 import 'package:conference_handson_2025/src/presentation/model/reading/reading_books_view_model.dart';
 
-import '../../application/model/my_application_model.dart';
+import '../../application/model/application_model.dart';
 import '../../fundamental/model/base_objects_model.dart';
 import 'reading_book_value_object.dart';
 
@@ -14,14 +14,13 @@ ReadingBooksDomainModel readingBooksDomainModelProvider(
   ModelCycle cycle = ModelCycle.get,
   ReadingBooksDomainModel? overrideModel,
 }) {
-  return modelProvider<MyApplicationModel, ReadingBooksDomainModel>(
+  return modelProvider<ApplicationModel, ReadingBooksDomainModel>(
     approver,
     cycle: cycle,
     isApproved: (Object approver) => approver is ReadingBooksViewModel,
     getModel: () => _readingBooksDomainModel,
     initModel: () {
-      _readingBooksDomainModel =
-          overrideModel ?? ReadingBooksDomainModel(); //FIXME start Step.1
+      _readingBooksDomainModel = overrideModel ?? ReadingBooksDomainModel();
       _readingBooksDomainModel!.initState();
       return _readingBooksDomainModel!;
     },
