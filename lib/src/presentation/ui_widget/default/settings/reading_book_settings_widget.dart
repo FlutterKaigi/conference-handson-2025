@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Required for FilteringTextInputFormatter
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../domain/model/reading_book_value_object.dart';
-import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
-import '../../model/default/reading_books_view_model.dart';
+import '../../../../domain/model/reading_book_value_object.dart';
+import '../../../../fundamental/ui_widget/consumer_staged_widget.dart';
+import '../../../model/view_model_packages.dart';
 
 class ReadingBookSettingsWidget
     extends ConsumerStagedWidget<Object?, ReadingBookSettingsState> {
