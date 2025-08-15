@@ -4,6 +4,7 @@ import 'package:conference_handson_2025/src/app/screen/my_home_page.dart';
 import 'package:conference_handson_2025/src/domain/model/my_counter_domain_model.dart';
 import 'package:conference_handson_2025/src/domain/model/my_counter_state_model.dart';
 import 'package:conference_handson_2025/src/fundamental/debug/debug_logger.dart';
+import 'package:conference_handson_2025/src/presentation/ui_widget/consumer_counter_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -67,29 +68,46 @@ void main() {
     // ConsumerCounterText.build 内部の Text ウイジェットにも与えているため、
     // Finder 検索で複数件の候補の中から、ラベル表示に使う Text を抽出する。
     final Finder homeCountFinder = find.byKey(homePageCountKey);
-    Text homeCounterLabel =
-        homeCountFinder
-                .evaluate()
-                .singleWhere((Element e) => e.widget is Text)
-                .widget
-            as Text;
+
+    // homePageCountKey キーは、ConsumerCounterText にしか適用されない。
+    final ConsumerCounterText counter =
+        homeCountFinder.evaluate().single.widget as ConsumerCounterText;
+    debugLog(
+      'find - ConsumerCounterText hasKey=${counter.key == homePageCountKey}',
+    );
+
+    // Finder 検索で、全ての画面を対象とした候補の中から、ラベル表示の Text を抽出する。
+    final List<Text> texts = homeCountFinder.allCandidates
+        .map((Element e) => e.widget)
+        .whereType<Text>()
+        .toList();
+    // ignore: avoid_function_literals_in_foreach_calls
+    texts.forEach((Text text) {
+      debugLog('find - ${text.data}, hasKey=${text.key == homePageCountKey}');
+    });
+
+    // ホーム画面のカウンタ・ラベルを抽出
+    final Text homeCounterLabel = texts.singleWhere(
+      (Text text) => text.data?.length == 1,
+    );
 
     // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
-    homeCounterLabel =
-        homeCountFinder
-                .evaluate()
-                .singleWhere((Element e) => e.widget is Text)
-                .widget
-            as Text;
+
+    // 詳細画面のカウンタ・ラベルを抽出
+    final Text detailCounterLabel = homeCountFinder.allCandidates
+        .map((Element e) => e.widget)
+        .whereType<Text>()
+        .singleWhere((Text text) => text.data?.length == 1);
 
     // Verify that our counter has incremented.
     expect(find.byType(MyHomePage), findsOneWidget);
     expect(find.byType(MyDetailPage), findsNothing);
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
-    expect(homeCounterLabel.data, '1');
+    expect(homeCounterLabel.data, '0');
+    expect(detailCounterLabel.data, '1');
 
     // Tap the 'Go Second' button and trigger a frame.
     await tester.tap(find.text('to current count'));

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/model/my_counter_domain_model.dart';
-import 'my_counter_value_object.dart';
+import '../../domain/model/my_counter_value_object.dart';
 
 final NotifierProvider<CounterViewModel, CountValueObject> counterProvider =
     NotifierProvider<CounterViewModel, CountValueObject>(
@@ -22,8 +22,8 @@ class CounterViewModel extends Notifier<CountValueObject> {
     // riverpod が管理する state 変数内容 ⇒ VO の初期値を生成して返却する。
     final CounterDomain domain = counterDomainProvider(this);
     return CountValueObject(
-      stateType: domain.stateModel!.runtimeType,
-      count: domain.stateModel!.value,
+      stateType: domain.stateModel.runtimeType,
+      count: domain.stateModel.valueObject.count,
     );
   }
 
@@ -37,7 +37,7 @@ class CounterViewModel extends Notifier<CountValueObject> {
   // ドメインモデルが保持する状態モデルの
   // カウント値が maxValueを超えれば、指定秒後に0にリセットする。
   void _resetOrNot(CounterDomain domain) {
-    if (domain.stateModel!.value >= maxValue) {
+    if (domain.stateModel.valueObject.count >= maxValue) {
       Timer(const Duration(seconds: 2), () {
         domain.reset();
         _updateState(domain);
@@ -48,9 +48,9 @@ class CounterViewModel extends Notifier<CountValueObject> {
   /// riverpod の state 更新
   void _updateState(CounterDomain domain) {
     state = state.copyWith(
-      stateType: domain.stateModel!.runtimeType,
-      count: domain.stateModel!.value,
-      isLoading: domain.stateModel!.value >= maxValue,
+      stateType: domain.stateModel.runtimeType,
+      count: domain.stateModel.valueObject.count,
+      isLoading: domain.stateModel.valueObject.count >= maxValue,
     );
   }
 }

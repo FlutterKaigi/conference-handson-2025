@@ -2,7 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../presentation/model/my_counter_value_object.dart';
+import '../../domain/model/my_counter_value_object.dart';
 import '../../presentation/model/my_counter_view_model.dart';
 import '../../presentation/ui_widget/consumer_counter_text.dart';
 import '../../routing/app_router.dart';
@@ -31,14 +31,20 @@ class MyHomePage extends ConsumerWidget {
             ConsumerCounterText(
               provider: (WidgetRef ref) => ref.watch(counterProvider),
               // ignore: always_specify_types
-              builders: (context, CountValueObject value, state) {
+              builders: (context, ref, value, state) {
                 // ignore: lines_longer_than_80_chars テスト時のチェック用に ConsumerCounterText のキーを Text にも与えている。
-                Widget text(String label) => Text(label, style: Theme.of(context).textTheme.headlineMedium, key: super.key);
+                Widget text(String label) => Text(
+                  label,
+                  style: Theme.of(context).textTheme.headlineMedium,
+                  key: super.key,
+                );
 
                 // ignore: always_specify_types, lines_longer_than_80_chars
-                Widget build(context, CountValueObject value, state) => text('${value.count}');
+                Widget build(context, ref, CountValueObject value, state) =>
+                    text('${value.count}');
                 // ignore: always_specify_types, lines_longer_than_80_chars
-                Widget build2(context, CountValueObject value, state) => text('*** ${value.count} ***');
+                Widget build2(context, ref, CountValueObject value, state) =>
+                    text('*** ${value.count} ***');
 
                 // ignore: always_specify_types
                 return [build, build2];
