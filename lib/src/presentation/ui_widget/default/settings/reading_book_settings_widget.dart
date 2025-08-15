@@ -192,7 +192,7 @@ class ReadingBookSettingsWidget
             child: Column(
               children: <Widget>[
                 Text(
-                  'タップ３０秒後にイベントを発行します。',
+                  'タップ 10秒後にイベントを発行します。',
                   style: TextTheme.of(context).bodySmall,
                 ),
                 _buildReadingStartSwitch(context, supportVM.debugStartReading),
