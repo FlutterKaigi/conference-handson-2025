@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Required for FilteringTextInputFormatter
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../domain/model/reading_book_value_object.dart';
 import '../../../../fundamental/ui_widget/consumer_staged_widget.dart';
 import '../../../model/view_model_packages.dart';
+import '../../../ui_widget/widget_packages.dart';
 
 class ReadingBookSettingsWidget
     extends ConsumerStagedWidget<Object?, ReadingBookSettingsState> {
@@ -43,6 +46,43 @@ class ReadingBookSettingsWidget
       state.formKey.currentState?.reset();
     }
     super.disposeState(state);
+  }
+
+  InputDecoration _buildDebugInputDecorator(
+    BuildContext context,
+    ReadingBookSettingsState state,
+  ) {
+    return InputDecoration(
+      labelText: 'デバッグ',
+      border: OutlineInputBorder(borderRadius: BorderRadius.circular(8)),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+    );
+  }
+
+  Widget _buildReadingStartSwitch(
+    BuildContext context,
+    ToggleSwitchViewModel viewModel,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        const Text('読書開始イベント'),
+        ToggleSwitch(viewModel: viewModel),
+      ],
+    );
+  }
+
+  Widget _buildReadingEndSwitch(
+    BuildContext context,
+    ToggleSwitchViewModel viewModel,
+  ) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: <Widget>[
+        const Text('読書終了イベント'),
+        ToggleSwitch(viewModel: viewModel),
+      ],
+    );
   }
 
   void _submitForm(
@@ -140,27 +180,78 @@ class ReadingBookSettingsWidget
     final ReadingBooksViewModel vm = ref.read(readingBooksProvider.notifier);
     final ReadingBookSettingsState controllers = state!;
 
+    // FIXME ReadingBookViewModel が対応するまでの仮設置
+    final ToggleSwitchViewModel startVM = ToggleSwitchViewModel(
+      initValue: false,
+      updateHandler: ({
+        required bool value,
+        required void Function({required bool value}) updateState,
+      }) {
+        Timer(
+          const Duration(seconds: 30),
+          () => updateState(value: !value),
+        );
+        return value;
+      },
+    );
+
+    // FIXME ReadingBookViewModel が対応するまでの仮設置
+    final ToggleSwitchViewModel endVM = ToggleSwitchViewModel(
+      initValue: false,
+      updateHandler: ({
+        required bool value,
+        required void Function({required bool value}) updateState,
+      }) {
+        Timer(
+          const Duration(seconds: 30),
+          () => updateState(value: !value),
+        );
+        return value;
+      },
+    );
+
     return Padding(
       padding: _middleEdgeInsetsAll(),
-      child: Form(
-        key: controllers.formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            _buildNameField(context, controllers),
-            _middleSpacer(),
-            _buildTotalPagesField(context, controllers),
-            _largeSpacer(),
-            ElevatedButton(
-              onPressed: () => _submitForm(context, vm, controllers),
-              style: ElevatedButton.styleFrom(
-                padding: _middleEdgeInsetsSymmetric(),
-                textStyle: _middleTextStyle(),
-              ),
-              child: const Text('新規追加'),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: <Widget>[
+          // デバッグ用トグルスイッチセクション
+          InputDecorator(
+            decoration: _buildDebugInputDecorator(context, controllers),
+            child: Column(
+              children: <Widget>[
+                Text(
+                  'タップ３０秒後にイベントを発行します。',
+                  style: TextTheme.of(context).bodySmall,
+                ),
+                _buildReadingStartSwitch(context, startVM),
+                _buildReadingEndSwitch(context, endVM),
+              ],
             ),
-          ],
-        ),
+          ),
+          _largeSpacer(),
+          // 書籍情報設定フォームセクション
+          Form(
+            key: controllers.formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                _buildNameField(context, controllers),
+                _middleSpacer(),
+                _buildTotalPagesField(context, controllers),
+                _largeSpacer(),
+                ElevatedButton(
+                  onPressed: () => _submitForm(context, vm, controllers),
+                  style: ElevatedButton.styleFrom(
+                    padding: _middleEdgeInsetsSymmetric(),
+                    textStyle: _middleTextStyle(),
+                  ),
+                  child: const Text('新規追加'),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
