@@ -36,7 +36,7 @@ final GoRouter appRouter = GoRouter(
               path: AppRoutes.readingGraph.path,
               name: AppRoutes.readingGraph.name, // ルート名
               builder: (BuildContext context, GoRouterState state) {
-                return const ReadingGraphPage();
+                return const ReadingBookGraphPage();
               },
             ),
           ],
