@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Required for FilteringTextInputFormatter
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -177,38 +175,11 @@ class ReadingBookSettingsWidget
     Object? value,
     ReadingBookSettingsState? state,
   ) {
+    final SupportAnimationsViewModel supportVM = ref.read(
+      supportAnimationsProvider.notifier,
+    );
     final ReadingBooksViewModel vm = ref.read(readingBooksProvider.notifier);
     final ReadingBookSettingsState controllers = state!;
-
-    // FIXME ReadingBookViewModel が対応するまでの仮設置
-    final ToggleSwitchViewModel startVM = ToggleSwitchViewModel(
-      initValue: false,
-      updateHandler: ({
-        required bool value,
-        required void Function({required bool value}) updateState,
-      }) {
-        Timer(
-          const Duration(seconds: 30),
-          () => updateState(value: !value),
-        );
-        return value;
-      },
-    );
-
-    // FIXME ReadingBookViewModel が対応するまでの仮設置
-    final ToggleSwitchViewModel endVM = ToggleSwitchViewModel(
-      initValue: false,
-      updateHandler: ({
-        required bool value,
-        required void Function({required bool value}) updateState,
-      }) {
-        Timer(
-          const Duration(seconds: 30),
-          () => updateState(value: !value),
-        );
-        return value;
-      },
-    );
 
     return Padding(
       padding: _middleEdgeInsetsAll(),
@@ -224,8 +195,8 @@ class ReadingBookSettingsWidget
                   'タップ３０秒後にイベントを発行します。',
                   style: TextTheme.of(context).bodySmall,
                 ),
-                _buildReadingStartSwitch(context, startVM),
-                _buildReadingEndSwitch(context, endVM),
+                _buildReadingStartSwitch(context, supportVM.debugStartReading),
+                _buildReadingEndSwitch(context, supportVM.debugEndReading),
               ],
             ),
           ),
