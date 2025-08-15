@@ -1,20 +1,25 @@
 import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ReadingGraphPage extends StatelessWidget {
-  final int totalPages;
-  final int readPages;
+import '../../../domain/model/reading_book_value_object.dart';
+import '../../../presentation/model/view_model_packages.dart';
 
-  const ReadingGraphPage({
-    super.key,
-    this.totalPages = 200, // 仮のデフォルト値
-    this.readPages = 100,  // 仮のデフォルト値
-  });
+class ReadingGraphPage extends ConsumerWidget {
+  /// コンストラクタ
+  const ReadingGraphPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final ReadingBookValueObject value = ref
+        .read(readingBooksProvider.notifier)
+        .currentEditReadingBook!;
+
+    final int totalPages = value.totalPages;
+    final int readPages = value.readingPageNum;
     double progress = 0;
-    if (totalPages > 0) {
+    if (totalPages > 0 && readPages > 0) {
       progress = (readPages / totalPages).clamp(0.0, 1.0);
     }
 
