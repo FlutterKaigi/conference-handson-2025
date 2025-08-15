@@ -1,7 +1,7 @@
-import 'package:conference_handson_2025/src/domain/model/reading_books_domain_model.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/model/reading_book_value_object.dart';
+import '../../../domain/model/reading_books_domain_model.dart';
 import '../../../domain/model/reading_books_value_object.dart';
 
 final NotifierProvider<ReadingBooksViewModel, ReadingBooksValueObject>

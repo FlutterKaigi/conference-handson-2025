@@ -5,7 +5,7 @@ import '../../../domain/model/reading_books_value_object.dart';
 import '../../../fundamental/debug/debug_logger.dart';
 import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
 import '../../../routing/app_router.dart';
-import '../../model/reading/reading_books_view_model.dart';
+import '../../model/default/reading_books_view_model.dart';
 
 class CurrentlyTasksWidget
     extends ConsumerStagedWidget<ReadingBooksValueObject, ScrollController> {

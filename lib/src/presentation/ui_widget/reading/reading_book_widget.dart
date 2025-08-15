@@ -1,12 +1,12 @@
-import 'package:conference_handson_2025/src/domain/model/reading_books_domain_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/model/reading_book_value_object.dart';
+import '../../../domain/model/reading_books_domain_model.dart';
 import '../../../fundamental/debug/debug_logger.dart';
 import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
-import '../../../presentation/model/reading/reading_books_view_model.dart';
+import '../../../presentation/model/default/reading_books_view_model.dart';
 
 class ReadingBookWidget
     extends ConsumerStagedWidget<ReadingBookValueObject, ReadingBookState> {
