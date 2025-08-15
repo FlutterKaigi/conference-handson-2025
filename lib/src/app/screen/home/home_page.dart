@@ -9,19 +9,6 @@ class HomePage extends ConsumerWidget {
   /// コンストラクタ
   const HomePage({super.key});
 
-  void _cycleAnimationType(WidgetRef ref) {
-    final SupportAnimationsViewModel vm = ref.read(
-      supportAnimationsProvider.notifier,
-    );
-    final AnimationTypeEnum currentType = vm.animationType;
-    final int nextTypeIndex =
-        (AnimationTypeEnum.values.indexOf(currentType) + 1) %
-        AnimationTypeEnum.values.length;
-    vm.updateAnimationType(
-      animationType: AnimationTypeEnum.values[nextTypeIndex],
-    );
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -46,11 +33,6 @@ class HomePage extends ConsumerWidget {
             provider: (WidgetRef ref) => ref.watch(supportAnimationsProvider),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _cycleAnimationType(ref),
-        tooltip: 'アニメーション切替 (デバッグ用)',
-        child: const Icon(Icons.animation),
       ),
     );
   }
