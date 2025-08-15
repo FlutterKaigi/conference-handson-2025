@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../domain/model/reading_books_domain_model.dart';
 import '../../../presentation/model/view_model_packages.dart';
 import '../../../presentation/ui_widget/widget_packages.dart';
+import '../../../routing/app_router.dart';
 
 class ReadingBookPage extends ConsumerWidget {
   /// コンストラクタ
@@ -19,6 +20,13 @@ class ReadingBookPage extends ConsumerWidget {
               ? '書籍の新規登録'
               : '書籍情報の編集',
         ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.pie_chart), // 円グラフアイコン
+            onPressed: context.goReadingGraph,
+            tooltip: 'グラフ',
+          ),
+        ],
       ),
       body: ReadingBookWidget(
         provider: (WidgetRef ref) =>
