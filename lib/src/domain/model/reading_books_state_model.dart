@@ -4,7 +4,11 @@ import 'reading_books_value_object.dart';
 
 /// アプリケーションスコープで共有される読書中書籍一覧の状態モデルクラス。
 class ReadingBooksState extends StateObject<ReadingBooksValueObject> {
-  ReadingBooksState();
+  ReadingBooksState({ReadingBooksValueObject? overrideValue})
+    : _overrideValue = overrideValue;
+
+  /// （オプション）テスト用初期状態値
+  late ReadingBooksValueObject? _overrideValue;
 
   late int _serialNumber;
   late ReadingBooksValueObject? _valueObject;
@@ -29,6 +33,14 @@ class ReadingBooksState extends StateObject<ReadingBooksValueObject> {
 
   @override
   void init() {
+    // 外部でテスト用初期状態値が指定されていた場合は、そちらを優先します。
+    if (_overrideValue != null) {
+      _serialNumber = 0;
+      update(_overrideValue!);
+      _overrideValue = null;
+      return;
+    }
+
     // 【注意】const 生成なので、readingBooks List は unmodifiable list になります。
     _valueObject = const ReadingBooksValueObject(
       stateType: ReadingBooksValueObject,

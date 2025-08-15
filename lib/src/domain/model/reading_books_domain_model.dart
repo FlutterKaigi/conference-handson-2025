@@ -50,10 +50,11 @@ enum ReadingBookEditMode {
 
 /// アプリケーションスコープで共有される読書中書籍一覧の状態を操作する Domainモデルクラス。
 class ReadingBooksDomainModel extends DomainObject<ReadingBooksState> {
-  /// デフォルト・コンストラクタ
-  ReadingBooksDomainModel() {
-    _stateModel = ReadingBooksState();
-  }
+  /// コンストラクタ
+  ///
+  /// - [overrideStateModel] : （オプション）テスト用の初期状態モデル
+  ReadingBooksDomainModel({ReadingBooksState? overrideStateModel})
+    : _stateModel = overrideStateModel ?? ReadingBooksState();
 
   /// 読書中書籍一覧・状態モデル
   late final ReadingBooksState _stateModel;
