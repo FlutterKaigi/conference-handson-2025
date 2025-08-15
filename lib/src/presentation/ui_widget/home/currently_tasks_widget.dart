@@ -30,6 +30,12 @@ class CurrentlyTasksWidget
   ScrollController? createWidgetState() => ScrollController();
 
   @override
+  // ignore: unnecessary_overrides
+  void initState(ScrollController? state) {
+    super.initState(state);
+  }
+
+  @override
   void disposeState(ScrollController? state) {
     state!.dispose();
     super.disposeState(state);
