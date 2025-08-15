@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import '../../fundamental/model/base_objects_model.dart';
 import '../../fundamental/model/equatable_utils.dart';
 
-/// プレゼンテーションスコープで UIと ViewModelとで共有される、カウンターの状態値(VO)となるクラス。
+/// カウンタ用の不変のカウント値を表す Value Object クラス。
 @immutable
 class CountValueObject extends ValueObject {
   const CountValueObject({

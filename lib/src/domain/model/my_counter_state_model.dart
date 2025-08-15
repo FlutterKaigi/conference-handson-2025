@@ -1,33 +1,36 @@
 import '../../fundamental/model/base_objects_model.dart';
+import 'my_counter_value_object.dart';
 
 /// アプリケーションスコープで共有されるカウンターの状態をカプセル化する状態モデルクラス。
-class CountState extends StateObject<int> {
+class CountState extends StateObject<CountValueObject> {
   CountState();
 
   late int _serialNumber;
-  late int? _value;
+  late CountValueObject? _valueObject;
 
   @override
   int get serialNumber => _serialNumber;
 
   @override
-  int get value => _value!;
+  CountValueObject get valueObject => _valueObject!;
+
+  int get count => _valueObject!.count;
 
   @override
   void init() {
-    _value = 0;
+    _valueObject = const CountValueObject(stateType: int, count: 0);
     _serialNumber = 0;
   }
 
   @override
   void dispose() {
-    _value = 0;
+    _valueObject = null;
     _serialNumber = 0;
   }
 
   @override
-  void update(int value) {
-    _value = value;
+  void update(CountValueObject value) {
+    _valueObject = value;
     _serialNumber++;
   }
 }

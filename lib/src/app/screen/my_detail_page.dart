@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../presentation/model/my_counter_value_object.dart';
+import '../../domain/model/my_counter_value_object.dart';
 import '../../presentation/model/my_counter_view_model.dart';
 
 const Key detailPageCountKey = Key('detail_count');
