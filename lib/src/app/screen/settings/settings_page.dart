@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../presentation/model/default/reading_books_view_model.dart';
-import '../../../presentation/ui_widget/settings/reading_book_settings_widget.dart';
+import '../../../presentation/model/view_model_packages.dart';
+import '../../../presentation/ui_widget/widget_packages.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({super.key});
