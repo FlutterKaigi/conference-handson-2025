@@ -5,7 +5,7 @@ import 'package:conference_handson_2025/src/domain/model/reading_books_state_mod
 import 'package:conference_handson_2025/src/domain/model/reading_books_value_object.dart';
 import 'package:conference_handson_2025/src/fundamental/debug/debug_logger.dart';
 import 'package:conference_handson_2025/src/fundamental/model/base_objects_model.dart';
-import 'package:conference_handson_2025/src/presentation/model/default/reading_books_view_model.dart';
+import 'package:conference_handson_2025/src/presentation/model/view_model_packages.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 

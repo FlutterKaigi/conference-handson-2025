@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
-import '../../model/default/support_animations_view_model.dart';
+import '../../../../fundamental/ui_widget/consumer_staged_widget.dart';
+import '../../../model/view_model_packages.dart';
 
 class SupportAnimationsWidget
     extends ConsumerStagedWidget<AnimationTypeEnum, Object> {

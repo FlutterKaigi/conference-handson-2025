@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../presentation/model/default/reading_books_view_model.dart';
-import '../../../presentation/model/default/support_animations_view_model.dart';
-import '../../../presentation/ui_widget/home/currently_tasks_widget.dart';
-import '../../../presentation/ui_widget/home/support_animations_widget.dart';
+import '../../../presentation/model/view_model_packages.dart';
+import '../../../presentation/ui_widget/widget_packages.dart';
 import '../../../routing/app_router.dart';
 
 class HomePage extends ConsumerWidget {
