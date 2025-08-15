@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../app/screen/home/home_page.dart';
 import '../app/screen/reading/reading_book_page.dart';
+import '../app/screen/reading_graph/reading_graph_page.dart';
 import '../app/screen/settings/settings_page.dart';
 
 // アプリケーションのルートを定義
@@ -30,6 +31,15 @@ final GoRouter appRouter = GoRouter(
           builder: (BuildContext context, GoRouterState state) {
             return const ReadingBookPage();
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: AppRoutes.readingGraph.path,
+              name: AppRoutes.readingGraph.name, // ルート名
+              builder: (BuildContext context, GoRouterState state) {
+                return const ReadingBookGraphPage();
+              },
+            ),
+          ],
         ),
       ],
     ),
@@ -47,6 +57,8 @@ extension AppRouterExtension on BuildContext {
 
   void goReadingBook() => goNamed(AppRoutes.readingBook.name);
 
+  void goReadingGraph() => goNamed(AppRoutes.readingGraph.name);
+
   // パラメータを伴う画面遷移の場合の例 (今回は不要)
   // void goUserDetails(String userId) =>
   //   goNamed('userDetails', params: {'userId': userId});
@@ -56,7 +68,8 @@ extension AppRouterExtension on BuildContext {
 enum AppRoutes {
   home('/'),
   settings('/settings'),
-  readingBook('/reading_book');
+  readingBook('/reading_book'),
+  readingGraph('/reading_book/graph');
 
   const AppRoutes(this.path);
 
