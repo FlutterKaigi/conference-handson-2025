@@ -35,10 +35,10 @@ AI Agent の教本となるプロジェクトコードがない状況で、独�
 コードファイル [lib/src/presentation/model/reading/reading_book_value_object.dart](../lib/src/presentation/model/reading/reading_book_value_object.dart) として追加して、
 
 さらに`読書中書籍一覧`を管理する ViewModel として
-[ReadingBooksViewModel](../lib/src/presentation/model/reading/reading_books_view_model.dart) も手動作成し、  
+[ReadingBooksViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) も手動作成し、  
 これらの ViewModel とValueObject が `riverpod - WidgetRef` を用いてグローバルに参照できるよう、  
 `readingBooksProvider` ⇒ `riverpod - NotifierProvider` の手動作成および、
-コードファイル [lib/src/presentation/model/reading/reading_books_view_model.dart](../lib/src/presentation/model/reading/reading_books_view_model.dart) の追加まで行っています。
+コードファイル [lib/src/presentation/model/reading/reading_books_view_model.dart](../lib/src/presentation/model/default/reading_books_view_model.dart) の追加まで行っています。
 
 これらにより `CurrentlyTasksWidget` は、[ConsumerStagedWidget](../lib/src/fundamental/ui_widget/consumer_staged_widget.dart) 派生にリライトされ、  
 `HomePage` ウイジェットも `riverpod - ConsumerWidget` 派生に手動リライトしています。

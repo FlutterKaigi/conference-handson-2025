@@ -1,9 +1,8 @@
-import 'package:conference_handson_2025/src/domain/model/reading_books_state_model.dart';
-import 'package:conference_handson_2025/src/presentation/model/reading/reading_books_view_model.dart';
-
 import '../../application/model/application_model.dart';
 import '../../fundamental/model/base_objects_model.dart';
+import '../../presentation/model/default/reading_books_view_model.dart';
 import 'reading_book_value_object.dart';
+import 'reading_books_state_model.dart';
 
 /// アプリ内共有の カウンター ドメインモデルオブジェクト
 ReadingBooksDomainModel? _readingBooksDomainModel;

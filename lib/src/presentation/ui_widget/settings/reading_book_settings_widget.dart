@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../domain/model/reading_book_value_object.dart';
 import '../../../fundamental/ui_widget/consumer_staged_widget.dart';
-import '../../model/reading/reading_books_view_model.dart';
+import '../../model/default/reading_books_view_model.dart';
 
 class ReadingBookSettingsWidget
     extends ConsumerStagedWidget<Object?, ReadingBookSettingsState> {
