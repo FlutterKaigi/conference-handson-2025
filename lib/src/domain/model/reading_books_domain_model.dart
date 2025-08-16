@@ -4,10 +4,10 @@ import '../../presentation/model/default/reading_books_view_model.dart';
 import 'reading_book_value_object.dart';
 import 'reading_books_state_model.dart';
 
-/// アプリ内共有の カウンター ドメインモデルオブジェクト
+/// アプリ内共有の 読書中書籍一覧 ドメインモデルオブジェクト
 ReadingBooksDomainModel? _readingBooksDomainModel;
 
-/// カウンタ用の Notifier ⇒ ViewModel からしかドメインモデルにアクセスできないよう制限する。
+/// 読書中書籍一覧 Notifier ⇒ ViewModel からしかドメインモデルにアクセスできないよう制限する。
 ReadingBooksDomainModel readingBooksDomainModelProvider(
   Object approver, {
   ModelCycle cycle = ModelCycle.get,
