@@ -7,7 +7,6 @@ import 'reading_book_value_object.dart';
 /// 読書中書籍一覧の状態値(VO)を表す Value Object 不変クラス。
 @immutable
 class ReadingBooksValueObject extends ValueObject {
-  //FIXME start Step.4
   const ReadingBooksValueObject({
     required super.stateType,
     required this.readingBooks,
