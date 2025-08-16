@@ -27,14 +27,12 @@ class _ToggleSwitchState extends State<ToggleSwitch> {
   @override
   void initState() {
     super.initState();
-    widget.viewModel._updateState = () {
-      setState(() {});
-    };
+    widget.viewModel._bindUpdateState(() => setState(() {}));
   }
 
   @override
   void dispose() {
-    widget.viewModel._updateState = null;
+    widget.viewModel._unbindUpdateState();
     super.dispose();
   }
 
@@ -53,30 +51,80 @@ class ToggleSwitchViewModel {
   /// コンストラクタ
   /// - [initValue] : トグルスイッチ初期値
   /// - [updateHandler] : トグルスイッチ・イベントハンドラ関数
+  /// - [onBinde] : （オプション）トグルスイッチ・バインド通知関数
+  /// - [onUnBinde] : （オプション）トグルスイッチ・アンバインド通知関数
   ToggleSwitchViewModel({
-    required this.initValue,
+    required bool initValue,
     required UpdateToggleSwitchState updateHandler,
-  }) : _updateHandler = updateHandler;
+    void Function()? onBinde,
+    void Function()? onUnBinde,
+  }) : _isEnable = initValue,
+       _updateHandler = updateHandler,
+       _onBinde = onBinde,
+       _onUnBinde = onUnBinde;
 
   final UpdateToggleSwitchState _updateHandler;
+
+  /// トグルスイッチ状態値の更新関数バインド
+  ///
+  /// _このメソッドは、_ToggleSwitchState からコールされます。_
+  void _bindUpdateState(void Function() updateState) {
+    _updateState = updateState;
+    _onBinde?.call();
+  }
+
+  /// トグルスイッチ状態値の更新関数アンバインド
+  ///
+  /// _このメソッドは、_ToggleSwitchState からコールされます。_
+  void _unbindUpdateState() {
+    _updateState = null;
+    _onUnBinde?.call();
+  }
+
+  final void Function()? _onBinde;
+
+  final void Function()? _onUnBinde;
+
+  /// トグルスイッチ表示・アップデート関数
+  ///
+  /// - _ToggleSwitchState から、
+  /// [_bindUpdateState] がコールされることににより
+  /// setState 関数コールがバインドされます。
+  ///
+  /// - _ToggleSwitchState から、
+  /// [_unbindUpdateState] がコールされることにより
+  /// setState 関数コールがアンバインドされます。
+  ///
+  /// **【注意事項】**<br/>
+  /// _「関心の分離」原則では、View は ViewModel をバインドし、
+  /// ViewModel よりも長命であり、ViewModel にアクセスや操作ができるとします。_
+  ///
+  /// _ですが「関心の分離」原則では、 ViewModel は、
+  /// View の存在を関知しない（アクセスや操作ができない）を原則とします。_
+  ///
+  /// _**この TogleSwitch カスタム UI 関数は、内部処理を見せるための学習用です。**_
+  ///
+  /// _ViewModel が View の setState 関数を保持することは、アクセスの逸脱であり、
+  /// コールバック（制御の反転）の利用は、操作の逸脱をしていることに注意下さい。_
+  ///
   void Function()? _updateState;
 
-  /// 初期値
-  final bool initValue;
-
-  bool _isEnable = false;
+  bool _isEnable;
 
   /// トグルスイッチ値
   bool get isEnable => _isEnable;
+
+  /// ViewModel と Widget がバインド中か否かのフラグ
+  bool get isBinding => _updateState != null;
 
   /// トグルスイッチ・イベントハンドラ
   ///
   ///  _スイッチ切り替え時に実行させたい関数を定義して下さい。_
   // ignore: avoid_positional_boolean_parameters,
   bool _update(bool value) {
-    _isEnable = _updateHandler(value: value, updateState: updateState);
+    _updateHandler(value: value, updateState: updateState);
     _updateState?.call();
-    return _isEnable;
+    return _isEnable = value;
   }
 
   /// トグルスイッチ状態値・アップデート
@@ -91,9 +139,8 @@ class ToggleSwitchViewModel {
 /// - [value] : カレント・トグルスイッチ状態値
 /// - [updateState] : トグルスイッチ状態値・アップデート関数<br/>
 ///   トグルスイッチ状態値の表示を変えたいときに利用して下さい。
-/// - 返却値 : 表示させたいトグルスイッチの状態値を返してください。
 typedef UpdateToggleSwitchState =
-    bool Function({
+    void Function({
       required bool value,
       required void Function({required bool value}) updateState,
     });
