@@ -67,14 +67,13 @@ class SupportAnimationsViewModel extends Notifier<AnimationTypeEnum> {
           required void Function({required bool value}) updateState,
         }) {
           if (value) {
-            // 30秒後にイベントを発行してフラグを OFF にします。
+            // 10秒後にイベントを発行してフラグを OFF にします。
             Timer(const Duration(seconds: 10), () {
               // FIXME アニメーション種類を増やし、表示パターンを増やすこと。
               _updateAnimationType(animationType: AnimationTypeEnum.cheer);
               updateState(value: !value);
             });
           }
-          return value;
         },
   );
 
@@ -90,14 +89,13 @@ class SupportAnimationsViewModel extends Notifier<AnimationTypeEnum> {
           required void Function({required bool value}) updateState,
         }) {
           if (value) {
-            // 30秒後にイベントを発行してフラグを OFF にします。
+            // 10秒後にイベントを発行してフラグを OFF にします。
             Timer(const Duration(seconds: 10), () {
               // FIXME アニメーション種類を増やし、表示パターンを増やすこと。
               _updateAnimationType(animationType: AnimationTypeEnum.scolding);
               updateState(value: !value);
             });
           }
-          return value;
         },
   );
 }
