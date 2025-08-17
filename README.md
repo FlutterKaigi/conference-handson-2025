@@ -103,7 +103,7 @@ Android Studio の Flutter/Dart 関連の設定を行います。
 Flutter lint は、analysis_options.yaml に設定されたルールに従いますが、  
 このルールは、dart format コマンドでフォーマットされたコードを想定しており、  
 現在の dart format コマンドは、フォーマット桁数を 80 に限定しているため 80桁に指定します。  
-将来の Dart 3.7 からは、analysis_options.yaml に format: セクションが追加され、  
+Dart 3.7 からは、analysis_options.yaml に format: セクションが追加され、  
 フォーマット桁数の指定ができるようになっています。
 
 
