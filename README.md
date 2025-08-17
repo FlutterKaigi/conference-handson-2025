@@ -33,9 +33,9 @@ riverpod で状態値のグローバルアクセスおよび UI更新を行い�
 ### Flutter/Dart バージョン
 - Flutter stable 3.32.8
     - Channel stable
-- Dart stable 3.8.1
-    - Dart SDK version: 3.9.1 (stable)  
-- DevTools 2.45.1
+- Dart stable 3.9.0
+    - Dart SDK version: 3.35.1 (stable)  
+- DevTools 2.48.0
 
 ### fvm
 このプロジェクトでは、Flutter SDK バージョンを統一するため `fvm` を利用しています。
@@ -105,6 +105,59 @@ Flutter lint は、analysis_options.yaml に設定されたルールに従いま
 現在の dart format コマンドは、フォーマット桁数を 80 に限定しているため 80桁に指定します。  
 将来の Dart 3.7 からは、analysis_options.yaml に format: セクションが追加され、  
 フォーマット桁数の指定ができるようになります。
+
+
+### Gemini CLI 設定
+Flutter 3.35 / Dart 3.9 から、`Dart and MCP Server` が利用できるようになりました。  
+`Dart and Flutter MCP Server`、Dartと Flutterの開発ツールのアクションを AIアシスタントクライアントに公開します。  
+そこでプロジェクトで `Gemini CLI`から `Dart and Flutter MCP Server`を使って開発アシストができるようにします。
+
+- Flutter のバージョンを 3.35 以上にする。  
+  プロジェクト内の .fvmrc 設定を 3.55 以上に更新しています。
+```json
+{
+  "flutter": "3.35.1"
+}
+
+```
+
+- Gemini CLI 最新バージョンのインストール（および更新）は、  
+  npx や npm ツールが使えるのであれば、以下の何れかのコマンドでできます。  
+  `$ npx @google/gemini-cli`   
+  `$ npm install -g @google/gemini-cli@latest`
+
+- ローカルプロジェクト内で `Dart and Flutter MCP Server` + `Gemini CLI` を利用するには、  
+  プロジェクト内の `.gemini/settings.json` ファイルに Dart and Flutter MCP サーバーを追加しています。
+```json
+{
+  "mcpServers": {
+    "dart": {
+      "command": "dart",
+      "args": [
+        "mcp-server",
+        "--experimental-mcp-server"
+      ]
+    }
+  }
+}
+
+```
+
+
+**参考資料**  
+
+- Dart and Flutter MCP サーバー
+    - [Dart and Flutter MCP server](https://dart.dev/tools/mcp-server)  
+      [https://dart.dev/tools/mcp-server](https://dart.dev/tools/mcp-server)
+
+- Gemini CLI インストール
+    - [Quick Install](https://github.com/google-gemini/gemini-cli/tree/main?tab=readme-ov-file#quick-install)  
+      [https://github.com/google-gemini/gemini-cli/tree/main?tab=readme-ov-file#quick-install](https://github.com/google-gemini/gemini-cli/tree/main?tab=readme-ov-file#quick-install)
+
+- Gemini CLI で Dart and Flutter MCP サーバを利用する設定
+    - [MCP servers with the Gemini CLI - How to set up your MCP server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)  
+      [https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)
+
 
 ## プロジェクトリポジトリの設定について
 - デフォルトブランチは、`develop`となっています。
