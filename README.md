@@ -104,7 +104,7 @@ Flutter lint は、analysis_options.yaml に設定されたルールに従いま
 このルールは、dart format コマンドでフォーマットされたコードを想定しており、  
 現在の dart format コマンドは、フォーマット桁数を 80 に限定しているため 80桁に指定します。  
 将来の Dart 3.7 からは、analysis_options.yaml に format: セクションが追加され、  
-フォーマット桁数の指定ができるようになります。
+フォーマット桁数の指定ができるようになっています。
 
 
 ### Gemini CLI 設定
@@ -112,19 +112,7 @@ Flutter 3.35 / Dart 3.9 から、`Dart and MCP Server` が利用できるよう�
 `Dart and Flutter MCP Server`、Dartと Flutterの開発ツールのアクションを AIアシスタントクライアントに公開します。  
 そこでプロジェクトで `Gemini CLI`から `Dart and Flutter MCP Server`を使って開発アシストができるようにします。
 
-- Flutter のバージョンを 3.35 以上にする。  
-  プロジェクト内の .fvmrc 設定を 3.55 以上に更新しています。
-```json
-{
-  "flutter": "3.35.1"
-}
-
-```
-
-- Gemini CLI 最新バージョンのインストール（および更新）は、  
-  npx や npm ツールが使えるのであれば、以下の何れかのコマンドでできます。  
-  `$ npx @google/gemini-cli`   
-  `$ npm install -g @google/gemini-cli@latest`
+- Flutter のバージョンを 3.35 以上にするため、プロジェクト内の .fvmrc 設定を 3.35 以上にしています。  
 
 - ローカルプロジェクト内で `Dart and Flutter MCP Server` + `Gemini CLI` を利用するには、  
   プロジェクト内の `.gemini/settings.json` ファイルに Dart and Flutter MCP サーバーを追加しています。
@@ -142,6 +130,12 @@ Flutter 3.35 / Dart 3.9 から、`Dart and MCP Server` が利用できるよう�
 }
 
 ```
+
+- Gemini CLI 最新バージョンのインストール（および更新）は、  
+  npx や npm ツールが使えるのであれば、以下の何れかのコマンドでできます。  
+  `$ npx @google/gemini-cli`   
+  `$ npm install -g @google/gemini-cli@latest`
+
 
 
 **参考資料**  
