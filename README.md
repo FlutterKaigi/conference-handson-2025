@@ -31,10 +31,10 @@ riverpod で状態値のグローバルアクセスおよび UI更新を行い�
   _Version 16.2_
 
 ### Flutter/Dart バージョン
-- Flutter stable 3.32.8
+- Flutter stable 3.35.1
     - Channel stable
 - Dart stable 3.9.0
-    - Dart SDK version: 3.35.1 (stable)  
+    - Dart SDK version: 3.9.0 (stable)  
 - DevTools 2.48.0
 
 ### fvm
