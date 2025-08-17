@@ -110,7 +110,7 @@ Dart 3.7 からは、analysis_options.yaml に format: セクションが追加�
 ### Gemini CLI 設定
 Flutter 3.35 / Dart 3.9 から、`Dart and MCP Server` が利用できるようになりました。  
 `Dart and Flutter MCP Server`は、Dartと Flutterの開発ツールのアクションを AIアシスタントに公開します。  
-そこでプロジェクトで `Gemini CLI`から `Dart and Flutter MCP Server`を使えるようにします。
+そこで開発支援のためにプロジェクトで `Gemini CLI`から `Dart and Flutter MCP Server`を使えるようにします。
 
 - Flutter のバージョンを 3.35 以上にするため、プロジェクト内の .fvmrc 設定を 3.35 以上にしています。  
 
