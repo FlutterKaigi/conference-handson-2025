@@ -51,17 +51,17 @@ class ToggleSwitchViewModel {
   /// コンストラクタ
   /// - [initValue] : トグルスイッチ初期値
   /// - [updateHandler] : トグルスイッチ・イベントハンドラ関数
-  /// - [onBinde] : （オプション）トグルスイッチ・バインド通知関数
-  /// - [onUnBinde] : （オプション）トグルスイッチ・アンバインド通知関数
+  /// - [onBind] : （オプション）トグルスイッチ・バインド通知関数
+  /// - [onUnBind] : （オプション）トグルスイッチ・アンバインド通知関数
   ToggleSwitchViewModel({
     required bool initValue,
     required UpdateToggleSwitchState updateHandler,
-    void Function()? onBinde,
-    void Function()? onUnBinde,
+    void Function()? onBind,
+    void Function()? onUnBind,
   }) : _isEnable = initValue,
        _updateHandler = updateHandler,
-       _onBinde = onBinde,
-       _onUnBinde = onUnBinde;
+       _onBind = onBind,
+       _onUnBind = onUnBind;
 
   final UpdateToggleSwitchState _updateHandler;
 
@@ -70,7 +70,7 @@ class ToggleSwitchViewModel {
   /// _このメソッドは、_ToggleSwitchState からコールされます。_
   void _bindUpdateState(void Function() updateState) {
     _updateState = updateState;
-    _onBinde?.call();
+    _onBind?.call();
   }
 
   /// トグルスイッチ状態値の更新関数アンバインド
@@ -78,12 +78,12 @@ class ToggleSwitchViewModel {
   /// _このメソッドは、_ToggleSwitchState からコールされます。_
   void _unbindUpdateState() {
     _updateState = null;
-    _onUnBinde?.call();
+    _onUnBind?.call();
   }
 
-  final void Function()? _onBinde;
+  final void Function()? _onBind;
 
-  final void Function()? _onUnBinde;
+  final void Function()? _onUnBind;
 
   /// トグルスイッチ表示・アップデート関数
   ///
@@ -102,7 +102,7 @@ class ToggleSwitchViewModel {
   /// _ですが「関心の分離」原則では、 ViewModel は、
   /// View の存在を関知しない（アクセスや操作ができない）を原則とします。_
   ///
-  /// _**この TogleSwitch カスタム UI 関数は、内部処理を見せるための学習用です。**_
+  /// _**この ToggleSwitch カスタム UI 関数は、内部処理を見せるための学習用です。**_
   ///
   /// _ViewModel が View の setState 関数を保持することは、アクセスの逸脱であり、
   /// コールバック（制御の反転）の利用は、操作の逸脱をしていることに注意下さい。_
