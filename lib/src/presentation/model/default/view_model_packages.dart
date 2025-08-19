@@ -1,4 +1,3 @@
 // UI ViewModel として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
-
-// デフォルト設定 （ViewModel）
-export 'default/view_model_packages.dart';
+export 'reading_books_view_model.dart';
+export 'support_animations_view_model.dart';
