@@ -206,14 +206,14 @@ class _ProgressDonutWidgetState extends State<_ProgressDonutWidget>
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      child: AnimatedBuilder(
-        animation:
-            widget.state.progressController ??
-            const AlwaysStoppedAnimation<double>(0),
-        builder: (BuildContext context, Widget? child) {
-          return Container(
+    return AnimatedBuilder(
+      animation:
+          widget.state.progressController ??
+          const AlwaysStoppedAnimation<double>(0),
+      builder: (BuildContext context, Widget? child) {
+        return GestureDetector(
+          onTap: widget.onTap,
+          child: Container(
             width: 280,
             height: 280,
             decoration: BoxDecoration(
@@ -262,9 +262,9 @@ class _ProgressDonutWidgetState extends State<_ProgressDonutWidget>
                 _buildCenterContent(),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 
