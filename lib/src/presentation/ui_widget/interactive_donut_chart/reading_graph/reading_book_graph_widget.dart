@@ -9,7 +9,7 @@ import '../../../../domain/model/reading_book_value_object.dart';
 import '../../../../fundamental/ui_widget/consumer_staged_widget.dart';
 
 class ReadingBookGraphWidget
-    extends ConsumerStagedWidget<ReadingBookValueObject, ProgressDonutState> {
+    extends ConsumerStagedWidget<ReadingBookValueObject, DonutAnimationState> {
   const ReadingBookGraphWidget({
     required super.provider,
     super.builders,
@@ -18,17 +18,17 @@ class ReadingBookGraphWidget
   });
 
   @override
-  ProgressDonutState? createWidgetState() {
-    return ProgressDonutState();
+  DonutAnimationState? createWidgetState() {
+    return DonutAnimationState();
   }
 
   @override
-  void disposeState(ProgressDonutState? state) {
+  void disposeState(DonutAnimationState? state) {
     // disposeは_ProgressDonutWidgetStateで行う
     super.disposeState(state);
   }
 
-  void _onDonutTap(ProgressDonutState state) {
+  void _onDonutTap(DonutAnimationState state) {
     state.triggerPulseAnimation();
     unawaited(HapticFeedback.lightImpact());
   }
@@ -38,9 +38,9 @@ class ReadingBookGraphWidget
     BuildContext context,
     WidgetRef ref,
     ReadingBookValueObject value,
-    ProgressDonutState? state,
+    DonutAnimationState? state,
   ) {
-    final ProgressDonutState controllers = state!;
+    final DonutAnimationState controllers = state!;
     final double progress = value.totalPages > 0
         ? (value.readingPageNum / value.totalPages).clamp(0.0, 1.0)
         : 0.0;
@@ -166,7 +166,13 @@ class ReadingBookGraphWidget
   }
 }
 
-// Progress Donut Widget with proper animations
+/// ドーナツチャートのアニメーション描画ウィジェット
+/// 
+/// このウィジェットは進捗のアニメーション表示を担当します：
+/// 1. AnimatedBuilderで AnimationController の変化を監視
+/// 2. GestureDetector でタップイベントをハンドリング
+/// 3. CustomPaint でドーナツチャートを描画
+/// 4. 中央部分で進捗状態を表示（完了時は祝福メッセージ）
 class _ProgressDonutWidget extends StatefulWidget {
   const _ProgressDonutWidget({
     required this.state,
@@ -174,7 +180,7 @@ class _ProgressDonutWidget extends StatefulWidget {
     required this.onTap,
   });
 
-  final ProgressDonutState state;
+  final DonutAnimationState state;
   final ReadingBookValueObject value;
   final VoidCallback onTap;
 
@@ -186,7 +192,7 @@ class _ProgressDonutWidget extends StatefulWidget {
     super.debugFillProperties(properties);
     properties.add(ObjectFlagProperty<VoidCallback>.has('onTap', onTap));
     properties.add(DiagnosticsProperty<ReadingBookValueObject>('value', value));
-    properties.add(DiagnosticsProperty<ProgressDonutState>('state', state));
+    properties.add(DiagnosticsProperty<DonutAnimationState>('state', state));
   }
 }
 
@@ -206,11 +212,21 @@ class _ProgressDonutWidgetState extends State<_ProgressDonutWidget>
 
   @override
   Widget build(BuildContext context) {
+    // AnimatedBuilder: Flutterアニメーションの描画連携コンポーネント
+    // 
+    // 動作の仕組み：
+    // 1. AnimationController.forward() → 0.0から1.0まで時間経過で値が変化
+    // 2. Tween.animate() → コントローラー値をbegin〜endの範囲にマッピング
+    // 3. AnimatedBuilder → アニメーション値変化を検知してbuilderを再実行
+    // 4. CustomPaint → 新しい進捗値でCanvas描画を更新
+    // 
+    // 結果：60FPSで滑らかにドーナツが伸びるアニメーション
     return AnimatedBuilder(
       animation:
           widget.state.progressController ??
           const AlwaysStoppedAnimation<double>(0),
       builder: (BuildContext context, Widget? child) {
+        // GestureDetector: タップイベントを検知してパルスアニメーションを発火
         return GestureDetector(
           onTap: widget.onTap,
           child: Container(
@@ -231,7 +247,7 @@ class _ProgressDonutWidgetState extends State<_ProgressDonutWidget>
             child: Stack(
               alignment: Alignment.center,
               children: <Widget>[
-                // Background glow effect
+                // 背景のグロー効果: ドーナツチャートに奥行きと視覚的魅力を追加
                 Container(
                   width: 280,
                   height: 280,
@@ -248,17 +264,18 @@ class _ProgressDonutWidgetState extends State<_ProgressDonutWidget>
                   ),
                 ),
 
-                // Main donut chart
+                // メインのドーナツチャート描画
+                // CustomPaint: Canvasに直接描画して高パフォーマンスなアニメーションを実現
                 CustomPaint(
                   size: const Size(280, 280),
                   painter: ProgressDonutPainter(
-                    progress: widget.state.animatedProgress,
-                    pulseValue: widget.state.pulseValue,
+                    progress: widget.state.animatedProgress, // アニメーション中の進捗値
+                    pulseValue: widget.state.pulseValue,     // タップ時のパルス効果
                     colorScheme: Theme.of(context).colorScheme,
                   ),
                 ),
 
-                // Center content
+                // 中央コンテンツ: 残りページ数または完了メッセージを表示
                 _buildCenterContent(),
               ],
             ),
@@ -329,47 +346,100 @@ class _ProgressDonutWidgetState extends State<_ProgressDonutWidget>
   }
 }
 
-// Progress Donut State with proper progress animation
-class ProgressDonutState {
+/// ドーナツチャートアニメーション状態管理クラス
+/// 
+/// このクラスはアニメーション関連の状態とロジックを管理します：
+/// - AnimationController: アニメーションの制御（開始/停止/リセット）
+/// - Animation`<double>`: 実際のアニメーション値（0.0〜1.0の進捗）
+/// - パルスアニメーション: タップ時の視覚的フィードバック
+/// - dispose管理: メモリリークを防ぐためのリソース解放
+class DonutAnimationState {
+  /// 進捗アニメーションを制御するAnimationController
   AnimationController? progressController;
+  
+  /// 0.0から目標値までの進捗アニメーション
   Animation<double>? progressAnimation;
+  
+  /// dispose済みかどうかのフラグ（重複dispose防止）
   bool _isDisposed = false;
 
+  /// アニメーションの目標進捗値（0.0〜1.0）
   double targetProgress = 0;
+  
+  /// 現在の進捗値（アニメーション前の値）
   double progressValue = 0;
+  
+  /// タップ時のパルス効果の強度（0.0〜1.0）
   double pulseValue = 0;
 
+  /// 現在のアニメーション進捗値を取得（アニメーション中は動的な値、未初期化時は固定値）
+  /// 
+  /// Animation.value の取得タイミング：
+  /// - AnimationController.forward() 実行中 → 0.0〜1.0で時間変化
+  /// - Tween.animate() → コントローラー値をbegin〜endにマッピング
+  /// - 例：Tween(begin: 0.3, end: 0.7) + controller.value = 0.5 → 0.5の値を返す
   double get animatedProgress => progressAnimation?.value ?? progressValue;
 
+  /// アニメーションの初期化（TickerProviderを使ってAnimationControllerを作成）
+  /// 
+  /// Flutterアニメーションの基本構成要素：
+  /// 1. AnimationController: アニメーションの時間管理（duration, vsync）
+  /// 2. Tween: 値の変化範囲を定義（begin → end）
+  /// 3. CurvedAnimation: アニメーションカーブ（easeOutCubic = 滑らかに減速）
+  /// 4. TickerProvider: フレーム同期のためのvsync提供
   void initializeAnimations(TickerProvider vsync) {
+    // AnimationController: アニメーションの心臓部
+    // duration: アニメーション実行時間（2秒）
+    // vsync: 画面リフレッシュと同期してパフォーマンス向上
     progressController = AnimationController(
       duration: const Duration(milliseconds: 2000),
       vsync: vsync,
     );
 
+    // 初期のTween（0→0）を作成
+    // 実際の値は animateToProgress() で動的に再作成されます
     progressAnimation = Tween<double>(begin: 0, end: 0).animate(
-      CurvedAnimation(parent: progressController!, curve: Curves.easeOutCubic),
+      CurvedAnimation(
+        parent: progressController!,
+        curve: Curves.easeOutCubic, // 最初速く、だんだん遅くなる自然なカーブ
+      ),
     );
   }
 
+  /// 指定した進捗値まで滑らかにアニメーション
+  /// 2秒かけてeaseOutCubicカーブで進捗を更新
+  /// 
+  /// アニメーション実行の流れ：
+  /// 1. 新しいTweenを作成（現在値 → 目標値）
+  /// 2. CurvedAnimationでイージング適用
+  /// 3. AnimationController.reset()で初期状態にリセット
+  /// 4. AnimationController.forward()でアニメーション開始
   void animateToProgress(double progress) {
     if (targetProgress != progress && progressController != null) {
       targetProgress = progress;
 
-      // Create new animation from current value to target
-      progressAnimation = Tween<double>(begin: animatedProgress, end: progress)
-          .animate(
-            CurvedAnimation(
-              parent: progressController!,
-              curve: Curves.easeOutCubic,
-            ),
-          );
+      // Tween: アニメーション値の変化を定義
+      // begin: 現在のアニメーション値（連続性を保つため）
+      // end: 目標となる進捗値（0.0〜1.0）
+      progressAnimation = Tween<double>(
+        begin: animatedProgress, // 現在値から開始（スムーズな継続）
+        end: progress,           // 目標値まで
+      ).animate(
+        // CurvedAnimation: 線形変化を自然なカーブに変換
+        CurvedAnimation(
+          parent: progressController!,     // AnimationControllerと連携
+          curve: Curves.easeOutCubic,     // 滑らかに減速するカーブ
+        ),
+      );
 
-      progressController!.reset();
-      unawaited(progressController!.forward());
+      // アニメーション実行
+      progressController!.reset();    // 0.0からスタート
+      unawaited(progressController!.forward()); // 1.0まで進行
     }
   }
 
+  /// タップ時のパルスアニメーション（視覚的フィードバック）
+  /// 300ms間だけpulseValueを1.0にしてドーナツを強調表示
   void triggerPulseAnimation() {
     pulseValue = 1;
     unawaited(
@@ -379,6 +449,8 @@ class ProgressDonutState {
     );
   }
 
+  /// リソースの解放（AnimationControllerのdispose）
+  /// 重複dispose防止のため_isDisposedフラグで制御
   void dispose() {
     if (!_isDisposed && progressController != null) {
       progressController!.dispose();
@@ -387,7 +459,18 @@ class ProgressDonutState {
   }
 }
 
-// Custom Painter for the progress donut
+/// ドーナツチャート描画用のCustomPainter
+/// 
+/// CustomPainterを継承してCanvasに直接描画することで：
+/// - 高パフォーマンスなアニメーション描画を実現
+/// - 複雑な図形（ドーナツ、グロー、ドット）を自在に制御
+/// - shouldRepaintで再描画の最適化
+/// 
+/// 描画要素：
+/// 1. 背景円（グレーのアウトライン）
+/// 2. 進捗アーク（プライマリカラーの円弧）
+/// 3. グロー効果（ぼかしを使った発光表現）
+/// 4. 進捗ドット（円弧の終端にある動的な点）
 class ProgressDonutPainter extends CustomPainter {
   ProgressDonutPainter({
     required this.progress,
@@ -395,85 +478,102 @@ class ProgressDonutPainter extends CustomPainter {
     required this.colorScheme,
   });
 
+  /// アニメーション中の進捗値（0.0〜1.0）
   final double progress;
+  
+  /// タップ時のパルス効果強度（0.0〜1.0）
   final double pulseValue;
+  
+  /// Material Design 3のカラースキーム
   final ColorScheme colorScheme;
 
+  /// Canvas描画メソッド（アニメーション変更時に呼ばれる）
   @override
   void paint(Canvas canvas, Size size) {
-    final Offset center = Offset(size.width / 2, size.height / 2);
-    final double radius = math.min(size.width, size.height) / 2 - 20;
-    const double strokeWidth = 16;
+    // 描画の基本パラメータを計算
+    final Offset center = Offset(size.width / 2, size.height / 2); // 円の中心点
+    final double radius = math.min(size.width, size.height) / 2 - 20; // 半径
+    const double strokeWidth = 16; // ドーナツの太さ
 
-    // Background circle
+    // 1. 背景円の描画（グレーの薄いアウトライン）
     final Paint backgroundPaint = Paint()
-      ..color = colorScheme.outline.withValues(alpha: 0.2)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth
-      ..strokeCap = StrokeCap.round;
+      ..color = colorScheme.outline.withValues(alpha: 0.2) // 薄いグレー
+      ..style = PaintingStyle.stroke                        // 線だけ描画
+      ..strokeWidth = strokeWidth                           // 線の太さ
+      ..strokeCap = StrokeCap.round;                       // 線端を丸く
 
     canvas.drawCircle(center, radius, backgroundPaint);
 
-    // 進捗アーク（単色）
+    // 2. 進捗アークの描画（プライマリカラーで進捗を表現）
     if (progress > 0) {
       final Paint progressPaint = Paint()
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = strokeWidth + (pulseValue * 4)
-        ..strokeCap = StrokeCap.round
-        ..color = colorScheme.primary;
+        ..style = PaintingStyle.stroke                       // 線だけ描画
+        ..strokeWidth = strokeWidth + (pulseValue * 4)      // パルス時に太くなる
+        ..strokeCap = StrokeCap.round                        // 線端を丸く
+        ..color = colorScheme.primary;                       // プライマリカラー
 
-      // 進捗グロー効果
+      // 3. グロー効果の描画（発光するような視覚効果）
       final Paint glowPaint = Paint()
-        ..color = colorScheme.primary.withValues(alpha: 0.3 + pulseValue * 0.2)
-        ..style = PaintingStyle.stroke
-        ..strokeWidth = strokeWidth + 8
-        ..strokeCap = StrokeCap.round
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
+        ..color = colorScheme.primary.withValues(
+          alpha: 0.3 + pulseValue * 0.2,                    // パルス時に明るくなる
+        )
+        ..style = PaintingStyle.stroke                       // 線だけ描画
+        ..strokeWidth = strokeWidth + 8                      // メインより太い線
+        ..strokeCap = StrokeCap.round                        // 線端を丸く
+        ..maskFilter = const MaskFilter.blur(               // ぼかし効果
+          BlurStyle.normal, 
+          8,
+        );
 
-      // Draw glow first
+      // グロー効果を先に描画（下レイヤー）
       canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        -math.pi / 2,
-        2 * math.pi * progress,
-        false,
+        Rect.fromCircle(center: center, radius: radius),   // 描画範囲
+        -math.pi / 2,                                      // 開始角度（12時方向）
+        2 * math.pi * progress,                            // 進捗に応じた角度
+        false,                                             // 扇形ではなく弧
         glowPaint,
       );
 
-      // Draw main progress arc
+      // メインの進捗アークを描画（上レイヤー）
       canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        -math.pi / 2,
-        2 * math.pi * progress,
-        false,
+        Rect.fromCircle(center: center, radius: radius),   // 描画範囲
+        -math.pi / 2,                                      // 開始角度（12時方向）
+        2 * math.pi * progress,                            // 進捗に応じた角度
+        false,                                             // 扇形ではなく弧
         progressPaint,
       );
 
-      // 進捗インジケーター（ドット）
-      final double endAngle = -math.pi / 2 + 2 * math.pi * progress;
+      // 4. 進捗ドットの描画（円弧の終端にある動的な点）
+      final double endAngle = -math.pi / 2 + 2 * math.pi * progress; // 終端角度
       final Offset dotPosition = Offset(
-        center.dx + math.cos(endAngle) * radius,
-        center.dy + math.sin(endAngle) * radius,
+        center.dx + math.cos(endAngle) * radius,              // X座標
+        center.dy + math.sin(endAngle) * radius,              // Y座標
       );
 
       final Paint dotPaint = Paint()
-        ..color = colorScheme.primary
-        ..style = PaintingStyle.fill;
+        ..color = colorScheme.primary                         // プライマリカラー
+        ..style = PaintingStyle.fill;                        // 塗りつぶし
 
       canvas.drawCircle(dotPosition, 6 + pulseValue * 2, dotPaint);
 
-      // ドットグロー効果
+      // ドットのグロー効果（ドット周りの光る効果）
       final Paint dotGlowPaint = Paint()
-        ..color = colorScheme.primary.withValues(alpha: 0.4)
-        ..style = PaintingStyle.fill
-        ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4);
+        ..color = colorScheme.primary.withValues(alpha: 0.4) // 半透明
+        ..style = PaintingStyle.fill                          // 塗りつぶし
+        ..maskFilter = const MaskFilter.blur(                // ぼかし効果
+          BlurStyle.normal, 
+          4,
+        );
 
       canvas.drawCircle(dotPosition, 8 + pulseValue * 3, dotGlowPaint);
     }
   }
 
+  /// 再描画が必要かどうかを判定（パフォーマンス最適化）
+  /// progressまたはpulseValueが変化した時のみ再描画
   @override
   bool shouldRepaint(ProgressDonutPainter oldDelegate) {
-    return progress != oldDelegate.progress ||
-        pulseValue != oldDelegate.pulseValue;
+    return progress != oldDelegate.progress ||     // 進捗値が変化
+        pulseValue != oldDelegate.pulseValue;      // パルス値が変化
   }
 }
