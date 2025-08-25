@@ -53,6 +53,7 @@ class ReadingBookWidget
     BuildContext context,
     ReadingBookValueObject readingBook,
     ReadingBooksViewModel readingBooksViewModel,
+    SupportAnimationsViewModel supportAnimationsViewModel,
     ReadingBookState state,
   ) {
     if (state.formKey.currentState!.validate()) {
@@ -63,7 +64,10 @@ class ReadingBookWidget
       final int readingPageNum =
           int.tryParse(state.readingPageNumController.text) ?? 0;
       final String bookReview = state.bookReviewController.text;
+      final int prevReadingPageNum =
+          readingBooksViewModel.editedReadingBook?.readingPageNum ?? 0;
 
+      // 書籍情報を更新
       final ReadingBookValueObject editedReadingBook = readingBooksViewModel
           .updateReadingBook(
             name: name,
@@ -72,6 +76,12 @@ class ReadingBookWidget
             bookReview: bookReview,
           );
       readingBooksViewModel.commitReadingBook(editedReadingBook);
+
+      // 読書進捗率に変化があれば、アニメーションを表示させます。
+      supportAnimationsViewModel.updateAnimationTypeIfProgressChange(
+        updatedBook: editedReadingBook,
+        prevReadingPageNum: prevReadingPageNum,
+      );
 
       Navigator.pop(context, editedReadingBook); // 結果を前の画面に返す
     }
@@ -240,6 +250,9 @@ class ReadingBookWidget
     ReadingBookValueObject value,
     ReadingBookState? state,
   ) {
+    final SupportAnimationsViewModel animeVm = ref.read(
+      supportAnimationsProvider.notifier,
+    );
     final ReadingBooksViewModel vm = ref.read(readingBooksProvider.notifier);
     final ReadingBookState controllers = state!;
     final double progress = value.totalPages > 0
@@ -383,7 +396,8 @@ class ReadingBookWidget
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                  onPressed: () => _submitForm(context, value, vm, controllers),
+                  onPressed: () =>
+                      _submitForm(context, value, vm, animeVm, controllers),
                 ),
               ),
               if (vm.currentEditMode == ReadingBookEditMode.edit) ...<Widget>[
