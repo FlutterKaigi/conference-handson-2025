@@ -77,6 +77,74 @@ class SupportAnimationsWidget
     );
   }
 
+  @override
+  /// [AnimationTypeEnum.progressRate10] に対応した、デフォルトの build関数
+  Widget build4(
+    BuildContext context,
+    WidgetRef ref,
+    AnimationTypeEnum value,
+    Object? state,
+  ) {
+    final String title =
+        ref.read(readingBooksProvider.notifier).editedReadingBook?.name ?? '';
+    return _buildHelper(
+      context: context,
+      animationText: '$title 読了率 10%を達成しました！ 🔥',
+      animationColor: Colors.blue,
+    );
+  }
+
+  @override
+  /// [AnimationTypeEnum.progressRate50] に対応した、デフォルトの build関数
+  Widget build5(
+    BuildContext context,
+    WidgetRef ref,
+    AnimationTypeEnum value,
+    Object? state,
+  ) {
+    final String title =
+        ref.read(readingBooksProvider.notifier).editedReadingBook?.name ?? '';
+    return _buildHelper(
+      context: context,
+      animationText: '$title 読了率 50%を達成しました！ 🔥',
+      animationColor: Colors.blue,
+    );
+  }
+
+  @override
+  /// [AnimationTypeEnum.progressRate80] に対応した、デフォルトの build関数
+  Widget build6(
+    BuildContext context,
+    WidgetRef ref,
+    AnimationTypeEnum value,
+    Object? state,
+  ) {
+    final String title =
+        ref.read(readingBooksProvider.notifier).editedReadingBook?.name ?? '';
+    return _buildHelper(
+      context: context,
+      animationText: '$title 読了率 80%を達成しました！ 🔥',
+      animationColor: Colors.blue,
+    );
+  }
+
+  @override
+  /// [AnimationTypeEnum.progressRate100] に対応した、デフォルトの build関数
+  Widget build7(
+    BuildContext context,
+    WidgetRef ref,
+    AnimationTypeEnum value,
+    Object? state,
+  ) {
+    final String title =
+        ref.read(readingBooksProvider.notifier).editedReadingBook?.name ?? '';
+    return _buildHelper(
+      context: context,
+      animationText: '$title 読了おめでとうございます！ 🔥',
+      animationColor: Colors.blue,
+    );
+  }
+
   Widget _buildHelper({
     required BuildContext context,
     required String animationText,
