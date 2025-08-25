@@ -34,9 +34,15 @@ class ReadingBooksViewModel extends Notifier<ReadingBooksValueObject> {
   /// 編集モード
   ReadingBookEditMode get currentEditMode => _domainModel.currentEditMode;
 
-  /// 編集モード
+  /// 編集中書籍
   ReadingBookValueObject? get currentEditReadingBook =>
       _domainModel.currentEditReadingBook;
+
+  /// （ViewModel内部状態）編集済書籍
+  ReadingBookValueObject? _editedReadingBook;
+
+  /// （ViewModel内部状態）編集済書籍
+  ReadingBookValueObject? get editedReadingBook => _editedReadingBook;
 
   /// 編集モード・書籍選択
   void selectReadingBook({required int index}) =>
@@ -71,6 +77,7 @@ class ReadingBooksViewModel extends Notifier<ReadingBooksValueObject> {
   /// 編集モード・完了
   void commitReadingBook(ReadingBookValueObject readingBook) {
     _domainModel.commitReadingBook(readingBook);
+    _editedReadingBook = readingBook;
     // 【注意】エレガントではありませんが、
     // 　　　　ドメインモデルは、riverpod を関知していないので、
     // 　　　　ViewModel が riverpod state を更新して画面反映させること。
