@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math' as math;
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -41,6 +42,7 @@ class ReadingBookWidget
     BuildContext context,
     ReadingBookValueObject readingBook,
     ReadingBooksViewModel readingBooksViewModel,
+    SupportAnimationsViewModel supportAnimationsViewModel,
     ReadingBookState state,
   ) async {
     // Prevent button spam
@@ -60,6 +62,8 @@ class ReadingBookWidget
         final int readingPageNum =
             int.tryParse(state.readingPageNumController.text) ?? 0;
         final String bookReview = state.bookReviewController.text;
+        final int prevReadingPageNum =
+            readingBooksViewModel.editedReadingBook?.readingPageNum ?? 0;
 
         // Update data model
         final ReadingBookValueObject editedReadingBook = readingBooksViewModel
@@ -70,6 +74,12 @@ class ReadingBookWidget
               bookReview: bookReview,
             );
         readingBooksViewModel.commitReadingBook(editedReadingBook);
+
+        // 読書進捗率に変化があれば、アニメーションを表示させます。
+        supportAnimationsViewModel.updateAnimationTypeIfProgressChange(
+          updatedBook: editedReadingBook,
+          prevReadingPageNum: prevReadingPageNum,
+        );
 
         // Start morphing animation sequence
         await _performMorphingSequence(state);
@@ -314,6 +324,7 @@ class ReadingBookWidget
     BuildContext context,
     ReadingBookValueObject value,
     ReadingBooksViewModel vm,
+    SupportAnimationsViewModel animeVm,
     ReadingBookState state,
   ) {
     return _MorphingButtonStateful(
@@ -326,7 +337,7 @@ class ReadingBookWidget
             ReadingBookValueObject value,
             ReadingBooksViewModel vm,
             ReadingBookState state,
-          ) => _submitForm(context, value, vm, state),
+          ) => _submitForm(context, value, vm, animeVm, state),
       getButtonWidth: _getButtonWidth,
       getBorderRadius: _getBorderRadius,
       getButtonGradient: _getButtonGradient,
@@ -411,6 +422,9 @@ class ReadingBookWidget
     ReadingBookValueObject value,
     ReadingBookState? state,
   ) {
+    final SupportAnimationsViewModel animeVm = ref.read(
+      supportAnimationsProvider.notifier,
+    );
     final ReadingBooksViewModel vm = ref.read(readingBooksProvider.notifier);
     final ReadingBookState controllers = state!;
 
@@ -569,6 +583,7 @@ class ReadingBookWidget
                   context,
                   value,
                   vm,
+                  animeVm,
                   controllers,
                 ),
               ),
