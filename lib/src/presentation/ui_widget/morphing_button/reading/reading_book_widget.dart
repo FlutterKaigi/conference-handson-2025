@@ -12,6 +12,12 @@ import '../../../../fundamental/debug/debug_logger.dart';
 import '../../../../fundamental/ui_widget/consumer_staged_widget.dart';
 import '../../../model/view_model_packages.dart';
 
+/// 読書記録編集ウィジェット
+///
+/// このウィジェットは以下の機能を提供します：
+/// 1. 書籍情報の入力フォーム
+/// 2. モーフィングボタンによる保存アニメーション
+/// 3. 削除機能（編集モード時のみ）
 class ReadingBookWidget
     extends ConsumerStagedWidget<ReadingBookValueObject, ReadingBookState> {
   const ReadingBookWidget({
@@ -38,6 +44,13 @@ class ReadingBookWidget
     super.disposeState(state);
   }
 
+  /// フォーム送信処理のメインフロー
+  ///
+  /// 処理の流れ：
+  /// 1. バリデーション実行
+  /// 2. データの保存
+  /// 3. モーフィングアニメーション実行
+  /// 4. 画面遷移
   Future<void> _submitForm(
     BuildContext context,
     ReadingBookValueObject readingBook,
@@ -45,134 +58,194 @@ class ReadingBookWidget
     SupportAnimationsViewModel supportAnimationsViewModel,
     ReadingBookState state,
   ) async {
-    // Prevent button spam
+    // 連打防止処理
     if (state.isProcessing) {
       return;
     }
 
-    if (state.formKey.currentState!.validate()) {
-      state.formKey.currentState!.save();
-      state.isProcessing = true;
+    // バリデーションチェック
+    if (!state.formKey.currentState!.validate()) {
+      return;
+    }
 
-      try {
-        // Prepare data before animation
-        final String name = state.nameController.text;
-        final int totalPages =
-            int.tryParse(state.totalPagesController.text) ?? 0;
-        final int readingPageNum =
-            int.tryParse(state.readingPageNumController.text) ?? 0;
-        final String bookReview = state.bookReviewController.text;
-        final int prevReadingPageNum =
-            readingBooksViewModel.editedReadingBook?.readingPageNum ?? 0;
+    state.formKey.currentState!.save();
+    state.isProcessing = true;
 
-        // Update data model
-        final ReadingBookValueObject editedReadingBook = readingBooksViewModel
-            .updateReadingBook(
-              name: name,
-              totalPages: totalPages,
-              readingPageNum: readingPageNum,
-              bookReview: bookReview,
-            );
-        readingBooksViewModel.commitReadingBook(editedReadingBook);
+    try {
+      // Step 1: フォームデータの取得
+      final _FormData formData = _getFormData(state);
 
-        // 読書進捗率に変化があれば、アニメーションを表示させます。
-        supportAnimationsViewModel.updateAnimationTypeIfProgressChange(
-          updatedBook: editedReadingBook,
-          prevReadingPageNum: prevReadingPageNum,
-        );
+      // Step 2: データモデルの更新
+      final ReadingBookValueObject editedReadingBook = _updateBookData(
+        readingBooksViewModel,
+        formData,
+      );
 
-        // Start morphing animation sequence
-        await _performMorphingSequence(state);
+      // Step 3: 進捗アニメーションの更新
+      _updateProgressAnimation(
+        supportAnimationsViewModel,
+        editedReadingBook,
+        readingBooksViewModel.editedReadingBook?.readingPageNum ?? 0,
+      );
 
-        // Add transition delay for better visual feedback
-        await Future<void>.delayed(const Duration(milliseconds: 400));
+      // Step 4: ボタンのモーフィングアニメーション実行
+      await _performMorphingSequence(state);
 
-        // Navigate back after animation completes
-        if (context.mounted) {
-          Navigator.pop(context, editedReadingBook);
-        }
-      } finally {
-        // Always reset processing state
-        state.isProcessing = false;
+      // Step 5: 画面遷移
+      if (context.mounted) {
+        await _navigateBack(context, editedReadingBook);
       }
+    } finally {
+      state.isProcessing = false;
     }
   }
 
+  /// フォームデータの取得
+  _FormData _getFormData(ReadingBookState state) {
+    return _FormData(
+      name: state.nameController.text,
+      totalPages: int.tryParse(state.totalPagesController.text) ?? 0,
+      readingPageNum: int.tryParse(state.readingPageNumController.text) ?? 0,
+      bookReview: state.bookReviewController.text,
+    );
+  }
+
+  /// 読書データの更新と保存
+  ReadingBookValueObject _updateBookData(
+    ReadingBooksViewModel viewModel,
+    _FormData formData,
+  ) {
+    final ReadingBookValueObject editedBook = viewModel.updateReadingBook(
+      name: formData.name,
+      totalPages: formData.totalPages,
+      readingPageNum: formData.readingPageNum,
+      bookReview: formData.bookReview,
+    );
+    viewModel.commitReadingBook(editedBook);
+    return editedBook;
+  }
+
+  /// 進捗アニメーションの更新
+  void _updateProgressAnimation(
+    SupportAnimationsViewModel animationViewModel,
+    ReadingBookValueObject updatedBook,
+    int previousPageNum,
+  ) {
+    animationViewModel.updateAnimationTypeIfProgressChange(
+      updatedBook: updatedBook,
+      prevReadingPageNum: previousPageNum,
+    );
+  }
+
+  /// 画面遷移処理
+  Future<void> _navigateBack(
+    BuildContext context,
+    ReadingBookValueObject editedBook,
+  ) async {
+    await Future<void>.delayed(const Duration(milliseconds: 400));
+    if (context.mounted) {
+      Navigator.pop(context, editedBook);
+    }
+  }
+
+  /// モーフィングボタンのアニメーションシーケンス
+  ///
+  /// 3つのフェーズで構成：
+  /// Phase 1: ボタン押下アニメーション
+  /// Phase 2: ローディングアニメーション
+  /// Phase 3: 成功アニメーション
   Future<void> _performMorphingSequence(ReadingBookState state) async {
     try {
-      // Phase 1: Button press with sophisticated animation
-      state.currentMorphState = MorphingButtonState.pressed;
-      unawaited(HapticFeedback.lightImpact());
+      // Phase 1: ボタン押下アニメーション
+      await _animateButtonPress(state);
 
-      // Start morphing animation
-      if (state.morphingController != null) {
-        unawaited(state.morphingController!.forward());
-      }
+      // Phase 2: ローディングアニメーション
+      await _animateLoading(state);
 
-      // Press animation with haptic feedback
-      if (state.pressController != null) {
-        await state.pressController!.forward();
-        await Future<void>.delayed(const Duration(milliseconds: 100));
-        await state.pressController!.reverse();
-      } else {
-        await Future<void>.delayed(const Duration(milliseconds: 200));
-      }
-
-      // Phase 2: Morph to loading state with smooth transition
-      state.currentMorphState = MorphingButtonState.loading;
-
-      // Smooth morphing transition
-      if (state.morphingController != null) {
-        await state.morphingController!.forward();
-      }
-
-      // Start loading animation with ripple effects
-      if (state.loadingController != null) {
-        // Reset and start loading animation
-        state.loadingController!.reset();
-
-        // Create sophisticated loading sequence with ripples
-        unawaited(state.loadingController!.repeat());
-
-        // Simulate actual work with progress updates
-        for (int i = 0; i <= 100; i += 10) {
-          state.loadingProgress = i / 100.0;
-          await Future<void>.delayed(const Duration(milliseconds: 25));
-        }
-
-        // Stop loading animation
-        state.loadingController!.stop();
-      } else {
-        // Fallback loading with enhanced visual feedback
-        for (int i = 0; i <= 100; i += 10) {
-          state.loadingProgress = i / 100.0;
-          await Future<void>.delayed(const Duration(milliseconds: 25));
-        }
-      }
-
-      // Phase 3: Success state with celebration
-      state.currentMorphState = MorphingButtonState.success;
-      unawaited(HapticFeedback.mediumImpact());
-
-      // Success celebration animation
-      if (state.morphingController != null) {
-        // Quick bounce effect for success
-        await state.morphingController!.reverse();
-        await state.morphingController!.forward();
-      }
-
-      // Hold success state with glow effect - EXTENDED for visibility
-      await Future<void>.delayed(const Duration(milliseconds: 800));
+      // Phase 3: 成功アニメーション
+      await _animateSuccess(state);
     } finally {
-      // Reset all animation controllers to initial state
-      state.morphingController?.reset();
-      state.loadingController?.reset();
-      state.pressController?.reset();
-      state.loadingProgress = 0;
-      state.currentMorphState = MorphingButtonState.idle;
+      _resetAnimationState(state);
     }
   }
 
+  /// Phase 1: ボタン押下アニメーション
+  /// ボタンが押されたことを視覚的・触覚的にフィードバック
+  Future<void> _animateButtonPress(ReadingBookState state) async {
+    state.currentMorphState = MorphingButtonState.pressed;
+    unawaited(HapticFeedback.lightImpact()); // 軽い振動フィードバック
+
+    // モーフィング開始
+    if (state.morphingController != null) {
+      unawaited(state.morphingController!.forward());
+    }
+
+    // プレスアニメーション（押す→戻る）
+    if (state.pressController != null) {
+      await state.pressController!.forward();
+      await Future<void>.delayed(const Duration(milliseconds: 100));
+      await state.pressController!.reverse();
+    } else {
+      await Future<void>.delayed(const Duration(milliseconds: 200));
+    }
+  }
+
+  /// Phase 2: ローディングアニメーション
+  /// データ処理中を表現する回転アニメーション
+  Future<void> _animateLoading(ReadingBookState state) async {
+    state.currentMorphState = MorphingButtonState.loading;
+
+    // ボタンを円形に変形
+    if (state.morphingController != null) {
+      await state.morphingController!.forward();
+    }
+
+    // ローディングプログレス表示
+    await _showLoadingProgress(state);
+  }
+
+  /// ローディングプログレスの表示
+  Future<void> _showLoadingProgress(ReadingBookState state) async {
+    if (state.loadingController != null) {
+      state.loadingController!.reset();
+      unawaited(state.loadingController!.repeat());
+    }
+
+    // プログレスバーのアニメーション（0% → 100%）
+    for (int i = 0; i <= 100; i += 10) {
+      state.loadingProgress = i / 100.0;
+      await Future<void>.delayed(const Duration(milliseconds: 25));
+    }
+
+    state.loadingController?.stop();
+  }
+
+  /// Phase 3: 成功アニメーション
+  /// 処理完了を祝福するアニメーション
+  Future<void> _animateSuccess(ReadingBookState state) async {
+    state.currentMorphState = MorphingButtonState.success;
+    unawaited(HapticFeedback.mediumImpact()); // 中程度の振動フィードバック
+
+    // バウンス効果で成功を表現
+    if (state.morphingController != null) {
+      await state.morphingController!.reverse();
+      await state.morphingController!.forward();
+    }
+
+    // 成功状態を維持（視認性のため長めに表示）
+    await Future<void>.delayed(const Duration(milliseconds: 800));
+  }
+
+  /// アニメーション状態のリセット
+  void _resetAnimationState(ReadingBookState state) {
+    state.morphingController?.reset();
+    state.loadingController?.reset();
+    state.pressController?.reset();
+    state.loadingProgress = 0;
+    state.currentMorphState = MorphingButtonState.idle;
+  }
+
+  /// 書籍削除処理
   Future<void> _deleteBook(
     BuildContext context,
     ReadingBookValueObject readingBook,
@@ -197,6 +270,7 @@ class ReadingBookWidget
     }
   }
 
+  /// 削除確認ボトムシート
   Widget _buildDeleteConfirmationSheet(
     BuildContext context,
     ReadingBookValueObject readingBook,
@@ -290,6 +364,8 @@ class ReadingBookWidget
     );
   }
 
+  /// フォームフィールドのビルダー
+  /// 共通のテキストフィールドUIを生成
   Widget _buildFormField(
     BuildContext context, {
     required TextEditingController controller,
@@ -320,6 +396,7 @@ class ReadingBookWidget
     );
   }
 
+  /// モーフィングボタンのビルド
   Widget _buildSophisticatedMorphingButton(
     BuildContext context,
     ReadingBookValueObject value,
@@ -345,6 +422,7 @@ class ReadingBookWidget
     );
   }
 
+  /// ボタンの幅を状態に応じて決定
   double _getButtonWidth(ReadingBookState state) {
     switch (state.currentMorphState) {
       case MorphingButtonState.idle:
@@ -358,6 +436,7 @@ class ReadingBookWidget
     }
   }
 
+  /// ボタンの角丸を状態に応じて決定
   double _getBorderRadius(ReadingBookState state) {
     switch (state.currentMorphState) {
       case MorphingButtonState.idle:
@@ -369,6 +448,7 @@ class ReadingBookWidget
     }
   }
 
+  /// ボタンのグラデーションを状態に応じて決定
   LinearGradient _getButtonGradient(
     BuildContext context,
     ReadingBookState state,
@@ -401,6 +481,7 @@ class ReadingBookWidget
     }
   }
 
+  /// ボタンの影の色を状態に応じて決定
   Color _getButtonShadowColor(BuildContext context, ReadingBookState state) {
     final ColorScheme colorScheme = Theme.of(context).colorScheme;
 
@@ -442,6 +523,7 @@ class ReadingBookWidget
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
+              // ヘッダーセクション
               Container(
                 padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
@@ -494,6 +576,7 @@ class ReadingBookWidget
               ),
               const SizedBox(height: 32),
 
+              // 書籍タイトル入力
               _buildFormField(
                 context,
                 controller: controllers.nameController,
@@ -509,6 +592,7 @@ class ReadingBookWidget
               ),
               const SizedBox(height: 20),
 
+              // ページ数入力（総ページ数・読了ページ数）
               Row(
                 children: <Widget>[
                   Expanded(
@@ -568,6 +652,7 @@ class ReadingBookWidget
               ),
               const SizedBox(height: 20),
 
+              // 書籍感想入力
               _buildFormField(
                 context,
                 controller: controllers.bookReviewController,
@@ -578,6 +663,7 @@ class ReadingBookWidget
               ),
               const SizedBox(height: 40),
 
+              // モーフィングボタン
               Center(
                 child: _buildSophisticatedMorphingButton(
                   context,
@@ -588,6 +674,7 @@ class ReadingBookWidget
                 ),
               ),
 
+              // 削除ボタン（編集モード時のみ）
               if (vm.currentEditMode == ReadingBookEditMode.edit) ...<Widget>[
                 const SizedBox(height: 24),
                 OutlinedButton.icon(
@@ -616,11 +703,30 @@ class ReadingBookWidget
   }
 }
 
+/// フォームデータを保持する構造体
+class _FormData {
+  const _FormData({
+    required this.name,
+    required this.totalPages,
+    required this.readingPageNum,
+    required this.bookReview,
+  });
+  final String name;
+  final int totalPages;
+  final int readingPageNum;
+  final String bookReview;
+}
+
+/// モーフィングボタンの状態
 enum MorphingButtonState { idle, pressed, loading, success }
 
+/// 読書記録フォームの状態管理クラス
+///
+/// フォームコントローラーとアニメーション状態を管理
 class ReadingBookState {
   ReadingBookState();
 
+  // フォーム関連
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final TextEditingController nameController = TextEditingController();
   final TextEditingController totalPagesController = TextEditingController();
@@ -628,29 +734,28 @@ class ReadingBookState {
       TextEditingController();
   final TextEditingController bookReviewController = TextEditingController();
 
-  // Animation controllers - will be initialized with proper vsync
+  // アニメーションコントローラー
   AnimationController? morphingController;
   AnimationController? loadingController;
   AnimationController? pressController;
 
-  // Animations
+  // アニメーション
   Animation<double>? morphingAnimation;
   Animation<double>? loadingAnimation;
   Animation<double>? pressAnimation;
 
+  // 状態管理
   MorphingButtonState currentMorphState = MorphingButtonState.idle;
   double loadingProgress = 0;
   bool isPressed = false;
-  bool isProcessing = false; // Prevent button spam
+  bool isProcessing = false; // 連打防止フラグ
 
   /// モーフィングボタンアニメーションの初期化
-  /// 
+  ///
   /// 3つのAnimationControllerで複雑なボタン変形を実現：
   /// 1. morphingController: ボタンの形状変化（幅・角丸・色の変化）
   /// 2. loadingController: ローディング中の回転アニメーション
   /// 3. pressController: タップ時のプレス効果（スケール変化）
-  /// 
-  /// 各アニメーションは異なるCurveを使い分けて自然な動作を実現
   void initializeAnimations(TickerProvider vsync) {
     // 重複初期化を防止
     if (morphingController != null) {
@@ -658,51 +763,48 @@ class ReadingBookState {
     }
 
     // 1. モーフィングController（ボタン形状変化）
-    // 600ms でボタンが矩形 → 円形に変形
     morphingController = AnimationController(
       duration: const Duration(milliseconds: 600),
       vsync: vsync,
     );
 
     // 2. ローディングController（スピナー回転）
-    // 2秒でローディングアニメーションが完了
     loadingController = AnimationController(
       duration: const Duration(seconds: 2),
       vsync: vsync,
     );
 
     // 3. プレスController（タップ効果）
-    // 200ms でプレス効果（スケール縮小→元に戻る）
     pressController = AnimationController(
       duration: const Duration(milliseconds: 200),
       vsync: vsync,
     );
 
-    // CurvedAnimation: 線形変化を自然なカーブに変換
+    // アニメーションカーブの設定
     morphingAnimation = CurvedAnimation(
       parent: morphingController!,
-      curve: Curves.easeOutCubic,      // 滑らかに減速（形状変化に適している）
+      curve: Curves.easeOutCubic, // 滑らかに減速
     );
 
     loadingAnimation = CurvedAnimation(
       parent: loadingController!,
-      curve: Curves.easeInOut,         // 加速→減速（回転に適している）
+      curve: Curves.easeInOut, // 加速→減速
     );
 
     pressAnimation = CurvedAnimation(
       parent: pressController!,
-      curve: Curves.easeOut,           // 素早いレスポンス（タップ効果に適している）
+      curve: Curves.easeOut, // 素早いレスポンス
     );
 
     // ローディング進捗の連動設定
-    // AnimationController.value の変化を loadingProgress に自動反映
     loadingController!.addListener(() {
       loadingProgress = loadingController!.value;
     });
   }
 
+  /// リソースの解放
   void dispose() {
-    // Safely dispose animation controllers only if they exist
+    // AnimationControllerのdispose
     try {
       morphingController?.dispose();
     } catch (e) {
@@ -719,7 +821,7 @@ class ReadingBookState {
       // Ignore dispose errors
     }
 
-    // Clear animation references
+    // Animation参照のクリア
     morphingController = null;
     loadingController = null;
     pressController = null;
@@ -727,7 +829,7 @@ class ReadingBookState {
     loadingAnimation = null;
     pressAnimation = null;
 
-    // Dispose text controllers
+    // TextControllerのdispose
     nameController.dispose();
     totalPagesController.dispose();
     readingPageNumController.dispose();
@@ -736,16 +838,11 @@ class ReadingBookState {
 }
 
 /// モーフィングボタンのコンテンツ描画用CustomPainter
-/// 
+///
 /// ボタンの状態に応じて異なるコンテンツを描画：
 /// - idle/pressed: テキスト（「登録する」「更新する」）
 /// - loading: アニメーション付きスピナー
 /// - success: チェックマーク＋グロー効果
-/// 
-/// CustomPainterを使うことで：
-/// - 状態変化に応じた滑らかなコンテンツ切り替え
-/// - 複雑な図形（チェックマーク、スピナー）の高品質描画
-/// - パフォーマンス最適化（shouldRepaintによる再描画制御）
 class MorphingButtonContentPainter extends CustomPainter {
   MorphingButtonContentPainter({
     required this.morphState,
@@ -754,21 +851,11 @@ class MorphingButtonContentPainter extends CustomPainter {
     required this.isCreateMode,
   });
 
-  /// 現在のモーフィング状態
   final MorphingButtonState morphState;
-  /// ローディングの進捗（0.0〜1.0）
   final double loadingProgress;
-  /// Material Design 3 カラースキーム
   final ColorScheme colorScheme;
-  /// 作成モードか編集モードかの判定
   final bool isCreateMode;
 
-  /// Canvas描画メソッド（状態変化時に呼ばれる）
-  /// 
-  /// モーフィング状態に応じて適切な描画メソッドを呼び分け：
-  /// 1. idle/pressed → テキスト描画
-  /// 2. loading → スピナー描画  
-  /// 3. success → チェックマーク描画
   @override
   void paint(Canvas canvas, Size size) {
     final Offset center = Offset(size.width / 2, size.height / 2);
@@ -776,14 +863,15 @@ class MorphingButtonContentPainter extends CustomPainter {
     switch (morphState) {
       case MorphingButtonState.idle:
       case MorphingButtonState.pressed:
-        _drawTextContent(canvas, size);        // テキスト描画
+        _drawTextContent(canvas, size);
       case MorphingButtonState.loading:
-        _drawLoadingContent(canvas, center);   // ローディングスピナー描画
+        _drawLoadingContent(canvas, center);
       case MorphingButtonState.success:
-        _drawSuccessContent(canvas, center);   // 成功チェックマーク描画
+        _drawSuccessContent(canvas, center);
     }
   }
 
+  /// テキストコンテンツの描画
   void _drawTextContent(Canvas canvas, Size size) {
     final String text = isCreateMode ? '登録する' : '更新する';
     final TextPainter textPainter = TextPainter(
@@ -809,89 +897,68 @@ class MorphingButtonContentPainter extends CustomPainter {
   }
 
   /// ローディングスピナーの描画
-  /// 
-  /// アニメーション付きの円弧スピナーを実現：
-  /// - loadingProgress (0.0〜1.0) に応じて円弧の角度が変化
-  /// - 背景円（薄い色）+ 進捗円弧（濃い色）の組み合わせ
-  /// - StrokeCap.round で線端を丸くして洗練された見た目
   void _drawLoadingContent(Canvas canvas, Offset center) {
-    // アニメーション付きスピナー（前景）
+    // スピナー本体
     final Paint spinnerPaint = Paint()
-      ..color = colorScheme.onSecondary           // セカンダリカラーの文字色
-      ..style = PaintingStyle.stroke              // 線だけ描画
-      ..strokeWidth = 3                           // 線の太さ
-      ..strokeCap = StrokeCap.round;             // 線端を丸く
+      ..color = colorScheme.onSecondary
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round;
 
-    // loadingProgress に基づいて円弧の角度を計算
-    // 0.0 → 0°, 1.0 → 360°（2π）
+    // 進捗に応じた円弧を描画
     final double sweepAngle = 2 * math.pi * loadingProgress;
 
     canvas.drawArc(
-      Rect.fromCircle(center: center, radius: 12), // 半径12の円
-      -math.pi / 2,                                // 12時方向から開始
-      sweepAngle,                                  // 進捗に応じた角度
-      false,                                       // 扇形ではなく円弧
+      Rect.fromCircle(center: center, radius: 12),
+      -math.pi / 2, // 12時方向から開始
+      sweepAngle, // 進捗に応じた角度
+      false,
       spinnerPaint,
     );
 
-    // 背景円（薄い色のガイドライン）
+    // 背景円
     final Paint backgroundPaint = Paint()
-      ..color = colorScheme.onSecondary.withValues(alpha: 0.3) // 半透明
-      ..style = PaintingStyle.stroke                            // 線だけ描画
-      ..strokeWidth = 3;                                       // 同じ太さ
+      ..color = colorScheme.onSecondary.withValues(alpha: 0.3)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3;
 
     canvas.drawCircle(center, 12, backgroundPaint);
   }
 
   /// 成功時のチェックマーク描画
-  /// 
-  /// 成功状態の視覚的フィードバック：
-  /// - Pathを使ったカスタムチェックマーク形状
-  /// - グロー効果による祝福感の演出
-  /// - 白色で統一された清潔な成功表現
   void _drawSuccessContent(Canvas canvas, Offset center) {
-    // チェックマークの描画設定
+    // チェックマーク
     final Paint checkPaint = Paint()
-      ..color = Colors.white                   // 白色（成功の象徴）
-      ..style = PaintingStyle.stroke          // 線だけ描画
-      ..strokeWidth = 3                       // やや太い線
-      ..strokeCap = StrokeCap.round;         // 線端を丸く
+      ..color = Colors.white
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 3
+      ..strokeCap = StrokeCap.round;
 
-    // チェックマーク形状をPathで定義
-    // ✓ の形を3つの座標点で描画
     final Path checkPath = Path();
-    checkPath.moveTo(center.dx - 8, center.dy);     // 左端点
-    checkPath.lineTo(center.dx - 2, center.dy + 6); // 中央下点（チェックの角）
-    checkPath.lineTo(center.dx + 8, center.dy - 6); // 右上端点
+    checkPath.moveTo(center.dx - 8, center.dy);
+    checkPath.lineTo(center.dx - 2, center.dy + 6);
+    checkPath.lineTo(center.dx + 8, center.dy - 6);
 
     canvas.drawPath(checkPath, checkPaint);
 
-    // 成功グロー効果（祝福感の演出）
+    // グロー効果
     final Paint glowPaint = Paint()
-      ..color = Colors.white.withValues(alpha: 0.3) // 半透明の白
-      ..style = PaintingStyle.fill                  // 塗りつぶし
-      ..maskFilter = const MaskFilter.blur(         // ぼかし効果
-        BlurStyle.normal, 
-        8,
-      );
+      ..color = Colors.white.withValues(alpha: 0.3)
+      ..style = PaintingStyle.fill
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 8);
 
     canvas.drawCircle(center, 16, glowPaint);
   }
 
-  /// 再描画が必要かどうかを判定（パフォーマンス最適化）
-  /// 
-  /// 以下の値が変化した場合のみ再描画：
-  /// - morphState: ボタン状態の変化
-  /// - loadingProgress: ローディング進捗の変化
-  /// - isCreateMode: 作成/編集モードの切り替え
   @override
   bool shouldRepaint(MorphingButtonContentPainter oldDelegate) {
-    return morphState != oldDelegate.morphState ||         // 状態変化
-        loadingProgress != oldDelegate.loadingProgress ||   // 進捗変化
-        isCreateMode != oldDelegate.isCreateMode;          // モード変化
+    return morphState != oldDelegate.morphState ||
+        loadingProgress != oldDelegate.loadingProgress ||
+        isCreateMode != oldDelegate.isCreateMode;
   }
 }
 
+/// モーフィングボタンのStatefulWidget
 class _MorphingButtonStateful extends StatefulWidget {
   const _MorphingButtonStateful({
     required this.value,
@@ -970,18 +1037,18 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
   @override
   void initState() {
     super.initState();
-    // Initialize animations with proper TickerProvider
+    // アニメーション初期化
     widget.state.initializeAnimations(this);
   }
 
   @override
   void dispose() {
-    // Properly dispose all animation controllers
+    // AnimationControllerのdispose
     widget.state.morphingController?.dispose();
     widget.state.loadingController?.dispose();
     widget.state.pressController?.dispose();
 
-    // Clear references
+    // 参照クリア
     widget.state.morphingController = null;
     widget.state.loadingController = null;
     widget.state.pressController = null;
@@ -993,22 +1060,15 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
   }
 
   /// モーフィングボタンのUI構築
-  /// 
-  /// AnimatedBuilderで複数のアニメーションを統合：
-  /// - Listenable.merge で複数のAnimationControllerを組み合わせ
-  /// - 任意のアニメーションが変化すると自動的にbuilderが再実行
-  /// - GestureDetectorでタップ状態を細かく制御（Down/Up/Cancel）
   @override
   Widget build(BuildContext context) {
     // 複数アニメーションの統合監視
-    // morphingController と pressController の両方を監視
     return AnimatedBuilder(
       animation: Listenable.merge(<Listenable>[
-        widget.state.morphingController ??         // 形状変化アニメーション
-            widget.state.loadingController ??      // ローディングアニメーション
+        widget.state.morphingController ??
+            widget.state.loadingController ??
             const AlwaysStoppedAnimation<double>(0),
-        widget.state.pressController ??            // プレス効果アニメーション
-            const AlwaysStoppedAnimation<double>(0),
+        widget.state.pressController ?? const AlwaysStoppedAnimation<double>(0),
       ]),
       builder: (BuildContext context, Widget? child) {
         return GestureDetector(
@@ -1057,19 +1117,19 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
               child: Stack(
                 alignment: Alignment.center,
                 children: <Widget>[
-                  // Background with sophisticated morphing
+                  // 背景とモーフィング効果
                   _buildMorphingBackground(),
 
-                  // Glow effects
+                  // グロー効果
                   _buildGlowEffects(),
 
-                  // Content with smooth transitions
+                  // コンテンツ
                   _buildAnimatedContent(),
 
-                  // Ripple effects
+                  // リップル効果
                   _buildRippleEffects(),
 
-                  // Progress overlay
+                  // プログレスオーバーレイ
                   _buildProgressOverlay(),
                 ],
               ),
@@ -1080,6 +1140,7 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
     );
   }
 
+  /// ボタン幅のアニメーション計算
   double _getAnimatedButtonWidth() {
     final double baseWidth = widget.getButtonWidth(widget.state);
     final double morphValue = widget.state.morphingAnimation?.value ?? 0;
@@ -1095,10 +1156,12 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
     }
   }
 
+  /// ボタン高さ（固定）
   double _getAnimatedButtonHeight() {
     return 64;
   }
 
+  /// モーフィング背景の構築
   Widget _buildMorphingBackground() {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 600),
@@ -1119,7 +1182,6 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
               4 - (widget.state.pressAnimation?.value ?? 0) * 2,
             ),
           ),
-          // Additional dynamic shadow
           BoxShadow(
             color: widget
                 .getButtonShadowColor(context, widget.state)
@@ -1157,6 +1219,7 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
     );
   }
 
+  /// グロー効果の構築
   Widget _buildGlowEffects() {
     if (widget.state.currentMorphState == MorphingButtonState.success) {
       return Container(
@@ -1168,13 +1231,11 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
               blurRadius: 25,
               spreadRadius: 3,
             ),
-            // Additional celebration glow
             BoxShadow(
               color: const Color(0xFF81C784).withValues(alpha: 0.6),
               blurRadius: 40,
               spreadRadius: 1,
             ),
-            // Pulsing outer glow
             BoxShadow(
               color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
               blurRadius: 60,
@@ -1184,7 +1245,6 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
         ),
       );
     } else if (widget.state.currentMorphState == MorphingButtonState.loading) {
-      // Loading state glow
       return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(32),
@@ -1203,6 +1263,7 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
     return const SizedBox.shrink();
   }
 
+  /// アニメーションコンテンツの構築
   Widget _buildAnimatedContent() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 24),
@@ -1218,6 +1279,7 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
     );
   }
 
+  /// リップル効果の構築
   Widget _buildRippleEffects() {
     if (widget.state.currentMorphState == MorphingButtonState.loading) {
       return CustomPaint(
@@ -1231,6 +1293,7 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
     return const SizedBox.shrink();
   }
 
+  /// プログレスオーバーレイの構築
   Widget _buildProgressOverlay() {
     if (widget.state.currentMorphState == MorphingButtonState.loading) {
       return ClipRRect(
@@ -1250,6 +1313,7 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
   }
 }
 
+/// リップル効果描画用CustomPainter
 class _RippleEffectPainter extends CustomPainter {
   _RippleEffectPainter({required this.animation, required this.colorScheme});
 
@@ -1261,7 +1325,7 @@ class _RippleEffectPainter extends CustomPainter {
     final Offset center = Offset(size.width / 2, size.height / 2);
     final double maxRadius = size.width / 2;
 
-    // Create multiple ripple waves
+    // 複数の波紋を描画
     for (int i = 0; i < 3; i++) {
       final double waveDelay = i * 0.3;
       final double waveAnimation = (animation - waveDelay).clamp(0.0, 1.0);
