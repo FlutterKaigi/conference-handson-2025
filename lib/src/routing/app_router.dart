@@ -1,10 +1,10 @@
 // lib/src/routing/app_router.dart
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/screen/home/home_page.dart';
 import '../app/screen/reading/reading_book_page.dart';
-import '../app/screen/reading_graph/reading_graph_page.dart';
 import '../app/screen/settings/settings_page.dart';
 
 // アプリケーションのルートを定義
@@ -27,19 +27,35 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: AppRoutes.readingBook.path,
-          name: AppRoutes.readingBook.name, // ルート名
-          builder: (BuildContext context, GoRouterState state) {
-            return const ReadingBookPage();
+          name: AppRoutes.readingBook.name,
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return CustomTransitionPage<void>(
+              key: state.pageKey,
+              child: const ReadingBookPage(),
+              transitionsBuilder:
+                  (BuildContext context, 
+                  Animation<double> animation, 
+                  Animation<double> secondaryAnimation, 
+                  Widget child) {
+                    // 変更点：上から下へのスライドアニメーションを定義
+                    final Tween<Offset> tween = Tween<Offset>(
+                      begin: const Offset(-1, 0), // 変更点：画面の左端の外側から
+                      end: Offset.zero, // 画面の中央へ
+                    );
+
+                    final CurvedAnimation curvedAnimation = CurvedAnimation(
+                      parent: animation,
+                      curve: Curves.easeInOut,
+                    );
+
+                    // SlideTransitionウィジェットを返す
+                    return SlideTransition(
+                      position: tween.animate(curvedAnimation),
+                      child: child,
+                    );
+                  },
+            );
           },
-          routes: <RouteBase>[
-            GoRoute(
-              path: AppRoutes.readingGraph.path,
-              name: AppRoutes.readingGraph.name, // ルート名
-              builder: (BuildContext context, GoRouterState state) {
-                return const ReadingBookGraphPage();
-              },
-            ),
-          ],
         ),
       ],
     ),
