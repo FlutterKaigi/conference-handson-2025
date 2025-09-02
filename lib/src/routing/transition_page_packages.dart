@@ -5,5 +5,5 @@
 
 // yu_s1127 設定 （routing/transition_page）
 
-// mem-4605-endo 設定
-export 'example1/transition_page_packages.dart';
+// mem-4605-endo 設定  （routing/transition_page）
+export 'example1/transition_page_packages.dart'; // ui_widget/example1 も利用します。
