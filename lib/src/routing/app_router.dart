@@ -1,11 +1,12 @@
 // lib/src/routing/app_router.dart
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../app/screen/home/home_page.dart';
 import '../app/screen/reading/reading_book_page.dart';
+import '../app/screen/reading_graph/reading_graph_page.dart';
 import '../app/screen/settings/settings_page.dart';
+import 'transition_page_packages.dart';
 
 // アプリケーションのルートを定義
 final GoRouter appRouter = GoRouter(
@@ -14,15 +15,15 @@ final GoRouter appRouter = GoRouter(
     GoRoute(
       path: AppRoutes.home.path,
       name: AppRoutes.home.name, // ルート名 (型安全なナビゲーションで使用)
-      builder: (BuildContext context, GoRouterState state) {
-        return const HomePage();
+      pageBuilder: (BuildContext context, GoRouterState state) {
+        return const HomeTransitionPage<void>(child: HomePage());
       },
       routes: <RouteBase>[
         GoRoute(
           path: AppRoutes.settings.path,
           name: AppRoutes.settings.name, // ルート名
-          builder: (BuildContext context, GoRouterState state) {
-            return const SettingsPage();
+          pageBuilder: (BuildContext context, GoRouterState state) {
+            return const SettingsTransitionPage<void>(child: SettingsPage());
           },
         ),
         GoRoute(
@@ -33,9 +34,9 @@ final GoRouter appRouter = GoRouter(
               key: state.pageKey,
               child: const ReadingBookPage(),
               transitionsBuilder:
-                  (BuildContext context, 
-                  Animation<double> animation, 
-                  Animation<double> secondaryAnimation, 
+                  (BuildContext context,
+                  Animation<double> animation,
+                  Animation<double> secondaryAnimation,
                   Widget child) {
                     // 変更点：上から下へのスライドアニメーションを定義
                     final Tween<Offset> tween = Tween<Offset>(
