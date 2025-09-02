@@ -8,5 +8,5 @@
 // export 'interactive_donut_chart/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 // export 'morphing_button/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 
-// エンドー設定
-export 'example1/widget_packages.dart';
+// mem-4605-endo 設定 （ui_widget）
+export 'example1/widget_packages.dart'; // routing/example1 も利用します。
