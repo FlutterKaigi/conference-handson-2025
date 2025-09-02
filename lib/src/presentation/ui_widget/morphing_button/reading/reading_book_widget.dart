@@ -75,23 +75,26 @@ class ReadingBookWidget
       // Step 1: フォームデータの取得
       final _FormData formData = _getFormData(state);
 
-      // Step 2: データモデルの更新
+      // Step 2: 更新前のページ数を保存（元のreadingBookから取得）
+      final int prevReadingPageNum = readingBook.readingPageNum;
+
+      // Step 3: データモデルの更新
       final ReadingBookValueObject editedReadingBook = _updateBookData(
         readingBooksViewModel,
         formData,
       );
 
-      // Step 3: 進捗アニメーションの更新
+      // Step 4: 進捗アニメーションの更新
       _updateProgressAnimation(
         supportAnimationsViewModel,
         editedReadingBook,
-        readingBooksViewModel.editedReadingBook?.readingPageNum ?? 0,
+        prevReadingPageNum,
       );
 
-      // Step 4: ボタンのモーフィングアニメーション実行
+      // Step 5: ボタンのモーフィングアニメーション実行
       await _performMorphingSequence(state);
 
-      // Step 5: 画面遷移
+      // Step 6: 画面遷移
       if (context.mounted) {
         await _navigateBack(context, editedReadingBook);
       }
