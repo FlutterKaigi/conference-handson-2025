@@ -28,35 +28,23 @@ final GoRouter appRouter = GoRouter(
         ),
         GoRoute(
           path: AppRoutes.readingBook.path,
-          name: AppRoutes.readingBook.name,
+          name: AppRoutes.readingBook.name, // ルート名
           pageBuilder: (BuildContext context, GoRouterState state) {
-            return CustomTransitionPage<void>(
-              key: state.pageKey,
-              child: const ReadingBookPage(),
-              transitionsBuilder:
-                  (BuildContext context,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                  Widget child) {
-                    // 変更点：上から下へのスライドアニメーションを定義
-                    final Tween<Offset> tween = Tween<Offset>(
-                      begin: const Offset(-1, 0), // 変更点：画面の左端の外側から
-                      end: Offset.zero, // 画面の中央へ
-                    );
-
-                    final CurvedAnimation curvedAnimation = CurvedAnimation(
-                      parent: animation,
-                      curve: Curves.easeInOut,
-                    );
-
-                    // SlideTransitionウィジェットを返す
-                    return SlideTransition(
-                      position: tween.animate(curvedAnimation),
-                      child: child,
-                    );
-                  },
+            return const ReadingBookTransitionPage<void>(
+              child: ReadingBookPage(),
             );
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: AppRoutes.readingGraph.path,
+              name: AppRoutes.readingGraph.name, // ルート名
+              pageBuilder: (BuildContext context, GoRouterState state) {
+                return const ReadingBookGraphTransitionPage<void>(
+                  child: ReadingBookGraphPage(),
+                );
+              },
+            ),
+          ],
         ),
       ],
     ),
