@@ -748,9 +748,9 @@ class ReadingBookState {
   Animation<double>? loadingAnimation;
   Animation<double>? pressAnimation;
 
-  // 状態管理
+  // カレント・モーフィング状態種別（アニメーション描画切替に用います）
   MorphingButtonState currentMorphState = MorphingButtonState.idle;
-  double loadingProgress = 0;
+  double loadingProgress = 0; // ローディング進捗率（0%〜100% ⇒ 0〜1.0）
   bool isPressed = false;
   bool isProcessing = false; // 連打防止フラグ
 
@@ -879,6 +879,7 @@ class MorphingButtonContentPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final Offset center = Offset(size.width / 2, size.height / 2);
 
+    // モーフィング状態の種別に応じてアニメーション描画を切り替える。
     switch (morphState) {
       case MorphingButtonState.idle:
       case MorphingButtonState.pressed:
