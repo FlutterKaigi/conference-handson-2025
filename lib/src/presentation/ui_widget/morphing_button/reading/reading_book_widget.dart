@@ -714,6 +714,7 @@ class _FormData {
     required this.readingPageNum,
     required this.bookReview,
   });
+
   final String name;
   final int totalPages;
   final int readingPageNum;
@@ -783,17 +784,32 @@ class ReadingBookState {
       vsync: vsync,
     );
 
-    // アニメーションカーブの設定
+    // 以下の３つのアニメーション・カーブ（変化曲線）設定は、
+    // 「リニアに変化」や「だんだん早く」や「徐々に遅く」など
+    // アニメーション変化の緩急指定をコードで扱えるようにするため、
+    //
+    // アニメーション期間をx、アニメーション変化をyとして、
+    // それぞれの値範囲が 0%〜100%の進捗率とした二次関数を使い、
+    // 幾つかの緩急パターンの変化曲線関数① が定義されている
+    // Curve クラス② を使って設定したものです。
+    //
+    // ① だんだん早くなら y=x^2 など（ただし y=x ⇒ 0〜1.0）
+    // ② Curves class
+    // 　 https://api.flutter.dev/flutter/animation/Curves-class.html
+
+    // モーフィング時のアニメーション・カーブ設定
     morphingAnimation = CurvedAnimation(
       parent: morphingController!,
       curve: Curves.easeOutCubic, // 滑らかに減速
     );
 
+    // ローディング時のアニメーション・カーブ設定
     loadingAnimation = CurvedAnimation(
       parent: loadingController!,
       curve: Curves.easeInOut, // 加速→減速
     );
 
+    // タップ時のアニメーション・カーブ設定
     pressAnimation = CurvedAnimation(
       parent: pressController!,
       curve: Curves.easeOut, // 素早いレスポンス
