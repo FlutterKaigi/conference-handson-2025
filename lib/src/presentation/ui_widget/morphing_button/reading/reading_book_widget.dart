@@ -11,6 +11,13 @@ import '../../../../domain/model/reading_books_domain_model.dart';
 import '../../../../fundamental/debug/debug_logger.dart';
 import '../../../../fundamental/ui_widget/consumer_staged_widget.dart';
 import '../../../model/view_model_packages.dart';
+import 'components/animated_content.dart';
+import 'components/delete_confirmation_sheet.dart';
+import 'components/form_field.dart' as form_field;
+import 'components/glow_effects.dart';
+import 'components/morphing_background.dart';
+import 'components/progress_overlay.dart';
+import 'components/ripple_effects.dart';
 
 /// 読書記録編集ウィジェット
 ///
@@ -258,10 +265,9 @@ class ReadingBookWidget
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
-      builder: (BuildContext context) => _buildDeleteConfirmationSheet(
-        context,
-        readingBook,
-        readingBooksViewModel,
+      builder: (BuildContext context) => DeleteConfirmationSheet(
+        readingBook: readingBook,
+        viewModel: readingBooksViewModel,
       ),
     );
 
@@ -271,158 +277,6 @@ class ReadingBookWidget
         Navigator.pop(context, readingBook);
       }
     }
-  }
-
-  /// 削除確認ボトムシート
-  Widget _buildDeleteConfirmationSheet(
-    BuildContext context,
-    ReadingBookValueObject readingBook,
-    ReadingBooksViewModel readingBooksViewModel,
-  ) {
-    return Container(
-      padding: EdgeInsets.only(
-        top: 24,
-        left: 24,
-        right: 24,
-        bottom: MediaQuery.of(context).viewInsets.bottom + 24,
-      ),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          Container(
-            width: 32,
-            height: 4,
-            decoration: BoxDecoration(
-              color: Theme.of(
-                context,
-              ).colorScheme.outline.withValues(alpha: 0.4),
-              borderRadius: BorderRadius.circular(2),
-            ),
-          ),
-          const SizedBox(height: 24),
-          Icon(
-            Icons.delete_outline,
-            size: 48,
-            color: Theme.of(context).colorScheme.error,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            '書籍を削除',
-            style: Theme.of(
-              context,
-            ).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            '「${readingBook.name}」を削除してもよろしいですか？\nこの操作は取り消せません。',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () => Navigator.pop(context, false),
-                  child: const Text('キャンセル'),
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: FilledButton(
-                  style: FilledButton.styleFrom(
-                    backgroundColor: Theme.of(context).colorScheme.error,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {
-                    readingBooksViewModel.removeReadingBook();
-                    readingBooksViewModel.commitReadingBook(readingBook);
-                    Navigator.pop(context, true);
-                  },
-                  child: const Text(
-                    '削除する',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// フォームフィールドのビルダー
-  /// 共通のテキストフィールドUIを生成
-  Widget _buildFormField(
-    BuildContext context, {
-    required TextEditingController controller,
-    required String label,
-    required String hint,
-    String? Function(String?)? validator,
-    TextInputType? keyboardType,
-    List<TextInputFormatter>? inputFormatters,
-    int maxLines = 1,
-    IconData? prefixIcon,
-  }) {
-    return TextFormField(
-      controller: controller,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
-        filled: true,
-        fillColor: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-      ),
-      keyboardType: keyboardType,
-      inputFormatters: inputFormatters,
-      validator: validator,
-      maxLines: maxLines,
-    );
-  }
-
-  /// モーフィングボタンのビルド
-  Widget _buildSophisticatedMorphingButton(
-    BuildContext context,
-    ReadingBookValueObject value,
-    ReadingBooksViewModel vm,
-    SupportAnimationsViewModel animeVm,
-    ReadingBookState state,
-  ) {
-    return _MorphingButtonStateful(
-      value: value,
-      vm: vm,
-      state: state,
-      onSubmit:
-          (
-            BuildContext context,
-            ReadingBookValueObject value,
-            ReadingBooksViewModel vm,
-            ReadingBookState state,
-          ) => _submitForm(context, value, vm, animeVm, state),
-      getButtonWidth: _getButtonWidth,
-      getBorderRadius: _getBorderRadius,
-      getButtonGradient: _getButtonGradient,
-      getButtonShadowColor: _getButtonShadowColor,
-    );
   }
 
   /// ボタンの幅を状態に応じて決定
@@ -580,8 +434,7 @@ class ReadingBookWidget
               const SizedBox(height: 32),
 
               // 書籍タイトル入力
-              _buildFormField(
-                context,
+              form_field.FormField(
                 controller: controllers.nameController,
                 label: '書籍タイトル',
                 hint: '例: Flutter実践入門',
@@ -599,8 +452,7 @@ class ReadingBookWidget
               Row(
                 children: <Widget>[
                   Expanded(
-                    child: _buildFormField(
-                      context,
+                    child: form_field.FormField(
                       controller: controllers.totalPagesController,
                       label: '総ページ数',
                       hint: '300',
@@ -623,8 +475,7 @@ class ReadingBookWidget
                   ),
                   const SizedBox(width: 16),
                   Expanded(
-                    child: _buildFormField(
-                      context,
+                    child: form_field.FormField(
                       controller: controllers.readingPageNumController,
                       label: '読了ページ数',
                       hint: '150',
@@ -656,8 +507,7 @@ class ReadingBookWidget
               const SizedBox(height: 20),
 
               // 書籍感想入力
-              _buildFormField(
-                context,
+              form_field.FormField(
                 controller: controllers.bookReviewController,
                 label: '書籍感想',
                 hint: '読書の感想や学んだことを記録しましょう',
@@ -668,12 +518,21 @@ class ReadingBookWidget
 
               // モーフィングボタン
               Center(
-                child: _buildSophisticatedMorphingButton(
-                  context,
-                  value,
-                  vm,
-                  animeVm,
-                  controllers,
+                child: _MorphingButtonStateful(
+                  value: value,
+                  vm: vm,
+                  state: controllers,
+                  onSubmit:
+                      (
+                        BuildContext context,
+                        ReadingBookValueObject value,
+                        ReadingBooksViewModel vm,
+                        ReadingBookState state,
+                      ) => _submitForm(context, value, vm, animeVm, state),
+                  getButtonWidth: _getButtonWidth,
+                  getBorderRadius: _getBorderRadius,
+                  getButtonGradient: _getButtonGradient,
+                  getButtonShadowColor: _getButtonShadowColor,
                 ),
               ),
 
@@ -1138,19 +997,37 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
                 alignment: Alignment.center,
                 children: <Widget>[
                   // 背景とモーフィング効果
-                  _buildMorphingBackground(),
+                  MorphingBackground(
+                    state: widget.state,
+                    onSubmit: widget.onSubmit,
+                    value: widget.value,
+                    vm: widget.vm,
+                    getBorderRadius: widget.getBorderRadius,
+                    getButtonGradient: widget.getButtonGradient,
+                    getButtonShadowColor: widget.getButtonShadowColor,
+                  ),
 
                   // グロー効果
-                  _buildGlowEffects(),
+                  GlowEffects(state: widget.state),
 
                   // コンテンツ
-                  _buildAnimatedContent(),
+                  AnimatedContent(
+                    state: widget.state,
+                    vm: widget.vm,
+                    getAnimatedButtonWidth: _getAnimatedButtonWidth,
+                  ),
 
                   // リップル効果
-                  _buildRippleEffects(),
+                  RippleEffects(
+                    state: widget.state,
+                    getAnimatedButtonWidth: _getAnimatedButtonWidth,
+                  ),
 
                   // プログレスオーバーレイ
-                  _buildProgressOverlay(),
+                  ProgressOverlay(
+                    state: widget.state,
+                    getBorderRadius: widget.getBorderRadius,
+                  ),
                 ],
               ),
             ),
@@ -1179,193 +1056,5 @@ class _MorphingButtonStatefulState extends State<_MorphingButtonStateful>
   /// ボタン高さ（固定）
   double _getAnimatedButtonHeight() {
     return 64;
-  }
-
-  /// モーフィング背景の構築
-  Widget _buildMorphingBackground() {
-    return AnimatedContainer(
-      duration: const Duration(milliseconds: 600),
-      curve: Curves.easeOutCubic,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          widget.getBorderRadius(widget.state),
-        ),
-        gradient: widget.getButtonGradient(context, widget.state),
-        boxShadow: <BoxShadow>[
-          BoxShadow(
-            color: widget
-                .getButtonShadowColor(context, widget.state)
-                .withValues(alpha: 0.3),
-            blurRadius: 12 + (widget.state.pressAnimation?.value ?? 0) * 8,
-            offset: Offset(
-              0,
-              4 - (widget.state.pressAnimation?.value ?? 0) * 2,
-            ),
-          ),
-          BoxShadow(
-            color: widget
-                .getButtonShadowColor(context, widget.state)
-                .withValues(alpha: 0.1),
-            blurRadius: 24 + (widget.state.pressAnimation?.value ?? 0) * 16,
-            offset: Offset(
-              0,
-              8 - (widget.state.pressAnimation?.value ?? 0) * 4,
-            ),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        borderRadius: BorderRadius.circular(
-          widget.getBorderRadius(widget.state),
-        ),
-        child: InkWell(
-          borderRadius: BorderRadius.circular(
-            widget.getBorderRadius(widget.state),
-          ),
-          onTap: widget.state.currentMorphState == MorphingButtonState.idle
-              ? () async {
-                  await widget.onSubmit(
-                    context,
-                    widget.value,
-                    widget.vm,
-                    widget.state,
-                  );
-                }
-              : null,
-          child: const SizedBox.expand(),
-        ),
-      ),
-    );
-  }
-
-  /// グロー効果の構築
-  Widget _buildGlowEffects() {
-    if (widget.state.currentMorphState == MorphingButtonState.success) {
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: const Color(0xFF4CAF50).withValues(alpha: 0.8),
-              blurRadius: 25,
-              spreadRadius: 3,
-            ),
-            BoxShadow(
-              color: const Color(0xFF81C784).withValues(alpha: 0.6),
-              blurRadius: 40,
-              spreadRadius: 1,
-            ),
-            BoxShadow(
-              color: const Color(0xFF4CAF50).withValues(alpha: 0.3),
-              blurRadius: 60,
-              spreadRadius: 5,
-            ),
-          ],
-        ),
-      );
-    } else if (widget.state.currentMorphState == MorphingButtonState.loading) {
-      return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(32),
-          boxShadow: <BoxShadow>[
-            BoxShadow(
-              color: Theme.of(
-                context,
-              ).colorScheme.secondary.withValues(alpha: 0.4),
-              blurRadius: 15,
-              spreadRadius: 1,
-            ),
-          ],
-        ),
-      );
-    }
-    return const SizedBox.shrink();
-  }
-
-  /// アニメーションコンテンツの構築
-  Widget _buildAnimatedContent() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: CustomPaint(
-        size: Size(_getAnimatedButtonWidth(), 64),
-        painter: MorphingButtonContentPainter(
-          morphState: widget.state.currentMorphState,
-          loadingProgress: widget.state.loadingProgress,
-          colorScheme: Theme.of(context).colorScheme,
-          isCreateMode: widget.vm.currentEditMode == ReadingBookEditMode.create,
-        ),
-      ),
-    );
-  }
-
-  /// リップル効果の構築
-  Widget _buildRippleEffects() {
-    if (widget.state.currentMorphState == MorphingButtonState.loading) {
-      return CustomPaint(
-        size: Size(_getAnimatedButtonWidth(), 64),
-        painter: _RippleEffectPainter(
-          animation: widget.state.loadingAnimation?.value ?? 0,
-          colorScheme: Theme.of(context).colorScheme,
-        ),
-      );
-    }
-    return const SizedBox.shrink();
-  }
-
-  /// プログレスオーバーレイの構築
-  Widget _buildProgressOverlay() {
-    if (widget.state.currentMorphState == MorphingButtonState.loading) {
-      return ClipRRect(
-        borderRadius: BorderRadius.circular(
-          widget.getBorderRadius(widget.state),
-        ),
-        child: LinearProgressIndicator(
-          value: widget.state.loadingProgress,
-          backgroundColor: Colors.transparent,
-          valueColor: AlwaysStoppedAnimation<Color>(
-            Theme.of(context).colorScheme.onSecondary.withValues(alpha: 0.3),
-          ),
-        ),
-      );
-    }
-    return const SizedBox.shrink();
-  }
-}
-
-/// リップル効果描画用CustomPainter
-class _RippleEffectPainter extends CustomPainter {
-  _RippleEffectPainter({required this.animation, required this.colorScheme});
-
-  final double animation;
-  final ColorScheme colorScheme;
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Offset center = Offset(size.width / 2, size.height / 2);
-    final double maxRadius = size.width / 2;
-
-    // 複数の波紋を描画
-    for (int i = 0; i < 3; i++) {
-      final double waveDelay = i * 0.3;
-      final double waveAnimation = (animation - waveDelay).clamp(0.0, 1.0);
-
-      if (waveAnimation > 0) {
-        final double radius = maxRadius * waveAnimation;
-        final double opacity = (1.0 - waveAnimation) * 0.3;
-
-        final Paint ripplePaint = Paint()
-          ..color = colorScheme.onSecondary.withValues(alpha: opacity)
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2.0;
-
-        canvas.drawCircle(center, radius, ripplePaint);
-      }
-    }
-  }
-
-  @override
-  bool shouldRepaint(_RippleEffectPainter oldDelegate) {
-    return animation != oldDelegate.animation;
   }
 }
