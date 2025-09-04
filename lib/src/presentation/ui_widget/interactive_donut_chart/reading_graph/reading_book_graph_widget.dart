@@ -7,6 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../domain/model/reading_book_value_object.dart';
 import '../../../../fundamental/ui_widget/consumer_staged_widget.dart';
+import 'components/background_glow.dart';
+import 'components/donut_center_content.dart';
+import 'components/progress_info.dart';
+import 'components/title_section.dart';
 
 /// 読書進捗ドーナツチャートウィジェット
 ///
@@ -62,7 +66,7 @@ class ReadingBookGraphWidget
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           // タイトルセクション
-          _buildTitleSection(context, value, progress),
+          TitleSection(value: value, progress: progress),
           const SizedBox(height: 32),
 
           // メインのドーナツチャート
@@ -74,7 +78,7 @@ class ReadingBookGraphWidget
           const SizedBox(height: 32),
 
           // 進捗統計情報
-          _buildProgressInfo(context, value),
+          ProgressInfo(value: value),
         ],
       ),
     );
@@ -86,110 +90,6 @@ class ReadingBookGraphWidget
       return 0;
     }
     return (value.readingPageNum / value.totalPages).clamp(0, 1);
-  }
-
-  /// タイトルセクションの構築
-  Widget _buildTitleSection(
-    BuildContext context,
-    ReadingBookValueObject value,
-    double progress,
-  ) {
-    return Column(
-      children: <Widget>[
-        Text(
-          value.name.isNotEmpty ? value.name : '読書進捗',
-          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          '${(progress * 100).toStringAsFixed(1)}% 完了',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 進捗統計情報の構築
-  Widget _buildProgressInfo(
-    BuildContext context,
-    ReadingBookValueObject value,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Theme.of(
-          context,
-        ).colorScheme.surfaceContainerHighest.withValues(alpha: 0.3),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.2),
-        ),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: <Widget>[
-          _buildStatItem(
-            context,
-            '${value.readingPageNum}',
-            '読了ページ',
-            Icons.book_outlined,
-            Theme.of(context).colorScheme.primary,
-          ),
-          Container(
-            width: 1,
-            height: 40,
-            color: Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
-          ),
-          _buildStatItem(
-            context,
-            '${value.totalPages}',
-            '総ページ',
-            Icons.menu_book_outlined,
-            Theme.of(context).colorScheme.secondary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 統計アイテムの構築
-  Widget _buildStatItem(
-    BuildContext context,
-    String value,
-    String label,
-    IconData icon,
-    Color color,
-  ) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Icon(icon, color: color, size: 24),
-        const SizedBox(height: 8),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).colorScheme.onSurface,
-          ),
-        ),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
   }
 }
 
@@ -272,7 +172,7 @@ class _ProgressDonutWidgetState extends State<_ProgressDonutWidget>
               alignment: Alignment.center,
               children: <Widget>[
                 // 背景のグロー効果
-                _buildBackgroundGlow(context),
+                const BackgroundGlow(),
 
                 // メインのドーナツチャート
                 CustomPaint(
@@ -285,104 +185,12 @@ class _ProgressDonutWidgetState extends State<_ProgressDonutWidget>
                 ),
 
                 // 中央コンテンツ
-                _buildCenterContent(context),
+                DonutCenterContent(state: widget.state, value: widget.value),
               ],
             ),
           ),
         );
       },
-    );
-  }
-
-  /// 背景のグロー効果を構築
-  Widget _buildBackgroundGlow(BuildContext context) {
-    return Container(
-      width: 280,
-      height: 280,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        gradient: RadialGradient(
-          colors: <Color>[
-            Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
-            Colors.transparent,
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// 中央コンテンツの構築
-  /// 進捗状況に応じて「残りページ数」または「完読メッセージ」を表示
-  Widget _buildCenterContent(BuildContext context) {
-    final double progress = widget.state.animatedProgress;
-    final bool isCompleted = progress >= 1.0;
-    final int remainingPages =
-        widget.value.totalPages - widget.value.readingPageNum;
-
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 600),
-      child: Container(
-        key: ValueKey<bool>(isCompleted),
-        padding: const EdgeInsets.all(16),
-        child: isCompleted
-            ? _buildCompletionContent(context)
-            : _buildProgressContent(context, remainingPages),
-      ),
-    );
-  }
-
-  /// 完了時のコンテンツ
-  Widget _buildCompletionContent(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Icon(
-          Icons.celebration_outlined,
-          color: Theme.of(context).colorScheme.primary,
-          size: 48,
-        ),
-        const SizedBox(height: 8),
-        Text(
-          '完読達成！',
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.w700,
-            color: Theme.of(context).colorScheme.primary,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  /// 進行中のコンテンツ
-  Widget _buildProgressContent(BuildContext context, int remainingPages) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: <Widget>[
-        Text(
-          '残り',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          '$remainingPages',
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-            fontWeight: FontWeight.w900,
-            color: Theme.of(context).colorScheme.primary,
-            height: 1,
-          ),
-        ),
-        Text(
-          'ページ',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
     );
   }
 }
