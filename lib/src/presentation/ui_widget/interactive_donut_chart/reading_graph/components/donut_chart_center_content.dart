@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 import '../../../../../domain/model/reading_book_value_object.dart';
 import '../reading_book_graph_widget.dart';
 
-/// 中央コンテンツ用のウィジェット
-/// 進捗状況に応じて「残りページ数」または「完読メッセージ」を表示
-class DonutCenterContent extends StatelessWidget {
-  const DonutCenterContent({
+/// ドーナツチャート・中央コンテンツ用のウィジェット
+///
+/// 進捗状況に応じて「残りページ数」または「完読メッセージ」を表示します。
+class DonutChartCenterContent extends StatelessWidget {
+  const DonutChartCenterContent({
     required this.state,
     required this.value,
     super.key,
