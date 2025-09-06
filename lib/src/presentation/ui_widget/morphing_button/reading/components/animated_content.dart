@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../../../../../domain/model/reading_books_domain_model.dart';
 import '../../../../model/view_model_packages.dart';
 import '../reading_book_widget.dart';
+import 'morphing_button_content_painter.dart';
 
 /// アニメーションコンテンツ用のウィジェット
 class AnimatedContent extends StatelessWidget {
