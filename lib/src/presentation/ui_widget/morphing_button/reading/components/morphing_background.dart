@@ -40,7 +40,7 @@ class MorphingBackground extends StatelessWidget {
   }
 
   /// ボタンのグラデーションを状態に応じて決定
-  LinearGradient _getButtonGradient( // FIXME
+  LinearGradient _getButtonGradient(
       BuildContext context,
       ReadingBookState state,
       ) {
