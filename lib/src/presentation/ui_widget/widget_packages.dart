@@ -7,3 +7,4 @@ export 'default/widget_packages.dart';
 //export 'hero/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 // export 'interactive_donut_chart/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 // export 'morphing_button/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+// export 'enhanced_progress/widget_packages.dart'; // model設置はありません。（model/default を利用します）
