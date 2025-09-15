@@ -51,7 +51,7 @@ class CurrentlyTasksWidget
   ) {
     // CurrentlyTasksWidget ウイジェットの内部状態
     final ScrollController scrollController = state!;
-    
+
     return Scrollbar(
       controller: scrollController,
       thumbVisibility: true,
@@ -62,7 +62,7 @@ class CurrentlyTasksWidget
           final ReadingBookValueObject book = value.readingBooks[index];
           final String title = book.name;
           return Dismissible(
-            key: ValueKey(book.name),
+            key: ValueKey<String>(book.name),
             // スワイプ方向を左から右のみに制限
             direction: DismissDirection.startToEnd,
             // アイテムが完全にスワイプされたときに呼ばれるコールバックパターン1()
@@ -74,8 +74,8 @@ class CurrentlyTasksWidget
             //   debugLog('$title がスワイプされました。(削除あり)');
             //   context.goReadingBook();
             // },
-             // アイテムが完全にスワイプされたときに呼ばれるコールバックパターン2
-            confirmDismiss: (direction) async {
+            // アイテムが完全にスワイプされたときに呼ばれるコールバックパターン2
+            confirmDismiss: (DismissDirection direction) async {
               // 画面遷移などの処理をここに記述
               ref
                   .read(readingBooksProvider.notifier)
@@ -108,7 +108,13 @@ class CurrentlyTasksWidget
               margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               child: ListTile(
                 title: Text(title),
-                // onTapは不要なので削除
+                onTap: () {
+                  ref
+                      .read(readingBooksProvider.notifier)
+                      .selectReadingBook(index: index);
+                  debugLog('$title がタップされました。');
+                  context.goReadingBook();
+                },
               ),
             ),
           );
