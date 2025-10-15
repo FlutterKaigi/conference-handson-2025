@@ -17,8 +17,8 @@ interactive_donut_chart/
     ├── donut_chart_center_content.dart   # 中央コンテンツ
     ├── background_glow.dart          # 背景グロー効果
     ├── progress_info.dart            # 統計情報表示
-    ├── stat_item.dart               # 統計アイテム
-    └── title_section.dart           # タイトルセクション
+    ├── stat_item.dart                # 統計アイテム
+    └── title_section.dart            # タイトルセクション
 ```
 
 責任の分離により、複雑なグラフィック処理を管理しやすい構造にしています。

@@ -16,9 +16,9 @@ morphing_button/
     ├── morphing_background.dart      # 背景とグラデーション
     ├── animated_content.dart         # ボタン内コンテンツ
     ├── progress_overlay.dart         # プログレス表示
-    ├── glow_effects.dart            # 発光効果
-    ├── ripple_effects.dart          # リップル効果
-    └── form_field.dart              # フォーム関連
+    ├── glow_effects.dart             # 発光効果
+    ├── ripple_effects.dart           # リップル効果
+    └── form_field.dart               # フォーム関連
 ```
 
 各コンポーネントが責任を明確に分離しており、保守性と再利用性を重視した設計となっています。
