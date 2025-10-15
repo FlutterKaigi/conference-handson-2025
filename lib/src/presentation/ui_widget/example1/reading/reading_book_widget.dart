@@ -317,6 +317,7 @@ class ReadingBookWidget
                                   ),
                                 ),
                                 Text(
+                                  // ignore: lines_longer_than_80_chars
                                   '${int.tryParse(controllers.readingPageNumController.text) ?? 0 + 1}',
                                   style: const TextStyle(color: Colors.grey),
                                 ),
