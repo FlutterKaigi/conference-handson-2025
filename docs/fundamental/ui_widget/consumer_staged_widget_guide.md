@@ -2,13 +2,6 @@
 
 ## 概要
 
-```
-fundamental/
-├── ui_widget/
-    ├── consumer_staged_widget.dart   # カスタム・ウイジェット（構造定義）
-    └── staged_widget.dart            # カスタム・ウイジェット（構造定義）
-```
-
 **ConsumerStagedWidget<R,T>** カスタム・ウィジェットは、  
 **①状況に応じた UI表示｜表示更新**、**②状況に応じた UI表示の切り替え**、**③内部状態の定義**、**④ライフサイクルのハンドリング**を  
 *State派生クラスを定義することなく、Widget クラス内のみで行える*ようにした [StatefulWidget](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html) ラッパーです。
@@ -23,13 +16,14 @@ fundamental/
 
   * オプション：`provider関数`が表す **状態値 ⇒ 状況種別**に応じて、**いくつかのパターンの`build`メソッド**を利用したい場合は、  
     状況ごとのパターンに合わせて **ビルドメソッド（`build, build2 〜 build20`）のオーバーライド**を行い、  
-    状況種別からビルドメソッドの index(`0〜19`)に対応させるよう、**ビルダー選択メソッド（`selectBuilder`）をオーバーライド**します。  
-    *メソッド・オーバーライドでなく、**コンストラクタ・オプションパラメータの `buildersリスト`や `selectBuilder関数`の外部定義**でも対応可能です。*  
+    状況種別とビルドメソッドの index(`0〜19`)が対応するように、**ビルダー選択メソッド（`selectBuilder`）をオーバーライド**します。  
+    *メソッド・オーバーライドでなく、**コンストラクタ・オプションパラメータで `buildersリスト`や `selectBuilder関数`を定義**することもできます。*  
 
-  * 活用例：非同期データの取得のため、最初はローディング表示、データ取得後にアイコン表示、もしくはデータ取得エラー表示に切り替えたい場合、  
-    [FutureBuilder](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html)を使わなくても、`provider関数`で enum [loading, complete, error] を返し、  
-    **ビルドメソッド**で ローディング｜アイコン｜エラー用にビルドメソッドをオーバーライドし、  
-    **ビルダー選択メソッド**で enum index の返却をオーバーライドさせることで対応できます。
+  * 活用例：非同期データの取得のため、最初はローディング表示、データ取得後にアイコン表示、  
+    もしくはデータ取得エラー表示に切り替えたい場合、[FutureBuilder](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html)を使わなくても、  
+    `provider関数`で enum [loading, complete, error] を返し、  
+    **ビルドメソッド**で ローディング｜アイコン｜エラー用にビルドメソッドをオーバーライドして、  
+    **ビルダー選択メソッド**で enum index の返却をオーバーライドさせることで対応することができます。
 
 * **③内部状態の定義**  
   * **ウィジェットの内部状態型 T を ウィジェット ジェネリクス&lt;T&gt;に指定して、  
@@ -48,6 +42,12 @@ fundamental/
   * 活用例：アプリがバックグラウンドの間はカウントダウンタイマーを停止させたいのであれば、  
      `onPausedハンドラメソッド`でタイマー停止、`onResumeハンドラメソッド`でタイマー再開を行う処理をオーバーライドします。
 
+```
+fundamental/
+├── ui_widget/
+    ├── consumer_staged_widget.dart   # カスタム・ウイジェット（構造定義）
+    └── staged_widget.dart            # カスタム・ウイジェット（構造定義）
+```
 
 
 ## 実装のポイント
