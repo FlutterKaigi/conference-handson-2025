@@ -14,8 +14,8 @@ import 'components/ripple_effect_widget.dart';
 import 'components/sparkle_effect_widget.dart';
 import 'components/title_text_widget.dart';
 
-class SupportAnimationsWidget
-    extends ConsumerStagedWidget<AnimationTypeEnum, Object> {
+class ReadingProgressAnimationsWidget
+    extends ConsumerStagedWidget<ProgressAnimationTypeEnum, Object> {
   /// コンストラクタ
   ///
   /// - [provider] : 引数の Riverpod ref を使って状態値を取得する関数。
@@ -25,7 +25,7 @@ class SupportAnimationsWidget
   ///
   /// - [selectBuilder] : （オプション）[selectBuild]を上書きする、
   ///   [provider]が返した状態値に対応するビルド・メソッドを返す関数。
-  const SupportAnimationsWidget({
+  const ReadingProgressAnimationsWidget({
     required super.provider,
     super.builders,
     super.selectBuilder,
@@ -33,66 +33,36 @@ class SupportAnimationsWidget
   });
 
   @override
-  /// [SupportAnimationsWidget] では、ウイジェット内部状態を使いません。
+  /// [ReadingProgressAnimationsWidget] では、ウイジェット内部状態を使いません。
   Object? createWidgetState() => null;
 
   @override
   /// [provider] が返す状態値の
-  /// [AnimationTypeEnum] に対応した build関数を返します。
-  ConsumerStagedBuild<AnimationTypeEnum, Object> selectBuild(
-    List<ConsumerStagedBuild<AnimationTypeEnum, Object>> builders,
-    AnimationTypeEnum value,
+  /// [ProgressAnimationTypeEnum] に対応した build関数を返します。
+  ConsumerStagedBuild<ProgressAnimationTypeEnum, Object> selectBuild(
+    List<ConsumerStagedBuild<ProgressAnimationTypeEnum, Object>> builders,
+    ProgressAnimationTypeEnum value,
   ) {
     return builders[value.index];
   }
 
   @override
-  /// [AnimationTypeEnum.none] に対応した、デフォルトの build関数
+  /// [ProgressAnimationTypeEnum.none] に対応した、デフォルトの build関数
   Widget build(
     BuildContext context,
     WidgetRef ref,
-    AnimationTypeEnum value,
+    ProgressAnimationTypeEnum value,
     Object? state,
   ) {
     return const Offstage();
   }
 
   @override
-  /// [AnimationTypeEnum.cheer] に対応した、デフォルトの build関数
+  /// [ProgressAnimationTypeEnum.progressRate10] に対応した、デフォルトの build関数
   Widget build2(
     BuildContext context,
     WidgetRef ref,
-    AnimationTypeEnum value,
-    Object? state,
-  ) {
-    return _buildHelper(
-      context: context,
-      animationText: '頑張って！応援してるよ！🎉',
-      animationColor: Colors.green,
-    );
-  }
-
-  @override
-  /// [AnimationTypeEnum.scolding] に対応した、デフォルトの build関数
-  Widget build3(
-    BuildContext context,
-    WidgetRef ref,
-    AnimationTypeEnum value,
-    Object? state,
-  ) {
-    return _buildHelper(
-      context: context,
-      animationText: 'もっと集中して！喝！🔥',
-      animationColor: Colors.orange,
-    );
-  }
-
-  @override
-  /// [AnimationTypeEnum.progressRate10] に対応した、デフォルトの build関数
-  Widget build4(
-    BuildContext context,
-    WidgetRef ref,
-    AnimationTypeEnum value,
+    ProgressAnimationTypeEnum value,
     Object? state,
   ) {
     final String title =
@@ -108,11 +78,11 @@ class SupportAnimationsWidget
   }
 
   @override
-  /// [AnimationTypeEnum.progressRate50] に対応した、デフォルトの build関数
-  Widget build5(
+  /// [ProgressAnimationTypeEnum.progressRate50] に対応した、デフォルトの build関数
+  Widget build3(
     BuildContext context,
     WidgetRef ref,
-    AnimationTypeEnum value,
+    ProgressAnimationTypeEnum value,
     Object? state,
   ) {
     final String title =
@@ -128,11 +98,11 @@ class SupportAnimationsWidget
   }
 
   @override
-  /// [AnimationTypeEnum.progressRate80] に対応した、デフォルトの build関数
-  Widget build6(
+  /// [ProgressAnimationTypeEnum.progressRate80] に対応した、デフォルトの build関数
+  Widget build4(
     BuildContext context,
     WidgetRef ref,
-    AnimationTypeEnum value,
+    ProgressAnimationTypeEnum value,
     Object? state,
   ) {
     final String title =
@@ -148,11 +118,11 @@ class SupportAnimationsWidget
   }
 
   @override
-  /// [AnimationTypeEnum.progressRate100] に対応した、デフォルトの build関数
-  Widget build7(
+  /// [ProgressAnimationTypeEnum.progressRate100] に対応した、デフォルトの build関数
+  Widget build5(
     BuildContext context,
     WidgetRef ref,
-    AnimationTypeEnum value,
+    ProgressAnimationTypeEnum value,
     Object? state,
   ) {
     final String title =
@@ -165,26 +135,6 @@ class SupportAnimationsWidget
       secondaryColor: const Color(0xFFFFD700),
       icon: Icons.celebration,
       isCompletion: true,
-    );
-  }
-
-  Widget _buildHelper({
-    required BuildContext context,
-    required String animationText,
-    required Color animationColor,
-  }) {
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        color: animationColor, // アニメーションの背景として一時的に色付け
-        child: Text(
-          animationText,
-          style: Theme.of(
-            context,
-          ).textTheme.headlineMedium?.copyWith(color: Colors.white),
-          textAlign: TextAlign.center,
-        ),
-      ),
     );
   }
 }
@@ -524,7 +474,6 @@ class _ProgressAchievementAnimationState
             message: widget.message,
             primaryColor: widget.primaryColor,
           ),
-
         ],
       ),
     );
