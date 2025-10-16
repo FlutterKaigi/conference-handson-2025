@@ -25,7 +25,7 @@ class MorphingButtonStateful extends StatefulWidget {
 
   final ReadingBookValueObject value;
   final ReadingBooksViewModel vm;
-  final SupportAnimationsViewModel animeVm;
+  final ReadingProgressAnimationsViewModel animeVm;
   final ReadingBookState state;
 
   /// フォーム送信処理のメインフロー
@@ -39,7 +39,7 @@ class MorphingButtonStateful extends StatefulWidget {
     BuildContext context,
     ReadingBookValueObject readingBook,
     ReadingBooksViewModel readingBooksViewModel,
-    SupportAnimationsViewModel supportAnimationsViewModel,
+    ReadingProgressAnimationsViewModel readingProgressAnimationsViewModel,
     ReadingBookState state,
   ) async {
     // 連打防止処理
@@ -70,7 +70,7 @@ class MorphingButtonStateful extends StatefulWidget {
 
       // Step 4: 進捗アニメーションの更新
       _updateProgressAnimation(
-        supportAnimationsViewModel,
+        readingProgressAnimationsViewModel,
         editedReadingBook,
         prevReadingPageNum,
       );
@@ -114,7 +114,7 @@ class MorphingButtonStateful extends StatefulWidget {
 
   /// 進捗アニメーションの更新
   void _updateProgressAnimation(
-    SupportAnimationsViewModel animationViewModel,
+    ReadingProgressAnimationsViewModel animationViewModel,
     ReadingBookValueObject updatedBook,
     int previousPageNum,
   ) {
@@ -267,7 +267,10 @@ class MorphingButtonStateful extends StatefulWidget {
     properties.add(DiagnosticsProperty<ReadingBookValueObject>('value', value));
     properties.add(DiagnosticsProperty<ReadingBooksViewModel>('vm', vm));
     properties.add(
-      DiagnosticsProperty<SupportAnimationsViewModel>('animeVm', animeVm),
+      DiagnosticsProperty<ReadingProgressAnimationsViewModel>(
+        'animeVm',
+        animeVm,
+      ),
     );
     properties.add(DiagnosticsProperty<ReadingBookState>('state', state));
   }
