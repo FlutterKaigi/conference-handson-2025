@@ -175,8 +175,8 @@ class ReadingBookSettingsWidget
     Object? value,
     ReadingBookSettingsState? state,
   ) {
-    final SupportAnimationsViewModel supportVM = ref.read(
-      supportAnimationsProvider.notifier,
+    final ReadingSupportAnimationsViewModel supportVM = ref.read(
+      readingSupportAnimationsProvider.notifier,
     );
     final ReadingBooksViewModel vm = ref.read(readingBooksProvider.notifier);
     final ReadingBookSettingsState controllers = state!;

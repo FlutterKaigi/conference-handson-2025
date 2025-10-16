@@ -53,7 +53,7 @@ class ReadingBookWidget
     BuildContext context,
     ReadingBookValueObject readingBook,
     ReadingBooksViewModel readingBooksViewModel,
-    SupportAnimationsViewModel supportAnimationsViewModel,
+    ReadingProgressAnimationsViewModel readingProgressAnimationsViewModel,
     ReadingBookState state,
   ) {
     if (state.formKey.currentState!.validate()) {
@@ -78,7 +78,7 @@ class ReadingBookWidget
       readingBooksViewModel.commitReadingBook(editedReadingBook);
 
       // 読書進捗率に変化があれば、アニメーションを表示させます。
-      supportAnimationsViewModel.updateAnimationTypeIfProgressChange(
+      readingProgressAnimationsViewModel.updateAnimationTypeIfProgressChange(
         updatedBook: editedReadingBook,
         prevReadingPageNum: prevReadingPageNum,
       );
@@ -250,8 +250,8 @@ class ReadingBookWidget
     ReadingBookValueObject value,
     ReadingBookState? state,
   ) {
-    final SupportAnimationsViewModel animeVm = ref.read(
-      supportAnimationsProvider.notifier,
+    final ReadingProgressAnimationsViewModel animeVm = ref.read(
+      readingProgressAnimationsProvider.notifier,
     );
     final ReadingBooksViewModel vm = ref.read(readingBooksProvider.notifier);
     final ReadingBookState controllers = state!;

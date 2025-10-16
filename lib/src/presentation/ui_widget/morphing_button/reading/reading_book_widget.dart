@@ -76,8 +76,8 @@ class ReadingBookWidget
     ReadingBookValueObject value,
     ReadingBookState? state,
   ) {
-    final SupportAnimationsViewModel animeVm = ref.read(
-      supportAnimationsProvider.notifier,
+    final ReadingProgressAnimationsViewModel animeVm = ref.read(
+      readingProgressAnimationsProvider.notifier,
     );
     final ReadingBooksViewModel vm = ref.read(readingBooksProvider.notifier);
     final ReadingBookState controllers = state!;
