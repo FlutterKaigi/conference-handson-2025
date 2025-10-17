@@ -28,9 +28,15 @@ class HomePage extends ConsumerWidget {
           CurrentlyTasksWidget(
             provider: (WidgetRef ref) => ref.watch(readingBooksProvider),
           ),
-          // 上層: アニメーション表示
-          SupportAnimationsWidget(
-            provider: (WidgetRef ref) => ref.watch(supportAnimationsProvider),
+          // 中層: 読書応援・アニメーション表示
+          ReadingSupportAnimationsWidget(
+            provider: (WidgetRef ref) =>
+                ref.watch(readingSupportAnimationsProvider),
+          ),
+          // 上層: 読書進捗達成・アニメーション表示
+          ReadingProgressAnimationsWidget(
+            provider: (WidgetRef ref) =>
+                ref.watch(readingProgressAnimationsProvider),
           ),
         ],
       ),
