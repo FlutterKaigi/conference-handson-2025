@@ -50,16 +50,23 @@ class ReadingBooksState extends StateObject<ReadingBooksValueObject> {
 
     // FIXME ストレージから保存中の読書中書籍一覧を取得するようにすること。
     // ダミーデータを生成
-    final List<ReadingBookValueObject> readingBooks =
-        List<String>.generate(20, (int index) => '読書中書籍 ${index + 1}')
-            .map(
-              (String name) => ReadingBookValueObject(
-                stateType: ReadingBookValueObject,
-                name: name,
-                totalPages: 100,
-              ),
-            )
-            .toList();
+    final List<ReadingBookValueObject> readingBooks = <ReadingBookValueObject>[
+      const ReadingBookValueObject(
+        stateType: ReadingBookValueObject,
+        name: 'Flutter入門',
+        totalPages: 100,
+      ),
+      const ReadingBookValueObject(
+        stateType: ReadingBookValueObject,
+        name: 'Flutter実践',
+        totalPages: 350,
+      ),
+      const ReadingBookValueObject(
+        stateType: ReadingBookValueObject,
+        name: 'Introduction to Flutter for Beginners.',
+        totalPages: 87,
+      ),
+    ];
     updateReadingBooks(readingBooks);
   }
 
