@@ -29,6 +29,7 @@ void main() {
     await tester.pumpWidget(
       ProviderScope(child: app.App(overrideReadingBooksDomain: domain)),
     );
+    await tester.pumpAndSettle();
 
     // ホーム画面が表示されていることを確認
     expect(find.byType(HomePage), findsOneWidget);
