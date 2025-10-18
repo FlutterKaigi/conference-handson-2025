@@ -8,3 +8,6 @@ export 'default/widget_packages.dart';
 // export 'interactive_donut_chart/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 // export 'morphing_button/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 // export 'enhanced_progress/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+
+// 完成形設定 （ui_widget）
+// export 'complete/widget_packages.dart'; // model設置はありません。（model/default を利用します）
