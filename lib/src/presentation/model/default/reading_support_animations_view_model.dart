@@ -59,7 +59,7 @@ class ReadingSupportAnimationsViewModel
   }
 
   /// アニメーション種別更新ラッパー （関数定義からアクセス可能にするためのラッパー）
-  static late final void Function({
+  static late void Function({
     required SupportAnimationTypeEnum animationType,
   })
   _updateAnimationType;
