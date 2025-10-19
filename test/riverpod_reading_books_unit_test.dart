@@ -46,6 +46,10 @@ void main() {
         .read(readingBooksProvider)
         .readingBooks;
 
+    debugLog(
+      '読書支援書籍一覧の初期値が、0件であることをチェックする。\n'
+      ' （readingBooks.length=${readingBooks.length}）\n',
+    );
     expect(readingBooks.length, equals(0));
 
     // ReadingBooksViewModel addReadingBook で、読書支援書籍を新規追加する。
@@ -55,6 +59,11 @@ void main() {
     container.read(readingBooksProvider.notifier).commitReadingBook(book);
     readingBooks = container.read(readingBooksProvider).readingBooks;
 
+    debugLog(
+      '読書支援書籍一覧に、"Flutter入門"を追加したことをチェックする。\n'
+      ' （readingBooks.length=${readingBooks.length}）, '
+      ' （readingBooks.first.name=${readingBooks.first.name}）\n',
+    );
     expect(readingBooks.length, equals(1));
     expect(readingBooks.first.name, equals('Flutter入門'));
 
@@ -66,6 +75,11 @@ void main() {
     container.read(readingBooksProvider.notifier).commitReadingBook(book);
     readingBooks = container.read(readingBooksProvider).readingBooks;
 
+    debugLog(
+      '書籍名を、"Flutter入門"から"Flutter実践入門"に編集したことをチェックする。\n'
+      ' （readingBooks.length=${readingBooks.length}）, '
+      ' （readingBooks.first.name=${readingBooks.first.name}）\n',
+    );
     expect(readingBooks.length, equals(1));
     expect(readingBooks.first.name, equals('Flutter実践入門'));
 
@@ -76,6 +90,12 @@ void main() {
     container.read(readingBooksProvider.notifier).commitReadingBook(book);
     readingBooks = container.read(readingBooksProvider).readingBooks;
 
+    debugLog(
+      '読書支援書籍一覧に、削除テスト用書籍の"Vibeでええやん？"を追加したことをチェックする。\n'
+      ' （readingBooks.length=${readingBooks.length}）, '
+      ' （readingBooks.first.name=${readingBooks.first.name}）, '
+      ' （readingBooks.last.name=${readingBooks.last.name}）\n',
+    );
     expect(readingBooks.length, equals(2));
     expect(readingBooks.last.name, equals('Vibeでええやん？'));
 
@@ -85,6 +105,12 @@ void main() {
     container.read(readingBooksProvider.notifier).commitReadingBook(book);
     readingBooks = container.read(readingBooksProvider).readingBooks;
 
+    debugLog(
+      '読書支援書籍一覧から、書籍の"Vibeでええやん？"を削除したことをチェックする。\n'
+      ' （readingBooks.length=${readingBooks.length}）, '
+      ' （readingBooks.first.name=${readingBooks.first.name}）, '
+      ' （readingBooks.last.name=${readingBooks.last.name}）\n',
+    );
     expect(readingBooks.length, equals(1));
     expect(readingBooks.first.name, equals('Flutter実践入門'));
     expect(readingBooks.last.name, equals('Flutter実践入門'));
