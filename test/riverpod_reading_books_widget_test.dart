@@ -32,10 +32,15 @@ void main() {
     await tester.pumpAndSettle();
 
     // ホーム画面が表示されていることを確認
+    debugLog('アプリ起動画面にホームページ（HomePage ウィジェット）が表示されていることをチェックする。\n');
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(SettingsPage), findsNothing);
 
     // 空の読書中書籍一覧であることを確認
+    debugLog(
+      'ホームページの読書中書籍一覧に、何も表示されていないことをチェックする。\n'
+      ' （domain.readingBooks.isEmpty=${domain.readingBooks.isEmpty}）\n',
+    );
     expect(find.text('Flutter入門'), findsNothing);
     expect(domain.readingBooks.isEmpty, true);
 
@@ -46,6 +51,10 @@ void main() {
     await tester.pumpAndSettle();
 
     // 設定画面が表示されていることを確認
+    debugLog(
+      'アプリバーの歯車アイコンをタップして、\n'
+      '設定画面（SettingsPage ウィジェット）に遷移したことをチェックする。\n',
+    );
     expect(find.byType(HomePage), findsNothing);
     expect(find.byType(SettingsPage), findsOneWidget);
 
@@ -60,10 +69,19 @@ void main() {
     await tester.pumpAndSettle();
 
     // ホーム画面が表示されていることを確認
+    debugLog(
+      '設定画面で、書籍(書籍名："Flutter入門"、総ページ数：350)の「新規追加」を行い、\n'
+      'ホーム画面（HomePage ウィジェット）に遷移したことをチェックする。\n',
+    );
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(SettingsPage), findsNothing);
 
     // 読書中書籍一覧に、書籍が追加されていることをチェック
+    debugLog(
+      'ホーム画面の読書中書籍一覧に、新規追加した"Flutter入門"が追加されたことをチェックする。\n'
+      ' （domain.readingBooks.length=${domain.readingBooks.length}）, \n'
+      ' （domain.readingBooks.first.name=${domain.readingBooks.first.name}）\n',
+    );
     expect(find.text('Flutter入門'), findsOneWidget);
     expect(domain.readingBooks.isNotEmpty, true);
 
@@ -72,6 +90,17 @@ void main() {
     await tester.pumpAndSettle();
 
     // 読書中書籍編集画面が表示されていることを確認
+    debugLog(
+      '読書中書籍一覧の"Flutter入門"をタップして、\n'
+      '読書中書籍編集画面（ReadingBookPage ウィジェット）に遷移したことをチェックする。\n'
+      ' （domain.readingBooks.first.name=${domain.readingBooks.first.name}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.totalPages=${domain.readingBooks.first.totalPages}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.readingPageNum=${domain.readingBooks.first.readingPageNum}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.bookReview=${domain.readingBooks.first.bookReview}）\n',
+    );
     expect(find.byType(HomePage), findsNothing);
     expect(find.byType(ReadingBookPage), findsOneWidget);
 
@@ -88,6 +117,7 @@ void main() {
       final String text = tf.controller?.text ?? '';
       debugLog('TextField - $text');
     });
+    debugLog('');
 
     // GoRouter 16.0 によるものか不明ですが、
     // Widget test 終了時の画面表示がキャッシュされているのか、
@@ -99,6 +129,10 @@ void main() {
     // ホーム画面が表示されていることを確認
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(ReadingBookPage), findsNothing);
+    debugLog(
+      'アプリバーのページバックボタンをタップして、\n'
+      'ホーム画面（HomePage ウィジェット）に戻ったことをチェックする。\n',
+    );
   });
 
   testWidgets('updateReadingBook smoke test', (WidgetTester tester) async {
@@ -128,10 +162,16 @@ void main() {
     await tester.pumpAndSettle();
 
     // ホーム画面が表示されていることを確認
+    debugLog('アプリ起動画面にホームページ（HomePage ウィジェット）が表示されていることをチェックする。\n');
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(SettingsPage), findsNothing);
 
     // 読書中書籍一覧に Flutter入門 があることを確認
+    debugLog(
+      'ホーム画面の読書中書籍一覧に、ProviderScopeでオーバライドした"Flutter入門"があることをチェックする。\n'
+      ' （domain.readingBooks.length=${domain.readingBooks.length}）,  \n'
+      ' （domain.readingBooks.first.name=${domain.readingBooks.first.name}）\n',
+    );
     expect(find.text('Flutter入門'), findsOneWidget);
     expect(domain.readingBooks.isNotEmpty, true);
 
@@ -140,6 +180,17 @@ void main() {
     await tester.pumpAndSettle();
 
     // 読書中書籍編集画面が表示されていることを確認
+    debugLog(
+      '読書中書籍一覧の"Flutter入門"をタップして、\n'
+      '読書中書籍編集画面（ReadingBookPage ウィジェット）に遷移したことをチェックする。\n'
+      ' （domain.readingBooks.first.name=${domain.readingBooks.first.name}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.totalPages=${domain.readingBooks.first.totalPages}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.readingPageNum=${domain.readingBooks.first.readingPageNum}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.bookReview=${domain.readingBooks.first.bookReview}）\n',
+    );
     expect(find.byType(HomePage), findsNothing);
     expect(find.byType(ReadingBookPage), findsOneWidget);
 
@@ -150,6 +201,7 @@ void main() {
       final String text = tf.controller?.text ?? '';
       debugLog('（編集前）TextField - $text');
     });
+    debugLog('');
 
     // １段目にある 書籍タイトル入力テキストフィールドの書籍名をチェック
     expect(findTextField(find, 0), 'Flutter入門');
@@ -171,10 +223,19 @@ void main() {
     await tester.pumpAndSettle();
 
     // ホーム画面が表示されていることを確認
+    debugLog(
+      '読書中書籍編集画面で、書籍名を"Flutter入門"から"Flutter実践入門"に「編集」して、\n'
+      'ホーム画面（HomePage ウイジェット）に遷移したことをチェックする。\n',
+    );
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(ReadingBookPage), findsNothing);
 
     // 読書中書籍一覧に Flutter実践入門 があることを確認
+    debugLog(
+      '読書中書籍一覧に、書籍名を変更した"Flutter入門"があることをチェックする。\n'
+      ' （domain.readingBooks.length=${domain.readingBooks.length}）, \n'
+      ' （domain.readingBooks.first.name=${domain.readingBooks.first.name}）\n',
+    );
     expect(find.text('Flutter実践入門'), findsOneWidget);
     expect(find.text('Flutter入門'), findsNothing);
     expect(domain.readingBooks.isNotEmpty, true);
@@ -207,10 +268,16 @@ void main() {
     await tester.pumpAndSettle();
 
     // ホーム画面が表示されていることを確認
+    debugLog('アプリ起動画面にホームページ（HomePage ウィジェット）が表示されていることをチェックする。\n');
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(SettingsPage), findsNothing);
 
     // 読書中書籍一覧に Flutter入門 があることを確認
+    debugLog(
+      'ホーム画面の読書中書籍一覧に、ProviderScopeでオーバライドした"Flutter入門"があることをチェックする。\n'
+      ' （domain.readingBooks.length=${domain.readingBooks.length}）,  \n'
+      ' （domain.readingBooks.first.name=${domain.readingBooks.first.name}）\n',
+    );
     expect(find.text('Flutter入門'), findsOneWidget);
     expect(domain.readingBooks.isNotEmpty, true);
 
@@ -219,6 +286,17 @@ void main() {
     await tester.pumpAndSettle();
 
     // 読書中書籍編集画面が表示されていることを確認
+    debugLog(
+      '読書中書籍一覧の"Flutter入門"をタップして、\n'
+      '読書中書籍編集画面（ReadingBookPage ウィジェット）に遷移したことをチェックする。\n'
+      ' （domain.readingBooks.first.name=${domain.readingBooks.first.name}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.totalPages=${domain.readingBooks.first.totalPages}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.readingPageNum=${domain.readingBooks.first.readingPageNum}）, \n'
+      // ignore: lines_longer_than_80_chars
+      ' （domain.readingBooks.bookReview=${domain.readingBooks.first.bookReview}）\n',
+    );
     expect(find.byType(HomePage), findsNothing);
     expect(find.byType(ReadingBookPage), findsOneWidget);
 
@@ -229,6 +307,7 @@ void main() {
       final String text = tf.controller?.text ?? '';
       debugLog('（編集前）TextField - $text');
     });
+    debugLog('');
 
     // １段目にある 書籍タイトル入力テキストフィールドの書籍名をチェック
     expect(findTextField(find, 0), 'Flutter入門');
@@ -251,10 +330,18 @@ void main() {
     await tester.pumpAndSettle();
 
     // ホーム画面が表示されていることを確認
+    debugLog(
+      '読書中書籍編集画面の「この書籍を削除する」をタップして、確認ダイアログの「削除」もタップして、\n'
+      'ホーム画面（HomePage ウイジェット）に遷移したことをチェックする。\n',
+    );
     expect(find.byType(HomePage), findsOneWidget);
     expect(find.byType(ReadingBookPage), findsNothing);
 
     // 読書中書籍一覧に Flutter入門 が無く、一覧が空になっていることを確認
+    debugLog(
+      '読書中書籍一覧に、削除した"Flutter入門"がなくなっていることをチェックする。\n'
+      ' （domain.readingBooks.length=${domain.readingBooks.length}）\n',
+    );
     expect(find.text('Flutter入門'), findsNothing);
     expect(domain.readingBooks.isEmpty, true);
   });
