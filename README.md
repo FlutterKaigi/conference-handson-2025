@@ -51,6 +51,10 @@ fvm をインストールされていない方は、下記のツールのイン�
 ```bash
 curl -fsSL https://fvm.app/install.sh | bash
 ```
+- fvm ツールのインストールコマンド（Windows）
+```powershell
+choco install fvm
+```
 
 ### Makefile
 このプロジェクトでは、アプリの実行やコード生成をコンソールで行えるよう `Makefile`を利用しています。  
@@ -62,7 +66,8 @@ curl -fsSL https://fvm.app/install.sh | bash
 プロジェクトのルートにある `Makefile`の中を見ていただければ、
 どんなコマンドで何ができるのかすぐに理解できると思います。
 
-`make`コマンドは、macOS であれば標準で組み込まれているのでインストールする必要はありません。
+`make`コマンドは、macOS/Linux であれば標準で組み込まれているのでインストールする必要はありません。  
+Windows の場合は、`Makefile`の中身を見て`fvm flutter run`などのコマンド実態を実行してください。  
 
 ### Android Studio 設定
 プロジェクトへの fvm 設定が終わり、プロジェクトで使う Flutter/Dart バージョンが定まったら、    
