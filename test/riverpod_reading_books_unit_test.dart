@@ -61,7 +61,7 @@ void main() {
 
     debugLog(
       '読書支援書籍一覧に、"Flutter入門"を追加したことをチェックする。\n'
-      ' （readingBooks.length=${readingBooks.length}）, '
+      ' （readingBooks.length=${readingBooks.length}）, \n'
       ' （readingBooks.first.name=${readingBooks.first.name}）\n',
     );
     expect(readingBooks.length, equals(1));
@@ -77,7 +77,7 @@ void main() {
 
     debugLog(
       '書籍名を、"Flutter入門"から"Flutter実践入門"に編集したことをチェックする。\n'
-      ' （readingBooks.length=${readingBooks.length}）, '
+      ' （readingBooks.length=${readingBooks.length}）, \n'
       ' （readingBooks.first.name=${readingBooks.first.name}）\n',
     );
     expect(readingBooks.length, equals(1));
@@ -92,8 +92,8 @@ void main() {
 
     debugLog(
       '読書支援書籍一覧に、削除テスト用書籍の"Vibeでええやん？"を追加したことをチェックする。\n'
-      ' （readingBooks.length=${readingBooks.length}）, '
-      ' （readingBooks.first.name=${readingBooks.first.name}）, '
+      ' （readingBooks.length=${readingBooks.length}）, \n'
+      ' （readingBooks.first.name=${readingBooks.first.name}）, \n'
       ' （readingBooks.last.name=${readingBooks.last.name}）\n',
     );
     expect(readingBooks.length, equals(2));
@@ -107,8 +107,8 @@ void main() {
 
     debugLog(
       '読書支援書籍一覧から、書籍の"Vibeでええやん？"を削除したことをチェックする。\n'
-      ' （readingBooks.length=${readingBooks.length}）, '
-      ' （readingBooks.first.name=${readingBooks.first.name}）, '
+      ' （readingBooks.length=${readingBooks.length}）, \n'
+      ' （readingBooks.first.name=${readingBooks.first.name}）, \n'
       ' （readingBooks.last.name=${readingBooks.last.name}）\n',
     );
     expect(readingBooks.length, equals(1));
