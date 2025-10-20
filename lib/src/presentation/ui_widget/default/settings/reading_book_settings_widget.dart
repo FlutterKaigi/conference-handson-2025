@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../domain/model/reading_book_value_object.dart';
 import '../../../../fundamental/ui_widget/consumer_staged_widget.dart';
+import '../../../../fundamental/ui_widget/toggle_switch.dart';
 import '../../../model/view_model_packages.dart';
-import '../../../ui_widget/widget_packages.dart';
 
 class ReadingBookSettingsWidget
     extends ConsumerStagedWidget<Object?, ReadingBookSettingsState> {
@@ -183,46 +183,51 @@ class ReadingBookSettingsWidget
 
     return Padding(
       padding: _middleEdgeInsetsAll(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          // デバッグ用トグルスイッチセクション
-          InputDecorator(
-            decoration: _buildDebugInputDecorator(context, controllers),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'タップ 10秒後にイベントを発行します。',
-                  style: TextTheme.of(context).bodySmall,
-                ),
-                _buildReadingStartSwitch(context, supportVM.debugStartReading),
-                _buildReadingEndSwitch(context, supportVM.debugEndReading),
-              ],
-            ),
-          ),
-          _largeSpacer(),
-          // 書籍情報設定フォームセクション
-          Form(
-            key: controllers.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _buildNameField(context, controllers),
-                _middleSpacer(),
-                _buildTotalPagesField(context, controllers),
-                _largeSpacer(),
-                ElevatedButton(
-                  onPressed: () => _submitForm(context, vm, controllers),
-                  style: ElevatedButton.styleFrom(
-                    padding: _middleEdgeInsetsSymmetric(),
-                    textStyle: _middleTextStyle(),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            // デバッグ用トグルスイッチセクション
+            InputDecorator(
+              decoration: _buildDebugInputDecorator(context, controllers),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'タップ 10秒後にイベントを発行します。',
+                    style: TextTheme.of(context).bodySmall,
                   ),
-                  child: const Text('新規追加'),
-                ),
-              ],
+                  _buildReadingStartSwitch(
+                    context,
+                    supportVM.debugStartReading,
+                  ),
+                  _buildReadingEndSwitch(context, supportVM.debugEndReading),
+                ],
+              ),
             ),
-          ),
-        ],
+            _largeSpacer(),
+            // 書籍情報設定フォームセクション
+            Form(
+              key: controllers.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  _buildNameField(context, controllers),
+                  _middleSpacer(),
+                  _buildTotalPagesField(context, controllers),
+                  _largeSpacer(),
+                  ElevatedButton(
+                    onPressed: () => _submitForm(context, vm, controllers),
+                    style: ElevatedButton.styleFrom(
+                      padding: _middleEdgeInsetsSymmetric(),
+                      textStyle: _middleTextStyle(),
+                    ),
+                    child: const Text('新規追加'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
