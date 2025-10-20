@@ -44,45 +44,50 @@ class ReadingBookGraphWidget
     }
 
     return Center(
-      child: Padding(
-        padding: _middleEdgeInsetsAll(),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              '総ページ数: ${value.totalPages}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Text(
-              '読了ページ数: ${value.readingPageNum}',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 20),
-            SizedBox(
-              width: 200,
-              height: 200,
-              child: CustomPaint(
-                painter: PieChartPainter(progress: progress),
-                child: Center(
-                  child: Text(
-                    '${(progress * 100).toStringAsFixed(0)}%',
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: _middleEdgeInsetsAll(),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                '総ページ数: ${value.totalPages}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              Text(
+                '読了ページ数: ${value.readingPageNum}',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 20),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  return SizedBox(
+                    width: 200,
+                    height: 200,
+                    child: CustomPaint(
+                      painter: PieChartPainter(progress: progress),
+                      child: Center(
+                        child: Text(
+                          '${(progress * 100).toStringAsFixed(0)}%',
+                          style: Theme.of(context).textTheme.headlineSmall
+                              ?.copyWith(fontWeight: FontWeight.bold),
+                        ),
+                      ),
                     ),
+                  );
+                },
+              ),
+              const SizedBox(height: 20),
+              if (progress == 1.0)
+                Text(
+                  '読了おめでとうございます！',
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    color: Colors.green,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-              ),
-            ),
-            const SizedBox(height: 20),
-            if (progress == 1.0)
-              Text(
-                '読了おめでとうございます！',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.green,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
