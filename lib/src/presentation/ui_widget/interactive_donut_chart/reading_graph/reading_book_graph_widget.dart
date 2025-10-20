@@ -58,26 +58,28 @@ class ReadingBookGraphWidget
       controllers.animateToProgress(progress);
     });
 
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          // タイトルセクション
-          TitleSection(value: value, progress: progress),
-          const SizedBox(height: 32),
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(24),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            // タイトルセクション
+            TitleSection(value: value, progress: progress),
+            const SizedBox(height: 32),
 
-          // メインのドーナツチャート
-          ProgressDonutChart(
-            state: controllers,
-            value: value,
-            onTap: () => _onDonutTap(controllers),
-          ),
-          const SizedBox(height: 32),
+            // メインのドーナツチャート
+            ProgressDonutChart(
+              state: controllers,
+              value: value,
+              onTap: () => _onDonutTap(controllers),
+            ),
+            const SizedBox(height: 32),
 
-          // 進捗統計情報
-          ProgressInfo(value: value),
-        ],
+            // 進捗統計情報
+            ProgressInfo(value: value),
+          ],
+        ),
       ),
     );
   }
