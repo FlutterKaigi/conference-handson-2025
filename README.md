@@ -1,5 +1,12 @@
 # conference_handson_2025
 
+![FlutterKaigi 2025 ハンズオンリポジトリ](./docs/images/FlutterKaigi_2025_hanson_ripository_cover.png)
+
+FlutterKaigi 2025 ハンズオン・プロジェクトのリポジトリです。  
+このREADMEページは、プロジェクト開発環境構築及びプロジェクト全体についての説明となっていますので、  
+ハンズオンの説明や作業についてのドキュメントは、こちらの [ハンズオン説明ドキュメント](./docs/handson_document.md) を御参照下さい。
+
+
 ## 機能要件
 
 ## 基本機能
