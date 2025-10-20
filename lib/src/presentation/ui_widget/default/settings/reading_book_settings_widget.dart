@@ -183,46 +183,51 @@ class ReadingBookSettingsWidget
 
     return Padding(
       padding: _middleEdgeInsetsAll(),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          // デバッグ用トグルスイッチセクション
-          InputDecorator(
-            decoration: _buildDebugInputDecorator(context, controllers),
-            child: Column(
-              children: <Widget>[
-                Text(
-                  'タップ 10秒後にイベントを発行します。',
-                  style: TextTheme.of(context).bodySmall,
-                ),
-                _buildReadingStartSwitch(context, supportVM.debugStartReading),
-                _buildReadingEndSwitch(context, supportVM.debugEndReading),
-              ],
-            ),
-          ),
-          _largeSpacer(),
-          // 書籍情報設定フォームセクション
-          Form(
-            key: controllers.formKey,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                _buildNameField(context, controllers),
-                _middleSpacer(),
-                _buildTotalPagesField(context, controllers),
-                _largeSpacer(),
-                ElevatedButton(
-                  onPressed: () => _submitForm(context, vm, controllers),
-                  style: ElevatedButton.styleFrom(
-                    padding: _middleEdgeInsetsSymmetric(),
-                    textStyle: _middleTextStyle(),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: <Widget>[
+            // デバッグ用トグルスイッチセクション
+            InputDecorator(
+              decoration: _buildDebugInputDecorator(context, controllers),
+              child: Column(
+                children: <Widget>[
+                  Text(
+                    'タップ 10秒後にイベントを発行します。',
+                    style: TextTheme.of(context).bodySmall,
                   ),
-                  child: const Text('新規追加'),
-                ),
-              ],
+                  _buildReadingStartSwitch(
+                    context,
+                    supportVM.debugStartReading,
+                  ),
+                  _buildReadingEndSwitch(context, supportVM.debugEndReading),
+                ],
+              ),
             ),
-          ),
-        ],
+            _largeSpacer(),
+            // 書籍情報設定フォームセクション
+            Form(
+              key: controllers.formKey,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  _buildNameField(context, controllers),
+                  _middleSpacer(),
+                  _buildTotalPagesField(context, controllers),
+                  _largeSpacer(),
+                  ElevatedButton(
+                    onPressed: () => _submitForm(context, vm, controllers),
+                    style: ElevatedButton.styleFrom(
+                      padding: _middleEdgeInsetsSymmetric(),
+                      textStyle: _middleTextStyle(),
+                    ),
+                    child: const Text('新規追加'),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
