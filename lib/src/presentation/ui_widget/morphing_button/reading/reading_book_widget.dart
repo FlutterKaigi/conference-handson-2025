@@ -28,6 +28,11 @@ class ReadingBookWidget
     super.key,
   });
 
+  /// （Widget test 対応）モーフィングボタン キー
+  static const ValueKey<String> morphingButtonKey = ValueKey<String>(
+    'MorphingButtonStateful',
+  );
+
   @override
   ReadingBookState? createWidgetState() {
     return ReadingBookState();
@@ -239,6 +244,7 @@ class ReadingBookWidget
                   vm: vm,
                   animeVm: animeVm,
                   state: controllers,
+                  key: morphingButtonKey,
                 ),
               ),
 

@@ -104,7 +104,7 @@ class DeleteConfirmationSheet extends StatelessWidget {
                     Navigator.pop(context, true);
                   },
                   child: const Text(
-                    '削除する',
+                    '削除',
                     style: TextStyle(fontWeight: FontWeight.w600),
                   ),
                 ),

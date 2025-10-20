@@ -4,7 +4,7 @@
 export '../default/custom_ui/toggle_switch.dart';
 export '../default/home/currently_tasks_widget.dart';
 export '../default/home/reading_support_animations_widget.dart';
+export '../default/reading/reading_book_widget.dart';
 export '../default/settings/reading_book_settings_widget.dart';
 export '../enhanced_progress/home/reading_progress_animations_widget.dart';
 export '../interactive_donut_chart/reading_graph/reading_book_graph_widget.dart';
-export '../morphing_button/reading/reading_book_widget.dart';

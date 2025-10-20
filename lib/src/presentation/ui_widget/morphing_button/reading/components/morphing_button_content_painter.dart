@@ -41,7 +41,7 @@ class MorphingButtonContentPainter extends CustomPainter {
 
   /// テキストコンテンツの描画
   void _drawTextContent(Canvas canvas, Size size) {
-    final String text = isCreateMode ? '登録する' : '更新する';
+    final String text = isCreateMode ? '登録する' : '編集する';
     final TextPainter textPainter = TextPainter(
       text: TextSpan(
         text: text,
