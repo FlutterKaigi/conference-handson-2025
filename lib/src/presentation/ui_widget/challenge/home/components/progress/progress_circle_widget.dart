@@ -65,8 +65,8 @@ class ProgressCircleWidget extends StatelessWidget {
       builder: (BuildContext context, Widget? child) {
         return Transform.scale(
           // ステップ3: アニメーションの値で動きを実現①
-          // scale: 1,
-          scale: pulseAnimation.value,
+          scale: 1,
+          // scale: pulseAnimation.value,
           child: Container(
             width: 140,
             height: 140,
