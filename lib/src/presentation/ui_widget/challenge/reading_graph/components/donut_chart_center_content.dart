@@ -30,6 +30,7 @@ class DonutChartCenterContent extends StatelessWidget {
     final bool isCompleted = progress >= 1.0;
     final int remainingPages = value.totalPages - value.readingPageNum;
 
+    // FIXME コードを完成させてください。
     // ステップ3: 完読時には専用メッセージ表示
     // return AnimatedSwitcher(
     //   duration: const Duration(milliseconds: 600),
