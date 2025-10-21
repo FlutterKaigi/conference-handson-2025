@@ -60,7 +60,7 @@ class ReadingBookGraphWidget
               ),
               const SizedBox(height: 20),
               LayoutBuilder(
-                builder: (context, constraints) {
+                builder: (BuildContext context, BoxConstraints constraints) {
                   return SizedBox(
                     width: 200,
                     height: 200,
