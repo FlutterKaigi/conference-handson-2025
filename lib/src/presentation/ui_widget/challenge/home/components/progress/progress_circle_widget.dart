@@ -88,6 +88,7 @@ class ProgressCircleWidget extends StatelessWidget {
                 BoxShadow(
                   color: primaryColor.withValues(alpha: 0.6),
                   // ステップ3: アニメーションの値で動きを実現②
+                  blurRadius: 40 + 1 * 15,
                   // blurRadius: 25 + pulseAnimation.value * 10,
                   spreadRadius: 8,
                   offset: const Offset(0, 5), // 下方向に影
@@ -96,6 +97,7 @@ class ProgressCircleWidget extends StatelessWidget {
                 BoxShadow(
                   color: secondaryColor.withValues(alpha: 0.4),
                   // ステップ3: アニメーションの値で動きを実現③
+                  blurRadius: 40 + 1 * 15,
                   // blurRadius: 40 + pulseAnimation.value * 15,
                   spreadRadius: 15,
                 ),
@@ -118,7 +120,7 @@ class ProgressCircleWidget extends StatelessWidget {
                   child: CustomPaint(
                     painter: _Enhanced3DProgressPainter(
                       // ステップ3: アニメーションの値で動きを実現④
-                      progress: 1,
+                      progress: 1 * (progressPercent / 100),
                       // progress:
                       //     progressAnimation.value * (progressPercent / 100),
                       primaryColor: primaryColor,
