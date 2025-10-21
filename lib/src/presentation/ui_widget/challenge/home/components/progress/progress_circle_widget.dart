@@ -88,7 +88,7 @@ class ProgressCircleWidget extends StatelessWidget {
                 BoxShadow(
                   color: primaryColor.withValues(alpha: 0.6),
                   // ステップ3: アニメーションの値で動きを実現②
-                  blurRadius: 40 + 1 * 15,
+                  blurRadius: 25 + 1 * 10,
                   // blurRadius: 25 + pulseAnimation.value * 10,
                   spreadRadius: 8,
                   offset: const Offset(0, 5), // 下方向に影
