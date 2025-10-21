@@ -54,6 +54,7 @@ class DynamicBackgroundWidget extends StatelessWidget {
               gradient: RadialGradient(
                 center: Alignment.center,
                 colors: <Color>[primaryColor, secondaryColor],
+                // FIXME コードを完成させてください。
                 // ステップ2: １層目の放射グラデーションの作成
                 // radius: 0.8 + animation.value * 0.4,
                 // colors: <Color>[

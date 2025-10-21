@@ -53,6 +53,7 @@ class ReadingBookGraphWidget
     final DonutAnimationState controllers = state!;
     final double progress = _calculateProgress(value);
 
+    // FIXME コードを完成させてください。
     // ステップ1: 画面表示完了後に円グラフ描画を予約する処理を追加
     // WidgetsBinding.instance.addPostFrameCallback((_) {
     //   controllers.animateToProgress(progress);
@@ -156,6 +157,7 @@ class DonutAnimationState {
     if (targetProgress != progress && progressController != null) {
       targetProgress = progress;
 
+      // FIXME コードを完成させてください。
       // ステップ2: 進捗に合わせた終了値を指定し開始する
       // progressAnimation =
       //     Tween<double>(
@@ -168,6 +170,7 @@ class DonutAnimationState {
       //       ),
       //     );
 
+      // FIXME コードを完成させてください。
       // progressController!.reset();
       // unawaited(progressController!.forward());
     }
