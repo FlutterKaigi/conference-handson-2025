@@ -1,7 +1,7 @@
 // UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
 
 // デフォルト設定 （ui_widget）
-export 'default/widget_packages.dart';
+// export 'default/widget_packages.dart';
 
 // 各UIパッケージ 設定 （ui_widget）
 // export 'hero/widget_packages.dart'; // model設置はありません。（model/default を利用します）
@@ -13,4 +13,4 @@ export 'default/widget_packages.dart';
 // export 'complete/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 
 // ハンズオン設定 （ui_widget）
-// export 'challenge/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+export 'challenge/widget_packages.dart'; // model設置はありません。（model/default を利用します）
