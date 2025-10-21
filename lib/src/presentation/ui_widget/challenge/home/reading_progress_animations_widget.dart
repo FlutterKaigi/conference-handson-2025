@@ -1,3 +1,6 @@
+// ignore_for_file: prefer_const_constructors
+// ignore_for_file: prefer_const_literals_to_create_immutables
+// ignore_for_file: unused_element
 // ignore_for_file: unused_import, unused_field
 
 import 'dart:async';
@@ -277,6 +280,7 @@ class _ProgressAchievementAnimationState
       vsync: this,
     );
 
+    // FIXME コードを完成させてください。
     // ステップ1：アニメーションの設定の分割（再生時間）
     // _backgroundController = AnimationController(
     //   duration: const Duration(milliseconds: 5000),
@@ -324,6 +328,7 @@ class _ProgressAchievementAnimationState
       curve: Curves.easeInOut,
     );
 
+    // FIXME コードを完成させてください。
     // ステップ1：アニメーションの設定の分割（動き）
     // _backgroundAnimation = CurvedAnimation(
     //   parent: _backgroundController,
@@ -332,6 +337,7 @@ class _ProgressAchievementAnimationState
   }
 
   Future<void> _startAnimationSequence() async {
+    // FIXME コードを完成させてください。
     // ステップ3: アニメーションの配置と実行
     // unawaited(_backgroundController.repeat(reverse: true));
 
@@ -370,6 +376,7 @@ class _ProgressAchievementAnimationState
     _pulseController.dispose();
     _rippleController.dispose();
     _sparkleController.dispose();
+    // FIXME コードを完成させてください。
     // ステップ1: アニメーションの設定の分割（動き）を追加後、disposeを追加
     // _backgroundController.dispose();
     super.dispose();
@@ -385,11 +392,10 @@ class _ProgressAchievementAnimationState
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
-        // ignore: prefer_const_constructors
         child: Stack(
           alignment: Alignment.center,
-          // ignore: prefer_const_literals_to_create_immutables
           children: <Widget>[
+            // FIXME コードを完成させてください。
             // ステップ3: アニメーションの配置と実行
             // DynamicBackgroundWidget(
             //   animation: _backgroundAnimation,
@@ -397,6 +403,7 @@ class _ProgressAchievementAnimationState
             //   secondaryColor: widget.secondaryColor,
             // ),
 
+            // FIXME コードを完成させてください。
             // ステップ4: ２層目の波紋
             // RippleEffectWidget(
             //   animation: _rippleAnimation,
@@ -404,6 +411,7 @@ class _ProgressAchievementAnimationState
             //   secondaryColor: widget.secondaryColor,
             // ),
 
+            // FIXME コードを完成させてください。
             // ステップ1: 複数のコントローラーを統合的に監視
             // AnimatedBuilder(
             //   animation: Listenable.merge(<Listenable>[
@@ -422,6 +430,7 @@ class _ProgressAchievementAnimationState
             //   },
             // ),
 
+            // FIXME コードを完成させてください。
             // ステップ4: 【おまけ】他のアニメーションを重ねる①
             // if (widget.isCompletion)
             //   ParticleEffectWidget(
@@ -429,6 +438,7 @@ class _ProgressAchievementAnimationState
             //     color: widget.secondaryColor,
             //   ),
 
+            // FIXME コードを完成させてください。
             // ステップ4: 【おまけ】他のアニメーションを重ねる②
             // SparkleEffectWidget(
             //   animation: _sparkleAnimation,
@@ -447,7 +457,6 @@ class _ProgressAchievementAnimationState
   /// - Columnによる縦方向のレイアウト
   /// - SizedBoxによる幅制限とスペーシング
   /// - 条件分岐による動的なウィジェット表示
-  // ignore: unused_element
   Widget _buildMainContent() {
     return SizedBox(
       width: 400,
@@ -455,6 +464,7 @@ class _ProgressAchievementAnimationState
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          // FIXME コードを完成させてください。
           // ステップ2: 応援メッセージを配置
           // ProgressCircleWidget(
           //   progressAnimation: _progressAnimation,
