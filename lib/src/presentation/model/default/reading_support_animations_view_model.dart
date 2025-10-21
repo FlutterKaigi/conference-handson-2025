@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../ui_widget/default/custom_ui/toggle_switch.dart';
+import '../../../fundamental/ui_widget/toggle_switch.dart';
 
 final NotifierProvider<
   ReadingSupportAnimationsViewModel,
