@@ -65,6 +65,7 @@ class DynamicBackgroundWidget extends StatelessWidget {
                 ),
                 // secondaryColor.withValues(
                 //   alpha: 0.08 + animation.value * 0.05,
+                // ),
                 primaryColor.withValues(alpha: 0.03),
                 Colors.transparent,
                 ],
