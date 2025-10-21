@@ -64,8 +64,9 @@ class ProgressCircleWidget extends StatelessWidget {
       animation: pulseAnimation,
       builder: (BuildContext context, Widget? child) {
         return Transform.scale(
-          // パルスアニメーションによるスケール変化
-          scale: pulseAnimation.value,
+          // ステップ3: アニメーションの値で動きを実現①
+          scale: 1,
+          // scale: pulseAnimation.value,
           child: Container(
             width: 140,
             height: 140,
@@ -86,14 +87,18 @@ class ProgressCircleWidget extends StatelessWidget {
                 // メインシャドウ（影の部分）
                 BoxShadow(
                   color: primaryColor.withValues(alpha: 0.6),
-                  blurRadius: 25 + pulseAnimation.value * 10,
+                  // ステップ3: アニメーションの値で動きを実現②
+                  blurRadius: 25 + 1 * 10,
+                  // blurRadius: 25 + pulseAnimation.value * 10,
                   spreadRadius: 8,
                   offset: const Offset(0, 5), // 下方向に影
                 ),
                 // グローエフェクト（光の部分）
                 BoxShadow(
                   color: secondaryColor.withValues(alpha: 0.4),
-                  blurRadius: 40 + pulseAnimation.value * 15,
+                  // ステップ3: アニメーションの値で動きを実現③
+                  blurRadius: 40 + 1 * 15,
+                  // blurRadius: 40 + pulseAnimation.value * 15,
                   spreadRadius: 15,
                 ),
                 // 内側のハイライト（上からの光）
@@ -114,8 +119,10 @@ class ProgressCircleWidget extends StatelessWidget {
                   height: 110,
                   child: CustomPaint(
                     painter: _Enhanced3DProgressPainter(
-                      progress:
-                          progressAnimation.value * (progressPercent / 100),
+                      // ステップ3: アニメーションの値で動きを実現④
+                      progress: 1 * (progressPercent / 100),
+                      // progress:
+                      //     progressAnimation.value * (progressPercent / 100),
                       primaryColor: primaryColor,
                       secondaryColor: secondaryColor,
                       pulseValue: pulseAnimation.value,
@@ -125,6 +132,8 @@ class ProgressCircleWidget extends StatelessWidget {
 
                 // アイコン（パルスと連動してサイズ変化）
                 Transform.scale(
+                  // ステップ3: アニメーションの値で動きを実現⑤
+                  // scale: 1.0 + 1 * 0.2,
                   scale: 1.0 + pulseAnimation.value * 0.2,
                   child: Container(
                     padding: const EdgeInsets.all(8),
