@@ -77,11 +77,140 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
 ### challenge バレルファイルを有効にする。
 まずはバレルファイルを修正し、虫食いコードが配置されているファイル群をアプリケーション内で参照するようにします。
 
+```dart:lib/src/presentation/ui_widget/widget_packages.dart
+// UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
+
+// デフォルト設定 （ui_widget）
+// export 'default/widget_packages.dart';
+
+// 各UIパッケージ 設定 （ui_widget）
+// export 'hero/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+// export 'interactive_donut_chart/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+// export 'morphing_button/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+// export 'enhanced_progress/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+
+// 完成形設定 （ui_widget）
+// export 'complete/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+
+// ハンズオン設定 （ui_widget）
+export 'challenge/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 ```
 
-```
+現時点のコードは虫食い状態ですが、ビルド可能です。アプリケーションを起動しておくことで後続のハンズオンの動作確認がスムーズになります。
+今のうちに起動しておきましょう。
 
 ### 穴開きカスタムUI コードを完成させる。
+ハンズオン作業はいくつかの工程に分けて進めていきます。各工程ごとに技術の説明と実装を行い、これを繰り返していきます。
+
+:::note
+実装するコードの完成系が虫食いの近くにコメントで添えてあります。ハンズオンは手入力でご参加いただいても、動作確認を目的にコメント解除で完成系コードを適用しても問題ありません。ご自身の取り組みやすい方法でご参加ください。
+:::
+
+### 装飾を重ねて華やかな演出をする
+このパートでは次の技術要素を扱います。
+
+- `AnimationController`と`Animation`
+- `AnimatedBuilder`と`animation.value`
+- `Stack` と`unawaited`
+
+`AnimationController`はアニメーションの時間軸を制御し、`Animation`はその進行度を具体的な数値に変換します。`AnimatedBuilder`は、`animation.value`の変化を検知してUIを自動的に再構築し、滑らかな動きを実現します。
+
+これらの技術を活用して、読書進捗に応じた応援メッセージを画面に表示します。各書籍の読了ページ数を変更し「編集する」ボタンを押下すると一覧ページに遷移します。この時に表示する応援メッセージを華やかにします。現時点では応援メッセージは表示されません。
+
+#### ステップ1: アニメーション設定の分割
+アニメーションを実現するための「再生時間」と「動き」の設定を用意します。このステップでは二つのオブジェクトを用意します。
+
+`AnimationController` はアニメーションの再生時間（`duration`）を制御する役割を担います。コンストラクタでは以下の設定をしています。
+
+- `duration`: アニメーションの再生時間を指定します。`Duration`クラスを使って時間を指定します。
+- `vsync`: アニメーションを画面のリフレッシュレートと同期させるための引数です。これにより、アニメーションがカクつかずに、非常に滑らかに見えます。
+
+`Animation` は`AnimationController`の進行度を、具体的な動きのパターンに変換します。ここで使用する`CurvedAnimation`はアニメーションの進行に緩急をつけ滑らかな動きにすることができます。コンストラクタでは以下の設定をしています。
+
+- `parent`: アニメーションの「時間軸」となる`AnimationController`を指定します。
+- `curve`: アニメーションの動きを指定します。`Curves.easeInOutSine`は、滑らかに加速と減速を繰り返す波のような動きを生成します。これにより、背景のグラデーションが穏やかに膨張・収縮するような効果を生み出します。
+
+このステップではグラデーションのアニメーション表現を代表して実装します。このグラデーションは重ねる装飾のうちの一番下地になります。他の表現についても同様の構造でオブジェクトを用意しています。
+
+では、グラデーション表現の`AnimationController`と`Animation`を用意します。
+
+```:作業対象
+lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── challenge
+│   │   │   │   ├── home
+│   │   │   │   │   ├── components
+│   │   │   │   │   ├── currently_tasks_widget.dart
+│   │   │   │   │   ├── reading_progress_animations_widget.dart  // これが対象
+│   │   │   │   │   └── reading_support_animations_widget.dart
+```
+
+修正前の時点ではグラデーション用のコードがコメントアウトされています。
+
+```dart:修正前
+void _initializeAnimations() {
+  // 省略（他のコントローラー）
+
+  // ステップ1：アニメーションの設定の分割（再生時間）
+  // _backgroundController = AnimationController(
+  //   duration: const Duration(milliseconds: 5000),
+  //   vsync: this,
+  // );
+
+  // 省略（他のアニメーション）
+
+  // ステップ1：アニメーションの設定の分割（動き）
+  // _backgroundAnimation = CurvedAnimation(
+  //   parent: _backgroundController,
+  //   curve: Curves.easeInOutSine,
+  // );
+}
+```
+
+`_backgroundController`変数は、グラデーションを5秒間かけて変化させるよう、時間の定義をしています。`duration`を5000ミリ秒（5秒）に設定しています。
+
+`_backgroundAnimation`変数は、グラデーションの動きを滑らかに加速と減速を繰り返す波のような動きにするための動きの定義をしています。`CurvedAnimation`を使い、時間軸（`_backgroundController`）に`Curves.easeInOutSine`という緩急パターンを適用しています。
+
+```dart:修正後
+void _initializeAnimations() {
+  // 省略（他のコントローラー）
+
+  // ステップ1：アニメーションの設定の分割（再生時間）
+  _backgroundController = AnimationController(
+    duration: const Duration(milliseconds: 5000),
+    vsync: this,
+  );
+
+  // 省略（他のアニメーション）
+
+  // ステップ1：アニメーションの設定の分割（動き）
+  _backgroundAnimation = CurvedAnimation(
+    parent: _backgroundController,
+    curve: Curves.easeInOutSine,
+  );
+ }
+```
+
+
+
+#### ステップ2: １層目の放射グラデーション
+重ね合わせるアニメーション表現の一番下層の放射グラデーションを用意します。このグラデーションは時間の進行に合わせて動くようにします。
+
+
+### 複数アニメーションを連動させる
+
+
+### 遅延実行とトランジションで滑らかな表現をする
+
 
 ### 完成させたカスタムUI の機能要件表現を確認する。
 
