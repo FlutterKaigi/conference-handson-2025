@@ -77,7 +77,8 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
 ### challenge バレルファイルを有効にする。
 まずはバレルファイルを修正し、虫食いコードが配置されているファイル群をアプリケーション内で参照するようにします。
 
-```dart:lib/src/presentation/ui_widget/widget_packages.dart
+lib/src/presentation/ui_widget/widget_packages.dart
+```dart
 // UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
 
 // デフォルト設定 （ui_widget）
@@ -102,9 +103,8 @@ export 'challenge/widget_packages.dart'; // model設置はありません。（m
 ### 穴開きカスタムUI コードを完成させる。
 ハンズオン作業はいくつかの工程に分けて進めていきます。各工程ごとに技術の説明と実装を行い、これを繰り返していきます。
 
-:::note
 実装するコードの完成系が虫食いの近くにコメントで添えてあります。ハンズオンは手入力でご参加いただいても、動作確認を目的にコメント解除で完成系コードを適用しても問題ありません。ご自身の取り組みやすい方法でご参加ください。
-:::
+
 
 ### 装飾を重ねて華やかな演出をする
 このパートでは次の技術要素を扱います。
@@ -134,7 +134,8 @@ export 'challenge/widget_packages.dart'; // model設置はありません。（m
 
 では、グラデーション表現の`AnimationController`と`Animation`を用意します。
 
-```:作業対象
+**作業対象**
+```
 lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart
 
 lib
@@ -156,7 +157,8 @@ lib
 
 修正前の時点ではグラデーション用のコードがコメントアウトされています。
 
-```dart:修正前
+**修正前**
+```dart
 void _initializeAnimations() {
   // 省略（他のコントローラー）
 
@@ -180,7 +182,8 @@ void _initializeAnimations() {
 
 `_backgroundAnimation`変数は、グラデーションの動きを滑らかに加速と減速を繰り返す波のような動きにするための動きの定義をしています。`CurvedAnimation`を使い、時間軸（`_backgroundController`）に`Curves.easeInOutSine`という緩急パターンを適用しています。
 
-```dart:修正後
+**修正後**
+```dart
 void _initializeAnimations() {
   // 省略（他のコントローラー）
 
