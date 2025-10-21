@@ -1,3 +1,5 @@
+// ignore_for_file: unused_import, unused_field
+
 import 'dart:async';
 
 import 'package:flutter/foundation.dart';
@@ -275,11 +277,11 @@ class _ProgressAchievementAnimationState
       vsync: this,
     );
 
-    // 7. 背景アニメーション（グラデーション背景の変化）
-    _backgroundController = AnimationController(
-      duration: const Duration(milliseconds: 5000),
-      vsync: this,
-    );
+    // ステップ1：アニメーションの設定の分割（再生時間）
+    // _backgroundController = AnimationController(
+    //   duration: const Duration(milliseconds: 5000),
+    //   vsync: this,
+    // );
 
     // フェードインアニメーション（より滑らか）
     _fadeAnimation = CurvedAnimation(
@@ -322,16 +324,16 @@ class _ProgressAchievementAnimationState
       curve: Curves.easeInOut,
     );
 
-    // 背景グラデーションアニメーション
-    _backgroundAnimation = CurvedAnimation(
-      parent: _backgroundController,
-      curve: Curves.easeInOutSine,
-    );
+    // ステップ1：アニメーションの設定の分割（動き）
+    // _backgroundAnimation = CurvedAnimation(
+    //   parent: _backgroundController,
+    //   curve: Curves.easeInOutSine,
+    // );
   }
 
   Future<void> _startAnimationSequence() async {
-    // 背景アニメーションを繰り返し開始
-    unawaited(_backgroundController.repeat(reverse: true));
+    // ステップ3: アニメーションの配置と実行
+    // unawaited(_backgroundController.repeat(reverse: true));
 
     // パルスアニメーションを繰り返し開始
     unawaited(_pulseController.repeat(reverse: true));
@@ -368,7 +370,8 @@ class _ProgressAchievementAnimationState
     _pulseController.dispose();
     _rippleController.dispose();
     _sparkleController.dispose();
-    _backgroundController.dispose();
+    // ステップ1: アニメーションの設定の分割（動き）を追加後、disposeを追加
+    // _backgroundController.dispose();
     super.dispose();
   }
 
@@ -382,57 +385,57 @@ class _ProgressAchievementAnimationState
       child: SizedBox(
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
+        // ignore: prefer_const_constructors
         child: Stack(
           alignment: Alignment.center,
+          // ignore: prefer_const_literals_to_create_immutables
           children: <Widget>[
-            // 1. 動的背景レイヤー（最背面）
-            DynamicBackgroundWidget(
-              animation: _backgroundAnimation,
-              primaryColor: widget.primaryColor,
-              secondaryColor: widget.secondaryColor,
-            ),
+            // ステップ3: アニメーションの配置と実行
+            // DynamicBackgroundWidget(
+            //   animation: _backgroundAnimation,
+            //   primaryColor: widget.primaryColor,
+            //   secondaryColor: widget.secondaryColor,
+            // ),
 
-            // 2. 波紋エフェクト
-            RippleEffectWidget(
-              animation: _rippleAnimation,
-              primaryColor: widget.primaryColor,
-              secondaryColor: widget.secondaryColor,
-            ),
+            // ステップ4: ２層目の波紋
+            // RippleEffectWidget(
+            //   animation: _rippleAnimation,
+            //   primaryColor: widget.primaryColor,
+            //   secondaryColor: widget.secondaryColor,
+            // ),
 
-            // 3. メインコンテンツ（中央）
-            AnimatedBuilder(
-              animation: Listenable.merge(<Listenable>[
-                _mainController,
-                _progressController,
-                _particleController,
-                _pulseController,
-                _sparkleController,
-              ]),
-              builder: (BuildContext context, Widget? child) {
-                return FadeTransition(
-                  opacity: _fadeAnimation,
-                  child: Transform.scale(
-                    scale: _scaleAnimation.value * _bounceAnimation.value,
-                    child: _buildMainContent(),
-                  ),
-                );
-              },
-            ),
+            // ステップ1: 複数のコントローラーを統合的に監視
+            // AnimatedBuilder(
+            //   animation: Listenable.merge(<Listenable>[
+            //     _mainController,
+            //     _progressController,
+            //     _pulseController,
+            //   ]),
+            //   builder: (BuildContext context, Widget? child) {
+            //     return FadeTransition(
+            //       opacity: _fadeAnimation,
+            //       child: Transform.scale(
+            //         scale: _scaleAnimation.value * _bounceAnimation.value,
+            //         child: _buildMainContent(),
+            //       ),
+            //     );
+            //   },
+            // ),
 
-            // 4. パーティクルエフェクト（完読時のみ表示）
-            if (widget.isCompletion)
-              ParticleEffectWidget(
-                animation: _particleController,
-                color: widget.secondaryColor,
-              ),
+            // ステップ4: 【おまけ】他のアニメーションを重ねる①
+            // if (widget.isCompletion)
+            //   ParticleEffectWidget(
+            //     animation: _particleController,
+            //     color: widget.secondaryColor,
+            //   ),
 
-            // 5. スパークルエフェクト（最前面）
-            SparkleEffectWidget(
-              animation: _sparkleAnimation,
-              primaryColor: widget.primaryColor,
-              secondaryColor: widget.secondaryColor,
-              isCompletion: widget.isCompletion,
-            ),
+            // ステップ4: 【おまけ】他のアニメーションを重ねる②
+            // SparkleEffectWidget(
+            //   animation: _sparkleAnimation,
+            //   primaryColor: widget.primaryColor,
+            //   secondaryColor: widget.secondaryColor,
+            //   isCompletion: widget.isCompletion,
+            // ),
           ],
         ),
       ),
@@ -444,6 +447,7 @@ class _ProgressAchievementAnimationState
   /// - Columnによる縦方向のレイアウト
   /// - SizedBoxによる幅制限とスペーシング
   /// - 条件分岐による動的なウィジェット表示
+  // ignore: unused_element
   Widget _buildMainContent() {
     return SizedBox(
       width: 400,
@@ -451,15 +455,15 @@ class _ProgressAchievementAnimationState
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          // プログレス円とアイコン（コンポーネント化済み）
-          ProgressCircleWidget(
-            progressAnimation: _progressAnimation,
-            pulseAnimation: _pulseAnimation,
-            progressPercent: widget.progressPercent,
-            primaryColor: widget.primaryColor,
-            secondaryColor: widget.secondaryColor,
-            icon: widget.icon,
-          ),
+          // ステップ2: 応援メッセージを配置
+          // ProgressCircleWidget(
+          //   progressAnimation: _progressAnimation,
+          //   pulseAnimation: _pulseAnimation,
+          //   progressPercent: widget.progressPercent,
+          //   primaryColor: widget.primaryColor,
+          //   secondaryColor: widget.secondaryColor,
+          //   icon: widget.icon,
+          // ),
           const SizedBox(height: 32),
 
           // タイトルテキスト

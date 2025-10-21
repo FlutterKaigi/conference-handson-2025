@@ -53,10 +53,10 @@ class ReadingBookGraphWidget
     final DonutAnimationState controllers = state!;
     final double progress = _calculateProgress(value);
 
-    // ビルド後に進捗アニメーションを開始
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      controllers.animateToProgress(progress);
-    });
+    // ステップ1: 画面表示完了後に円グラフ描画を予約する処理を追加
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   controllers.animateToProgress(progress);
+    // });
 
     return SingleChildScrollView(
       child: Container(
@@ -156,21 +156,20 @@ class DonutAnimationState {
     if (targetProgress != progress && progressController != null) {
       targetProgress = progress;
 
-      // 現在値から目標値へのTweenを作成
-      progressAnimation =
-          Tween<double>(
-            begin: animatedProgress, // 現在のアニメーション値から開始
-            end: progress, // 目標値まで
-          ).animate(
-            CurvedAnimation(
-              parent: progressController!,
-              curve: Curves.easeOutCubic, // 自然な減速カーブ
-            ),
-          );
+      // ステップ2: 進捗に合わせた終了値を指定し開始する
+      // progressAnimation =
+      //     Tween<double>(
+      //       begin: animatedProgress,
+      //       end: progress,
+      //     ).animate(
+      //       CurvedAnimation(
+      //         parent: progressController!,
+      //         curve: Curves.easeOutCubic,
+      //       ),
+      //     );
 
-      // アニメーション実行
-      progressController!.reset(); // 0.0にリセット
-      unawaited(progressController!.forward()); // 1.0まで進行
+      // progressController!.reset();
+      // unawaited(progressController!.forward());
     }
   }
 

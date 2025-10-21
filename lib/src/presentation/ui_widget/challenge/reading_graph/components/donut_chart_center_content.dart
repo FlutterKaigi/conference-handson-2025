@@ -30,15 +30,21 @@ class DonutChartCenterContent extends StatelessWidget {
     final bool isCompleted = progress >= 1.0;
     final int remainingPages = value.totalPages - value.readingPageNum;
 
-    return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 600),
-      child: Container(
-        key: ValueKey<bool>(isCompleted),
-        padding: const EdgeInsets.all(16),
-        child: isCompleted
-            ? const CompletionContent()
-            : ProgressContent(remainingPages: remainingPages),
-      ),
+    // ステップ3: 完読時には専用メッセージ表示
+    // return AnimatedSwitcher(
+    //   duration: const Duration(milliseconds: 600),
+    //   child: Container(
+    //     key: ValueKey<bool>(isCompleted),
+    //     padding: const EdgeInsets.all(16),
+    //     child: isCompleted
+    //         ? const CompletionContent()
+    //         : ProgressContent(remainingPages: remainingPages),
+    //   ),
+    // );
+    return Container(
+      key: ValueKey<bool>(isCompleted),
+      padding: const EdgeInsets.all(16),
+      child: ProgressContent(remainingPages: remainingPages),
     );
   }
 }
