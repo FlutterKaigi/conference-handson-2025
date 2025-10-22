@@ -790,7 +790,7 @@ Widget _buildMainContent() {
 ```
 lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart
 
-.
+lib
 ├── src
 │   ├── app
 │   ├── application
@@ -958,11 +958,218 @@ SparkleEffectWidget(
 この工程では、複数のアニメーションを協調させて複雑な演出を作り出すための技術を学習しました。`Listenable.merge`を使うことで、複数の独立した`AnimationController`を一つにまとめました。これにより、異なる時間軸で動く複数のアニメーションを監視できます。これらの技術を用いることで、よりリッチで説得力のあるUIを構築できるようになります。
 
 ### 遅延実行とトランジションで滑らかな表現をする
+このパートでは次の技術要素を扱います。
+
+- `WidgetsBinding.instance.addPostFrameCallback`
+- `Tween`
+- `AnimatedSwitcher`
+
+アニメーションの遅延実行やトランジションを適用したウィジェット切り替えを学習します。
+
+### ステップ1: 画面表示完了後に円グラフ描画を予約
+- ステップ1からステップ2までの完成例
+
+  <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
+
+
+今回の進捗円グラフは画面表示の瞬間に描画するのではなく、背景のグレーの円を含む画面表示の完了後に、それをなぞる様に遅延実行し、進捗円グラフの描画をします。
+
+`WidgetsBinding.instance.addPostFrameCallback` メソッドは画面の描画が完了した直後に一度だけ実行されるコールバック関数を登録します。ここに進捗円グラフを描画する処理を渡します。
+
+```
+lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── challenge
+│   │   │   │   ├── reading_graph
+│   │   │   │   │   ├── components
+│   │   │   │   │   └── reading_book_graph_widget.dart  // これが対象
+```
+
+修正前は進捗円グラフの描画処理がコメントアウトされています。
+
+**修正前**
+```dart
+// ステップ1: 画面表示完了後に円グラフ描画を予約
+// WidgetsBinding.instance.addPostFrameCallback((_) {
+//   controllers.animateToProgress(progress);
+// });
+```
+
+円グラフの描画を行う`animateToProgress`メソッドの呼び出しを含むコールバック関数を遅延実行に指定します。
+
+**修正後**
+```dart
+// ステップ1: 画面表示完了後に円グラフ描画を予約
+WidgetsBinding.instance.addPostFrameCallback((_) {
+  controllers.animateToProgress(progress);
+});
+```
+
+具体的な描画を行う`animateToProgress`メソッドは後続のステップで確認します。
+
+### ステップ2: 進捗に合わせた終了値を指定し開始
+前ステップでコールバックに指定した`animateToProgress` メソッド内を修正します。
+
+`Tween`で動作範囲と動きを定義し、`unawaited`内でアニメーションを実行します。
+
+`Tween`は、アニメーションがどの値からどの値まで変化するかを定義します。ここでは、現在の進捗値（`animatedProgress`）から最終的な目標の進捗値（`progress`）まで変化するよう設定しています。
+`.animate()`は、生成した`Tween`を`AnimationController`に紐づけ、アニメーションの動きのパターンを適用しています。`progressController`を時間軸として使用し、`Curves.easeOutCubic`というカーブ（緩急）を適用しています。これにより、アニメーションが滑らかに加速してから徐々に減速し、自然な動きで目標値に到達します。
+
+`progressController!.reset()`は、コントローラーの値を`0.0`にリセットする命令です。新しいアニメーションを開始する前に、前の状態をクリアしています。
+`unawaited()` にコントローラーの`forward()` メソッドの呼び出しを指定し、アニメーションを実行しています。
+
+修正前は動きの定義と実行それぞれコメントアウトされています。
+
+**修正前**
+```dart
+// ステップ2: 進捗に合わせた終了値を指定し開始
+// progressAnimation =
+//     Tween<double>(
+//       begin: animatedProgress, 
+//       end: progress,
+//     ).animate(
+//       CurvedAnimation(
+//         parent: progressController!,
+//         curve: Curves.easeOutCubic,
+//       ),
+//     );
+
+// progressController!.reset();
+// unawaited(progressController!.forward());
+```
+
+緩急のある動きを定義し、非同期でアニメーションの実行を指示します。
+
+**修正後**
+```dart
+// ステップ2: 進捗に合わせた終了値を指定し開始
+progressAnimation =
+    Tween<double>(
+      begin: animatedProgress,
+      end: progress,
+    ).animate(
+      CurvedAnimation(
+        parent: progressController!,
+        curve: Curves.easeOutCubic,
+      ),
+    );
+
+progressController!.reset();
+unawaited(progressController!.forward());
+```
+
+- ステップ1からステップ2までの完成例（再掲）
+
+  <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
+
+
+
+### ステップ3: 完読時には専用メッセージ表示
+- ステップ3の完成例
+
+  <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
+
+完読時は円グラフの中央にお祝いメッセージが表示されるように修正します。表示するウィジェットを切り替える際にトランジションアニメーションを適用するように`AnimatedSwitcher`を利用します。
+
+`AnimatedSwitcher`は次の引数を利用します。
+- `duration`: トランジションアニメーションの適用時間のミリ秒を指定します。
+- `child`:`AnimatedSwitcher`が監視するウィジェットです。このウィジェットの`key` に渡している値に変化があった場合は「ウィジェットが切り替わった」と判断してアニメーションをトリガーします。今回は完読したかの真偽値がキーです。
+- `child`: 表示メッセージを条件演算子を使って切り替えてます。完読の場合は「完読達成！」メッセージを表示するウィジェットが採用されます。
+
+**作業対象**
+```
+lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── challenge
+│   │   │   │   ├── reading_graph
+│   │   │   │   │   ├── components
+│   │   │   │   │   │   ├── donut_chart_center_content.dart  // これが対象
+│   │   │   │   │   │   ├── その他ウィジェット
+│   │   │   │   │   └── reading_book_graph_widget.dart
+```
+
+作業前の時点では仮の実装があります。ここでは残ページ数を表示するウィジェットを指定しています。
+
+**修正前**
+```dart
+// ステップ3: 完読時には専用メッセージ表示
+// return AnimatedSwitcher(
+//   duration: const Duration(milliseconds: 600),
+//   child: Container(
+//     key: ValueKey<bool>(isCompleted),
+//     padding: const EdgeInsets.all(16),
+//     child: isCompleted
+//         ? const CompletionContent()
+//         : ProgressContent(remainingPages: remainingPages),
+//   ),
+// );
+return Container(
+  key: ValueKey<bool>(isCompleted),
+  padding: const EdgeInsets.all(16),
+  child: ProgressContent(remainingPages: remainingPages),
+);
+```
+
+完読時には残ページ数ではなく専用メッセージを表示するように`AnimatedSwitcher`で切り替えます。
+`isCompleted`の値は円グラフが1周すると`true`に変わります。その時に、自動的に表示内容が「残り〇ページ」を示す`ProgressContent`から、「完読達成！」を示す`CompletionContent`へと切り替わります。変化は600ミリ秒かけてトランジションアニメーションを適用します。
+
+**修正後**
+```dart
+// ステップ3: 完読時には専用メッセージ表示
+return AnimatedSwitcher(
+  duration: const Duration(milliseconds: 600),
+  child: Container(
+    key: ValueKey<bool>(isCompleted),
+    padding: const EdgeInsets.all(16),
+    child: isCompleted
+        ? const CompletionContent()
+        : ProgressContent(remainingPages: remainingPages),
+  ),
+);
+```
+
+- ステップ3の完成例（再掲）
+
+  <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
+
+
+#### まとめ
+アニメーションの遅延実行やトランジションアニメーションを適用したウィジェット切り替えを学習しました。これらの技術を通じて、単なる静的なUIではなく、ユーザーの操作に自然に応答する動的なUIを構築することができます。
 
 
 ### 完成させたカスタムUI の機能要件表現を確認する。
+ハンズオンお疲れ様でした。これでカスタムUIの虫食い実装は完了です。作成したカスタムUIの要件について改めて確認します。
+
+- 進捗応援アニメーション
+  - 読書進捗に応じた応援アニメーションを書籍一覧ページに重ねて表示する。
+  - アニメーションは複数組み合わせ、読書の達成感や継続するためのモチベーションの向上を目指す。
+- 読書進捗グラフ
+  - 本の総ページ数に対する現在の進捗や残りページ数を視覚的に表現する。
+  - 瞬間的な表示ではなく、徐々に描画することで進捗の積み重ねの視覚的表現を強化し、努力の肯定感を高める。
+
+シンプルなUIでも機能は満たせますが、アニメーションを実装することで、ユーザーへの印象づけや動機づけなど、体験を向上させることができます。
+
 
 ### ベースUIと カスタムUI のコードを比較してみる。
+構造が違いすぎるので不要
 
 ----------
 
