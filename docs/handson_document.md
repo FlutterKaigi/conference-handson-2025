@@ -139,6 +139,7 @@ export 'challenge/widget_packages.dart'; // model設置はありません。（m
 
 #### ステップ1: アニメーション設定の分割
 - ステップ1からステップ3までの完成例
+
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
 
 ステップ1では、アニメーションを実現するための「再生時間」と「動き」の設定を用意します。このステップでは二つのオブジェクトを用意します。
@@ -420,6 +421,7 @@ Future<void> _startAnimationSequence() async {
 ```
 
 - ステップ1からステップ3までの完成例（再掲）
+
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
 
 
