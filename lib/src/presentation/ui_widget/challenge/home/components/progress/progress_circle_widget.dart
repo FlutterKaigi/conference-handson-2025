@@ -138,8 +138,8 @@ class ProgressCircleWidget extends StatelessWidget {
                 Transform.scale(
                   // FIXME コードを完成させてください。
                   // ステップ3: アニメーションの値で動きを実現⑤
-                  // scale: 1.0 + 1 * 0.2,
-                  scale: 1.0 + pulseAnimation.value * 0.2,
+                  scale: 1.0 + 1 * 0.2,
+                  // scale: 1.0 + pulseAnimation.value * 0.2,
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
