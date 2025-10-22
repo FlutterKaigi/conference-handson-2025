@@ -2,9 +2,9 @@
 
 ## 主要３画面のコード生成について
 読書支援アプリの主要３画面
-[HomePage](../lib/src/app/screen/home/home_page.dart),
-[SettingsPage](../lib/src/app/screen/settings/settings_page.dart),
-[ReadingBookPage](../lib/src/app/screen/reading/reading_book_page.dart) は、  
+[HomePage](../../lib/src/app/screen/home/home_page.dart),
+[SettingsPage](../../lib/src/app/screen/settings/settings_page.dart),
+[ReadingBookPage](../../lib/src/app/screen/reading/reading_book_page.dart) は、  
 **Gemini in Android Studio** の **Agent mode (preview)** を使ってベースコードを作成しました。  
 
 - **Gemini in Android Studio - Agent mode**  
@@ -30,17 +30,17 @@ AI Agent の教本となるプロジェクトコードがない状況で、独�
 一括生成できるようなプロンプトができたとしても、 自然言語による詳細な具象実装指導と変わらなくなるため、  
 画面機能のみをコード生成させ、付帯部のコード実装や生成コードのリライトについては、手動で行ないました。
 
-このため`読書中書籍の読書情報`を表す ValueObject として
-[ReadingBookValueObject](../lib/src/presentation/model/reading/reading_book_value_object.dart) を手動作成し、  
-コードファイル [lib/src/presentation/model/reading/reading_book_value_object.dart](../lib/src/presentation/model/reading/reading_book_value_object.dart) として追加して、
+このため`読書中書籍の読書情報`を表す [ValueObject](../../lib/src/fundamental/model/base_objects_model.dart) (の派生具象)として、
+`ReadingBookValueObject`を手動作成し、  
+コードファイル [lib/src/presentation/model/reading/reading_book_value_object.dart](../../lib/src/domain/model/reading_book_value_object.dart) として追加して、
 
 さらに`読書中書籍一覧`を管理する ViewModel として
-[ReadingBooksViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) も手動作成し、  
+[ReadingBooksViewModel](../../lib/src/presentation/model/default/reading_books_view_model.dart) も手動作成し、  
 これらの ViewModel とValueObject が `riverpod - WidgetRef` を用いてグローバルに参照できるよう、  
 `readingBooksProvider` ⇒ `riverpod - NotifierProvider` の手動作成および、
-コードファイル [lib/src/presentation/model/reading/reading_books_view_model.dart](../lib/src/presentation/model/default/reading_books_view_model.dart) の追加まで行っています。
+コードファイル [lib/src/presentation/model/reading/reading_books_view_model.dart](../../lib/src/presentation/model/default/reading_books_view_model.dart) の追加まで行っています。
 
-これらにより `CurrentlyTasksWidget` は、[ConsumerStagedWidget](../lib/src/fundamental/ui_widget/consumer_staged_widget.dart) 派生にリライトされ、  
+これらにより `CurrentlyTasksWidget` は、[ConsumerStagedWidget](../../lib/src/fundamental/ui_widget/consumer_staged_widget.dart) 派生にリライトされ、  
 `HomePage` ウイジェットも `riverpod - ConsumerWidget` 派生に手動リライトしています。
 
 _`ホーム画面`だけでなく、読書中書籍情報の`設定画面`や`編集画面`もまた、  
