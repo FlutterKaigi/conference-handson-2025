@@ -410,7 +410,7 @@ Future<void> _startAnimationSequence() async {
   // unawaited(_backgroundController.repeat(reverse: true));
 ```
 
-`unawaited`により、_backgroundControllerが制御する背景グラデーションのアニメーションを開始します。
+`unawaited`により非同期で、_backgroundControllerが制御する背景グラデーションのアニメーションを開始します。
 
 **修正後**
 ```dart
@@ -512,7 +512,450 @@ child: Stack(
 
 
 ### 複数アニメーションを連動させる
+このパートでは次の技術要素を扱います。
 
+- `Listenable.merge`
+- 複数の`animation.value`
+
+複数のアニメーションを協調させて複雑な演出を作り出します。Listenable.mergeを使うことで、複数の独立したAnimationControllerを一つにまとめて監視できます。
+
+１つのUI表現のなかで複数の異なる時間軸のアニメーション値（animation.value）を利用し、応援メッセージの中心となるコンテンツを作成します。
+
+#### ステップ1: 複数のコントローラーを統合的に監視
+- ステップ1の完成例
+
+  <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
+
+
+複数のアニメーションを組み合わせた統合的な制御を行うよう設定をします。
+
+これまでの放射グラデーションなどでは、`AnimatedBuilder` の引数には単一の`Animation` オブジェクトを渡していました。これは時間経過によるUI更新を渡した`Animation`に紐づいた単一の`AnimationController`を監視することにより実現していました。
+
+今回は、複数の時間軸によるアニメーション値の変化を利用します。`AnimatedBuilder`の`animation`引数に`Listenable.merge`を指定します。`Listenable.merge`は、複数の`AnimationController`を一つのリスナーとして統合します。
+
+ここでは、`_mainController`, `_progressController`, `_pulseController`のいずれかの値が変更されるたびに、`AnimatedBuilder`が子ウィジェットを再構築するようになります。これにより複数のアニメーションを連動させたUI構築が可能になります。
+
+**作業対象**
+```
+lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── challenge
+│   │   │   │   ├── home
+│   │   │   │   │   ├── components
+│   │   │   │   │   ├── currently_tasks_widget.dart
+│   │   │   │   │   ├── reading_progress_animations_widget.dart  // これが対象
+│   │   │   │   │   └── reading_support_animations_widget.dart
+```
+
+修正前の時点では、`Stack`でグラデーションと波紋のウィジェットを重ねて配置しています。その上に応援メッセージの中心となるコンテンツを配置します。
+
+**修正前**
+```dart
+child: Stack(
+  alignment: Alignment.center,
+  children: <Widget>[
+    DynamicBackgroundWidget(省略
+
+    RippleEffectWidget(省略
+
+    // ステップ1: 複数のコントローラーを統合的に監視
+    // AnimatedBuilder(
+    //   animation: Listenable.merge(<Listenable>[
+    //     _mainController,
+    //     _progressController,
+    //     _pulseController,
+    //   ]),
+    //   builder: (BuildContext context, Widget? child) {
+    //     return FadeTransition(
+    //       opacity: _fadeAnimation,
+    //       child: Transform.scale(
+    //         scale: _scaleAnimation.value * _bounceAnimation.value,
+    //         child: _buildMainContent(),
+    //       ),
+    //     );
+    //   },
+    // ),
+```
+
+`Listenable.merge`で複数のコントローラーを監視します。これにより複数のアニメーション値の変化を組み合わせた表現が可能になります。
+
+このステップでは`Listenable.merge`が主題です。ハンズオン負荷軽減のため`builder`以下はコメント解除にて実装してください。
+
+**修正後**
+```dart
+child: Stack(
+  alignment: Alignment.center,
+  children: <Widget>[
+    DynamicBackgroundWidget(省略
+
+    RippleEffectWidget(省略
+
+    // ステップ1: 複数のコントローラーを統合的に監視
+    AnimatedBuilder(
+      animation: Listenable.merge(<Listenable>[
+        _mainController,
+        _progressController,
+        _pulseController,
+      ]),
+      builder: (BuildContext context, Widget? child) {
+        return FadeTransition(
+          opacity: _fadeAnimation,
+          child: Transform.scale(
+            scale: _scaleAnimation.value * _bounceAnimation.value,
+            child: _buildMainContent(),
+          ),
+        );
+      },
+    ),
+```
+
+- ステップ1の完成例（再掲）
+
+  <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
+
+
+`builder`での記述に登場する`_fadeAnimation`、`_scaleAnimation`、`_bounceAnimation`はいずれも`_mainController`で管理されており、同じ時間軸のなかで動いています。
+
+よって`Listenable.merge`の特徴はまだ発揮されていません。他のコントローラーの値を利用しているのは`_buildMainContent()`の中です。後続のステップで修正します。
+
+#### ステップ2: 応援メッセージを配置
+- ステップ2の完成例
+
+  <img width="300" alt="動きのないメインコンテンツ" src="./images/hands-on_MainContent_2.png" />
+
+
+このステップでは応援メッセージの中心を担うウィジェットを配置します。技術的に新しいものはないので、コメントを解除して実装します。
+
+ここで配置する`ProgressCircleWidget`には、引数で２つの`Animation`オブジェクトを渡しています。これらの`_progressAnimation`と`_pulseAnimation` は前ステップの`Listenable.merge`で監視している`_progressController`と`_pulseController`を利用しています。
+
+次のステップでは、`ProgressCircleWidget`の中で各アニメーション値を利用した実装をします。
+
+**作業対象**
+```
+lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── challenge
+│   │   │   │   ├── home
+│   │   │   │   │   ├── components
+│   │   │   │   │   ├── currently_tasks_widget.dart
+│   │   │   │   │   ├── reading_progress_animations_widget.dart  // これが対象
+│   │   │   │   │   └── reading_support_animations_widget.dart
+```
+
+修正前は応援メッセージの中心を構成する`ProgressCircleWidget`の配置がコメントアウトされています。
+
+**修正前**
+```dart
+Widget _buildMainContent() {
+  return SizedBox(
+    width: 400,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        // ステップ2: 応援メッセージを配置
+        // ProgressCircleWidget(
+        //   progressAnimation: _progressAnimation,
+        //   pulseAnimation: _pulseAnimation,
+        //   progressPercent: widget.progressPercent,
+        //   primaryColor: widget.primaryColor,
+        //   secondaryColor: widget.secondaryColor,
+        //   icon: widget.icon,
+        // ),
+```
+
+`ProgressCircleWidget`に複数の`Animation`を渡して配置します。これらの`Animation`の値をウィジェット内で利用します。
+
+**修正後**
+```dart
+Widget _buildMainContent() {
+  return SizedBox(
+    width: 400,
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: <Widget>[
+        // ステップ2: 応援メッセージを配置
+        ProgressCircleWidget(
+          progressAnimation: _progressAnimation,
+          pulseAnimation: _pulseAnimation,
+          progressPercent: widget.progressPercent,
+          primaryColor: widget.primaryColor,
+          secondaryColor: widget.secondaryColor,
+          icon: widget.icon,
+        ),
+```
+
+- ステップ2の完成例（再掲）
+
+  <img width="300" alt="動きのないメインコンテンツ" src="./images/hands-on_MainContent_2.png" />
+
+中央に表示されたコンテンツが`ProgressCircleWidget`です。現時点ではサイズは固定、進捗プログレスも動かない状態ですが、次のステップで修正します。
+
+#### ステップ3: アニメーションの値で動きを実現
+- ステップ3の完成例
+
+  <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
+
+応援メッセージを表す`ProgressCircleWidget`内で、アニメーション値を利用して動きをつけます。
+
+コード内の５箇所でアニメーション値を利用しています。
+
+1. `Transform.scale` を使い円全体を拡大・縮小します。`scale`プロパティに`double`値を指定することで、子ウィジェットのサイズを変更します。ここに`pulseAnimation.value`を適用し、アニメーションの進行に合わせて拡大率を変更させます。`pulseAnimation.value`は0.95〜1.15を往復するよう設定をしています。
+    
+    ```dart
+    return Transform.scale(
+      // ステップ3: アニメーションの値で動きを実現①
+      scale: pulseAnimation.value,
+      child: Container(
+    ```
+    
+2. `BoxShadow` を使い影とグロー効果（柔らかい光）を表現します。`blurRadius`プロパティは影のぼかしの度合いを表し、ここに`pulseAnimation.value` を適用し、アニメーションの進行に合わせて影のぼかしを変更させます。
+    1. １つ目の`BoxShadow`では影を表現しており、円の拡大縮小に合わせて影のぼかしを連動させます。
+        
+        ```dart
+        BoxShadow(
+          color: primaryColor.withValues(alpha: 0.6),
+          // ステップ3: アニメーションの値で動きを実現②
+          blurRadius: 25 + pulseAnimation.value * 10,
+          spreadRadius: 8,
+          offset: const Offset(0, 5),
+        ),
+        ```
+        
+    2. ２つ目の`BoxShadow`ではグロー効果を表現しており、円の拡大縮小に合わせて別の色のぼかしを連動させます。
+        
+        ```dart
+        BoxShadow(
+          color: secondaryColor.withValues(alpha: 0.4),
+          // ステップ3: アニメーションの値で動きを実現③
+          blurRadius: 40 + pulseAnimation.value * 15,
+          spreadRadius: 15,
+        ),
+        ```
+        
+3. 進捗円弧を滑らかに表示します。`_Enhanced3DProgressPainter`は進捗に応じた円弧を描画する独自のクラスです。ここに渡す進捗は`progressAnimation.value`を使って計算するようにします。時間経過に応じた進捗を渡し、滑らかな進捗円弧を`drawArc` で描画します。
+    
+    ```dart
+    child: CustomPaint(
+      painter: _Enhanced3DProgressPainter(
+        // ステップ3: アニメーションの値で動きを実現④
+        progress:
+            progressAnimation.value * (progressPercent / 100),
+        primaryColor: primaryColor,
+        secondaryColor: secondaryColor,
+        pulseValue: pulseAnimation.value,
+      ),
+    ),
+    ```
+    
+4. `Transform.scale` を使って円の中心に表示するアイコンを拡大・縮小します。円の拡大縮小でも利用している`pulseAnimation.value`を計算に組み込むことで円の動きに合わせて拡大率を変更させます。
+    
+    ```dart
+    Transform.scale(
+      // ステップ3: アニメーションの値で動きを実現⑤
+      scale: 1.0 + pulseAnimation.value * 0.2,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withValues(alpha: 0.2),
+        ),
+        child: Icon(icon, size: 32, color: Colors.white),
+      ),
+    ),
+    ```
+
+ここまで見てきたようにProgressCircleWidget内では、pulseAnimation.valueやprogressAnimation.valueといった複数の異なるアニメーション値を利用し、１つの応援メッセージの中に異なる時間軸で管理された値を取り入れた複雑な動きのアニメーションを実現しています。
+
+**作業対象**
+```
+lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart
+
+.
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── challenge
+│   │   │   │   ├── home
+│   │   │   │   │   ├── components
+│   │   │   │   │   │   └── progress
+│   │   │   │   │   │       ├── progress_circle_widget.dart  // これが対象
+│   │   │   │   │   │       ├── その他ウィジェット
+│   │   │   │   │   ├── currently_tasks_widget.dart
+│   │   │   │   │   ├── reading_progress_animations_widget.dart
+│   │   │   │   │   └── reading_support_animations_widget.dart
+```
+
+**修正前**
+`xxxAnimation.value`とする部分を全て固定値１にしています。
+
+
+固定値１にしていた修正前のコードはコメントアウトで残しています。コードが長いため、一部省略して掲載しています。
+
+**修正後**
+```dart
+@override
+Widget build(BuildContext context) {
+  return AnimatedBuilder(
+    animation: pulseAnimation,
+    builder: (BuildContext context, Widget? child) {
+      return Transform.scale(
+        // ステップ3: アニメーションの値で動きを実現①
+        // scale: 1,
+        scale: pulseAnimation.value,
+        child: Container(
+          width: 140,
+          height: 140,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            gradient: RadialGradient(
+              // 省略
+            ),
+            boxShadow: <BoxShadow>[
+              BoxShadow(
+                color: primaryColor.withValues(alpha: 0.6),
+                // ステップ3: アニメーションの値で動きを実現②
+                // blurRadius: 25 + 1 * 10,
+                blurRadius: 25 + pulseAnimation.value * 10,
+                spreadRadius: 8,
+                offset: const Offset(0, 5),
+              ),
+              BoxShadow(
+                color: secondaryColor.withValues(alpha: 0.4),
+                // ステップ3: アニメーションの値で動きを実現③
+                // blurRadius: 40 + 1 * 15,
+                blurRadius: 40 + pulseAnimation.value * 15,
+                spreadRadius: 15,
+              ),
+              BoxShadow(
+                // 省略
+              ),
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              SizedBox(
+                width: 110,
+                height: 110,
+                child: CustomPaint(
+                  painter: _Enhanced3DProgressPainter(
+                    // ステップ3: アニメーションの値で動きを実現④
+                    // progress:
+                    //     1 * (progressPercent / 100),
+                    progress:
+                        progressAnimation.value * (progressPercent / 100),
+                    primaryColor: primaryColor,
+                    secondaryColor: secondaryColor,
+                    pulseValue: pulseAnimation.value,
+                  ),
+                ),
+              ),
+
+              Transform.scale(
+                // ステップ3: アニメーションの値で動きを実現⑤
+                // scale: 1.0 + 1 * 0.2,
+                scale: 1.0 + pulseAnimation.value * 0.2,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.2),
+                  ),
+                  child: Icon(icon, size: 32, color: Colors.white),
+                ),
+              ),
+```
+
+- ステップ3の完成例（再掲）
+
+  <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
+
+
+異なる時間軸の動きが協調して、中央の円が大きくなったり小さくなったり、進捗プログレスもじわっと描画されようになりました。
+
+これで応援アニメーションの主要な実装は完了しました。次のステップでは、おまけとして他のアニメーション表現を重ねます。
+
+#### ステップ4: 【おまけ】他のアニメーションを重ねる
+- ステップ4の完成例
+
+  <img width="300" alt="完成した応援のメインコンテンツ" src="./images/hands-on_MainContent_4.png" />
+
+
+おまけに他のアニメーション表現のウィジェットも`Stack` に追加します。コメントを解除して適用してください。より華やかな演出になります。
+
+**作業対象**
+```
+lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── challenge
+│   │   │   │   ├── home
+│   │   │   │   │   ├── components
+│   │   │   │   │   ├── currently_tasks_widget.dart
+│   │   │   │   │   ├── reading_progress_animations_widget.dart  // これが対象
+│   │   │   │   │   └── reading_support_animations_widget.dart
+```
+
+粒子が広がる`ParticleEffectWidget`と星が飛び散る`SparkleEffectWidget`を有効化し、演出を重ねます。
+
+**修正後**
+```dart
+// ステップ4: 【おまけ】他のアニメーションを重ねる①
+if (widget.isCompletion)
+  ParticleEffectWidget(
+    animation: _particleController,
+    color: widget.secondaryColor,
+  ),
+
+// ステップ4: 【おまけ】他のアニメーションを重ねる②
+SparkleEffectWidget(
+  animation: _sparkleAnimation,
+  primaryColor: widget.primaryColor,
+  secondaryColor: widget.secondaryColor,
+  isCompletion: widget.isCompletion,
+),
+```
+
+- ステップ4の完成例（再掲）
+
+  <img width="300" alt="完成した応援のメインコンテンツ" src="./images/hands-on_MainContent_4.png" />
+
+#### まとめ
+
+この工程では、複数のアニメーションを協調させて複雑な演出を作り出すための技術を学習しました。`Listenable.merge`を使うことで、複数の独立した`AnimationController`を一つにまとめました。これにより、異なる時間軸で動く複数のアニメーションを監視できます。これらの技術を用いることで、よりリッチで説得力のあるUIを構築できるようになります。
 
 ### 遅延実行とトランジションで滑らかな表現をする
 
