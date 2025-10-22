@@ -64,6 +64,7 @@ class ProgressCircleWidget extends StatelessWidget {
       animation: pulseAnimation,
       builder: (BuildContext context, Widget? child) {
         return Transform.scale(
+          // FIXME コードを完成させてください。
           // ステップ3: アニメーションの値で動きを実現①
           scale: 1,
           // scale: pulseAnimation.value,
@@ -87,6 +88,7 @@ class ProgressCircleWidget extends StatelessWidget {
                 // メインシャドウ（影の部分）
                 BoxShadow(
                   color: primaryColor.withValues(alpha: 0.6),
+                  // FIXME コードを完成させてください。
                   // ステップ3: アニメーションの値で動きを実現②
                   blurRadius: 25 + 1 * 10,
                   // blurRadius: 25 + pulseAnimation.value * 10,
@@ -96,6 +98,7 @@ class ProgressCircleWidget extends StatelessWidget {
                 // グローエフェクト（光の部分）
                 BoxShadow(
                   color: secondaryColor.withValues(alpha: 0.4),
+                  // FIXME コードを完成させてください。
                   // ステップ3: アニメーションの値で動きを実現③
                   blurRadius: 40 + 1 * 15,
                   // blurRadius: 40 + pulseAnimation.value * 15,
@@ -119,6 +122,7 @@ class ProgressCircleWidget extends StatelessWidget {
                   height: 110,
                   child: CustomPaint(
                     painter: _Enhanced3DProgressPainter(
+                      // FIXME コードを完成させてください。
                       // ステップ3: アニメーションの値で動きを実現④
                       progress: 1 * (progressPercent / 100),
                       // progress:
@@ -132,9 +136,10 @@ class ProgressCircleWidget extends StatelessWidget {
 
                 // アイコン（パルスと連動してサイズ変化）
                 Transform.scale(
+                  // FIXME コードを完成させてください。
                   // ステップ3: アニメーションの値で動きを実現⑤
-                  // scale: 1.0 + 1 * 0.2,
-                  scale: 1.0 + pulseAnimation.value * 0.2,
+                  scale: 1.0 + 1 * 0.2,
+                  // scale: 1.0 + pulseAnimation.value * 0.2,
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(

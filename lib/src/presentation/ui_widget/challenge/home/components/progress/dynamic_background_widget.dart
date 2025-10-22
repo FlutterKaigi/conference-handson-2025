@@ -53,18 +53,23 @@ class DynamicBackgroundWidget extends StatelessWidget {
               // centerから外側に向かって色が変化する
               gradient: RadialGradient(
                 center: Alignment.center,
-                colors: <Color>[primaryColor, secondaryColor],
+                // FIXME コードを完成させてください。
                 // ステップ2: １層目の放射グラデーションの作成
+                radius: 0.8 + 1 * 0.4,
                 // radius: 0.8 + animation.value * 0.4,
-                // colors: <Color>[
+                colors: <Color>[
+                primaryColor.withValues(alpha: 0.15 + 1 * 0.1),
                 // primaryColor.withValues(alpha: 0.15 + animation.value * 0.1),
+                secondaryColor.withValues(
+                  alpha: 0.08 + 1 * 0.05,
+                ),
                 // secondaryColor.withValues(
                 //   alpha: 0.08 + animation.value * 0.05,
                 // ),
-                // primaryColor.withValues(alpha: 0.03),
-                // Colors.transparent,
-                // ],
-                // stops: const <double>[0, 0.4, 0.7, 1],
+                primaryColor.withValues(alpha: 0.03),
+                Colors.transparent,
+                ],
+                stops: const <double>[0, 0.4, 0.7, 1],
               ),
             ),
           ),

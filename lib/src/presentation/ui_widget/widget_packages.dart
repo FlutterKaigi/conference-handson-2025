@@ -1,6 +1,6 @@
 // UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
 
-// デフォルト設定 （ui_widget）
+// デフォルト設定 （ui_widget/default）
 export 'default/widget_packages.dart';
 
 // 各UIパッケージ 設定 （ui_widget）
@@ -9,8 +9,8 @@ export 'default/widget_packages.dart';
 // export 'morphing_button/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 // export 'enhanced_progress/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 
-// 完成形設定 （ui_widget）
+// 完成形設定 （ui_widget/complete）
 // export 'complete/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 
-// ハンズオン設定 （ui_widget）
+// ハンズオン設定 （ui_widget/challenge）
 // export 'challenge/widget_packages.dart'; // model設置はありません。（model/default を利用します）
