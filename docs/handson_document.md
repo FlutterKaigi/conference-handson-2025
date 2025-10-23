@@ -321,7 +321,7 @@ lib
 
 #### ベースUI コード
 - **ベースUIコード**  
-  - **home（書籍一覧画面）**  
+  - **home（書籍一覧画面のUI表示）**  
     - [currently_tasks_widget.dart](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart)  
       読書中書籍一覧表示のUIウィジェット
 
@@ -331,15 +331,15 @@ lib
     - [reading_support_animations_widget.dart](../lib/src/presentation/ui_widget/default/home/reading_support_animations_widget.dart)  
       激励一喝表示のUIウィジェット
 
-  - **reading（書籍編集画面）**  
+  - **reading（書籍編集画面のUI表示）**  
     - [reading_book_widget.dart](../lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart)  
       読書中書籍編集表示のUIウィジェット
 
-  - **reading_graph（書籍進捗率グラフ画面）**  
+  - **reading_graph（書籍進捗率グラフ画面のUI表示）**  
     - [reading_book_graph_widget.dart](../lib/src/presentation/ui_widget/default/reading_graph/reading_book_graph_widget.dart)  
       読書中書籍進捗グラフ表示のUIウィジェット
 
-  - **settings（設定画面）**  
+  - **settings（設定画面のUI表示）**  
     - [reading_book_settings_widget.dart](../lib/src/presentation/ui_widget/default/settings/reading_book_settings_widget.dart)  
       設定表示のUIウィジェット
 
