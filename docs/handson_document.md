@@ -343,6 +343,13 @@ lib
     - [reading_book_settings_widget.dart](../lib/src/presentation/ui_widget/default/settings/reading_book_settings_widget.dart)  
       設定表示のUIウィジェット
 
+- **UIウィジェット - バレルファイル**
+  - **UIウィジェット全体統括用**  
+    [widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart)  
+
+    - **defaultディレクトリ用**  
+      [widget_packages.dart](../lib/src/presentation/ui_widget/default/widget_packages.dart)  
+
 #### ViewModel コード
 _**ViewModel**は、`default`、`complete`、`challenge`ともに **defaultのコードを共用** しています。_
 
@@ -359,6 +366,13 @@ _**ViewModel**は、`default`、`complete`、`challenge`ともに **defaultの�
     - [reading_support_animations_view_model.dart](../lib/src/presentation/model/default/reading_support_animations_view_model.dart)  
       激励一喝の状態種別と状態値を保持する ViewModel  
       _オブジェクトは、`readingSupportAnimationsProvider` に保持されます。_
+
+- **ViewModel - バレルファイル**
+  - **ViewModel全体統括用**  
+    [view_model_packages.dart](../lib/src/presentation/model/view_model_packages.dart)
+
+    - **defaultディレクトリ用**  
+      [view_model_packages.dart](../lib/src/presentation/model/default/view_model_packages.dart)
 
 ----------
 
