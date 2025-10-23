@@ -297,15 +297,15 @@ lib
 
 #### ページウィジェット コード
 - **screen**
-  - **home（読書中書籍一覧画面）**
+  - **home（書籍一覧画面）**
     - [home_page.dart](../lib/src/app/screen/home/home_page.dart)  
       読書中書籍一覧画面のページウィジェット
 
-  - **reading（読書中書籍編集画面）**
+  - **reading（書籍編集画面）**
     - [reading_book_page.dart](../lib/src/app/screen/reading/reading_book_page.dart)  
       読書中書籍編集画面のページウィジェット
 
-  - **reading_graph（読書中書籍進捗率グラフ画面）**
+  - **reading_graph（書籍進捗率グラフ画面）**
     - [reading_graph_page.dart](../lib/src/app/screen/reading_graph/reading_graph_page.dart)  
       読書中書籍進捗率グラフのページウィジェット
 
