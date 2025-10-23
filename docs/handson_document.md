@@ -200,8 +200,7 @@ export 'challenge/widget_packages.dart';
 これらの技術を活用して、読書進捗に応じた応援メッセージを画面に表示します。各書籍の読了ページ数を変更し「編集する」ボタンを押下すると一覧ページに遷移します。この時に表示する応援メッセージを華やかにします。現時点では応援メッセージは表示されません。
 
 #### ステップ1: アニメーション設定の分割
-- ステップ1からステップ3までの完成例
-
+- ステップ1からステップ3までの完成例  
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
 
 ステップ1では、アニメーションを実現するための「再生時間」と「動き」の設定を用意します。このステップでは二つのオブジェクトを用意します。
@@ -482,8 +481,7 @@ Future<void> _startAnimationSequence() async {
   unawaited(_backgroundController.repeat(reverse: true));
 ```
 
-- ステップ1からステップ3までの完成例（再掲）
-
+- ステップ1からステップ3までの完成例（再掲）  
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
 
 
@@ -491,8 +489,7 @@ Future<void> _startAnimationSequence() async {
 なお、本サンプルアプリでは、応援メッセージは10秒後に自動的に非表示になるよう実装しています。
 
 ### ステップ4: ２層目の波紋
-- ステップ4の完成例
-
+- ステップ4の完成例  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffec.png" />
 
 アニメーションを重ねていることを体験するために、もう一つ重ねます。前ステップの放射グラデーションの上に波紋の表現を重ねます。
@@ -565,8 +562,7 @@ child: Stack(
 
 ```
 
-- ステップ4の完成例（再掲）
-
+- ステップ4の完成例（再掲）  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffec.png" />
 
 #### まとめ
@@ -586,8 +582,7 @@ child: Stack(
 １つのUI表現のなかで複数の異なる時間軸のアニメーション値（animation.value）を利用し、応援メッセージの中心となるコンテンツを作成します。
 
 #### ステップ1: 複数のコントローラーを統合的に監視
-- ステップ1の完成例
-
+- ステップ1の完成例  
   <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
 
 
@@ -682,8 +677,7 @@ child: Stack(
     ),
 ```
 
-- ステップ1の完成例（再掲）
-
+- ステップ1の完成例（再掲）  
   <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
 
 
@@ -692,8 +686,7 @@ child: Stack(
 よって`Listenable.merge`の特徴はまだ発揮されていません。他のコントローラーの値を利用しているのは`_buildMainContent()`の中です。後続のステップで修正します。
 
 #### ステップ2: 応援メッセージを配置
-- ステップ2の完成例
-
+- ステップ2の完成例  
   <img width="300" alt="動きのないメインコンテンツ" src="./images/hands-on_MainContent_2.png" />
 
 
@@ -768,15 +761,13 @@ Widget _buildMainContent() {
         ),
 ```
 
-- ステップ2の完成例（再掲）
-
+- ステップ2の完成例（再掲）  
   <img width="300" alt="動きのないメインコンテンツ" src="./images/hands-on_MainContent_2.png" />
 
 中央に表示されたコンテンツが`ProgressCircleWidget`です。現時点ではサイズは固定、進捗プログレスも動かない状態ですが、次のステップで修正します。
 
 #### ステップ3: アニメーションの値で動きを実現
-- ステップ3の完成例
-
+- ステップ3の完成例  
   <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
 
 応援メッセージを表す`ProgressCircleWidget`内で、アニメーション値を利用して動きをつけます。
@@ -955,8 +946,7 @@ Widget build(BuildContext context) {
               ),
 ```
 
-- ステップ3の完成例（再掲）
-
+- ステップ3の完成例（再掲）  
   <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
 
 
@@ -965,8 +955,7 @@ Widget build(BuildContext context) {
 これで応援アニメーションの主要な実装は完了しました。次のステップでは、おまけとして他のアニメーション表現を重ねます。
 
 #### ステップ4: 【おまけ】他のアニメーションを重ねる
-- ステップ4の完成例
-
+- ステップ4の完成例  
   <img width="300" alt="完成した応援のメインコンテンツ" src="./images/hands-on_MainContent_4.png" />
 
 
@@ -1013,8 +1002,7 @@ SparkleEffectWidget(
 ),
 ```
 
-- ステップ4の完成例（再掲）
-
+- ステップ4の完成例（再掲）  
   <img width="300" alt="完成した応援のメインコンテンツ" src="./images/hands-on_MainContent_4.png" />
 
 #### まとめ
@@ -1031,8 +1019,7 @@ SparkleEffectWidget(
 アニメーションの遅延実行やトランジションを適用したウィジェット切り替えを学習します。
 
 ### ステップ1: 画面表示完了後に円グラフ描画を予約
-- ステップ1からステップ2までの完成例
-
+- ステップ1からステップ2までの完成例  
   <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
 
 
@@ -1131,15 +1118,13 @@ progressController!.reset();
 unawaited(progressController!.forward());
 ```
 
-- ステップ1からステップ2までの完成例（再掲）
-
+- ステップ1からステップ2までの完成例（再掲）  
   <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
 
 
 
 ### ステップ3: 完読時には専用メッセージ表示
-- ステップ3の完成例
-
+- ステップ3の完成例  
   <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
 
 完読時は円グラフの中央にお祝いメッセージが表示されるように修正します。表示するウィジェットを切り替える際にトランジションアニメーションを適用するように`AnimatedSwitcher`を利用します。
@@ -1210,8 +1195,7 @@ return AnimatedSwitcher(
 );
 ```
 
-- ステップ3の完成例（再掲）
-
+- ステップ3の完成例（再掲）  
   <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
 
 
