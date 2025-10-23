@@ -299,19 +299,25 @@ lib
 - **screen**
   - **home（書籍一覧画面）**
     - [home_page.dart](../lib/src/app/screen/home/home_page.dart)  
-      読書中書籍一覧画面のページウィジェット
+      読書中書籍一覧画面のページウィジェット  
+      -  _読書中書籍一覧表示のUIウィジェットに、`readingBooksProvider.notifier` をバインドさせます。_
+      -  _読書中書籍進捗表示のUIウィジェットに、`readingSupportAnimationsProvider.notifier` をバインドさせます。_
+      -  _激励一喝表示のUIウィジェットに、`readingProgressAnimationsProvider.notifier` をバインドさせます。_
 
   - **reading（書籍編集画面）**
     - [reading_book_page.dart](../lib/src/app/screen/reading/reading_book_page.dart)  
-      読書中書籍編集画面のページウィジェット
+      読書中書籍編集画面のページウィジェット  
+      -  _読書中書籍編集表示のUIウィジェットに、`readingBooksProvider.notifier` をバインドさせます。_
 
   - **reading_graph（書籍進捗率グラフ画面）**
     - [reading_graph_page.dart](../lib/src/app/screen/reading_graph/reading_graph_page.dart)  
-      読書中書籍進捗率グラフのページウィジェット
+      読書中書籍進捗率グラフのページウィジェット  
+      -  _読書中書籍進捗グラフ表示のUIウィジェットに、`readingBooksProvider.notifier` をバインドさせます。_
 
   - **settings（設定画面）**
     - [settings_page.dart](../lib/src/app/screen/settings/settings_page.dart)  
-      設定画面のページウィジェット
+      設定画面のページウィジェット  
+      -  _設定表示のUIウィジェットに、`readingBooksProvider.notifier` をバインドさせます。_
 
 #### ベースUI コード
 - **ベースUIコード**  
@@ -343,13 +349,16 @@ _**ViewModel**は、`default`、`complete`、`challenge`ともに **defaultの�
 - **ViewModelコード**  
   - **default**  
     - [reading_books_view_model.dart](../lib/src/presentation/model/default/reading_books_view_model.dart)  
-      読書中書籍一覧の状態値を保持する ViewModel
+      読書中書籍一覧の状態値を保持する ViewModel  
+      _オブジェクトは、`readingBooksProvider` に保持されます。_
 
     - [reading_progress_animations_view_model.dart](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart)  
-      読書中書籍進捗の状態種別と状態値を保持する ViewModel
+      読書中書籍進捗の状態種別と状態値を保持する ViewModel  
+      _オブジェクトは、`readingProgressAnimationsProvider` に保持されます。_
 
     - [reading_support_animations_view_model.dart](../lib/src/presentation/model/default/reading_support_animations_view_model.dart)  
-      激励一喝の状態種別と状態値を保持する ViewModel
+      激励一喝の状態種別と状態値を保持する ViewModel  
+      _オブジェクトは、`readingSupportAnimationsProvider` に保持されます。_
 
 ----------
 
