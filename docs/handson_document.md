@@ -164,25 +164,25 @@ _**〜 この「ベースUI を見てみよう。」章は、ただいま作成�
 
 ##### 書籍の新規追加
 - ホーム画のアプリバーにある歯車アイコンをタップして、設定画面を開きます。  
-  <img width="800" alt="設定画面オープン" src="./images/hands-on_basic_step_1.png" />
+  <img width="600" alt="設定画面オープン" src="./images/hands-on_basic_step_1.png" />
 
 - 書籍名と総ページ数を入力して「新規追加」をタップすると、ホーム画面に書籍が追加されています。  
-  <img width="800" alt="書籍新規追加" src="./images/hands-on_basic_step_2.png" />
+  <img width="600" alt="書籍新規追加" src="./images/hands-on_basic_step_2.png" />
 
 ##### 一覧から選択した書籍の編集
 - ホーム画の書籍一覧からMCPサーバー入門をタップして、書籍編集画面を開きます。  
-  <img width="800" alt="書籍編集画面オープン" src="./images/hands-on_basic_step_3.png" />
+  <img width="600" alt="書籍編集画面オープン" src="./images/hands-on_basic_step_3.png" />
 
 - 書籍名をMCPサーバー実践に変更して「編集する」をタップすると、ホーム画面の書籍名がMCPサーバー実践に更新されています。  
-  <img width="800" alt="書籍情報更新" src="./images/hands-on_basic_step_4.png" />
+  <img width="600" alt="書籍情報更新" src="./images/hands-on_basic_step_4.png" />
 
 ##### 一覧から選択した書籍の削除
 - ホーム画の書籍一覧からMCPサーバー実践をタップして、書籍編集画面を開き、  
   「書籍を削除する」をタップして、確認ダイアログでも「削除」をタップします。  
-  <img width="1000" alt="書籍編集画面オープン＋削除操作" src="./images/hands-on_basic_step_5.png" />
+  <img width="800" alt="書籍編集画面オープン＋削除操作" src="./images/hands-on_basic_step_5.png" />
 
 - ホーム画面の書籍一覧からMCPサーバ実践が削除されています。  
-  <img width="320" alt="書籍削除" src="./images/hands-on_basic_step_6.png" />
+  <img width="260" alt="書籍削除" src="./images/hands-on_basic_step_6.png" />
 
 #### 自動テストについて
 前段の **基本要件** については、Unit test も提供されていますので、あわせて御確認ください。
