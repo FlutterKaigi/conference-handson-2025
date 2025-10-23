@@ -300,24 +300,24 @@ lib
   - **home（書籍一覧画面）**
     - [home_page.dart](../lib/src/app/screen/home/home_page.dart)  
       読書中書籍一覧画面のページウィジェット  
-      -  _読書中書籍一覧表示のUIウィジェットに、`readingBooksProvider.notifier` をバインドさせます。_
-      -  _読書中書籍進捗表示のUIウィジェットに、`readingSupportAnimationsProvider.notifier` をバインドさせます。_
-      -  _激励一喝表示のUIウィジェットに、`readingProgressAnimationsProvider.notifier` をバインドさせます。_
+      -  _読書中書籍一覧表示のUIウィジェットに、`readingBooksProvider.notifier` を監視させます。_
+      -  _読書中書籍進捗表示のUIウィジェットに、`readingSupportAnimationsProvider.notifier` を監視させます。_
+      -  _激励一喝表示のUIウィジェットに、`readingProgressAnimationsProvider.notifier` を監視させます。_
 
   - **reading（書籍編集画面）**
     - [reading_book_page.dart](../lib/src/app/screen/reading/reading_book_page.dart)  
       読書中書籍編集画面のページウィジェット  
-      -  _読書中書籍編集表示のUIウィジェットに、`readingBooksProvider.notifier` をバインドさせます。_
+      -  _読書中書籍編集表示のUIウィジェットに、`readingBooksProvider.notifier` を監視させます。_
 
   - **reading_graph（書籍進捗率グラフ画面）**
     - [reading_graph_page.dart](../lib/src/app/screen/reading_graph/reading_graph_page.dart)  
       読書中書籍進捗率グラフのページウィジェット  
-      -  _読書中書籍進捗グラフ表示のUIウィジェットに、`readingBooksProvider.notifier` をバインドさせます。_
+      -  _読書中書籍進捗グラフ表示のUIウィジェットに、`readingBooksProvider.notifier` を監視させます。_
 
   - **settings（設定画面）**
     - [settings_page.dart](../lib/src/app/screen/settings/settings_page.dart)  
       設定画面のページウィジェット  
-      -  _設定表示のUIウィジェットに、`readingBooksProvider.notifier` をバインドさせます。_
+      -  _設定表示のUIウィジェットに、`readingBooksProvider.notifier` を監視させます。_
 
 #### ベースUI コード
 - **ベースUIコード**  
