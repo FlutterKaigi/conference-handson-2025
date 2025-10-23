@@ -111,6 +111,8 @@ UIウィジェット・パッケージ全体のバレルファイル [lib/src/pr
 他の export 行がコメントアウトされていることを確認します。  
 
 ```dart
+// UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
+
 // デフォルト設定 （ui_widget/default）
 export 'default/widget_packages.dart';
 
