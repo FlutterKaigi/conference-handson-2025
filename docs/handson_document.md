@@ -69,6 +69,50 @@ _**〜 この「模擬アプリとしてのハンズオン・プロジェクト�
 ### フィーチャー設計
 
 
+#### ハンズオン・プロジェクト全体構成
+```text
+lib
+└── src
+    ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
+    │   └── scren
+    │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
+    │       └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
+    ├── application
+    │   └── model              アプリ・モデル　（ドメインモデルのオブジェクを保持）
+    ├── domain
+    │   └── model              ドメイン・モデル（読書中書籍の状態モデルなどを定義）
+    ├── fundamental
+    │   ├── model              基底基盤モデル　（ValueObjectなどを定義）
+    │   └── ui_widget          基底ウィジェット（ConsumerStagedWidgetなどを定義）
+    ├── infrastructure
+    ├── presentation
+    │   ├── model    （各ViewModelオブジェクトは、状態種別と状態値を保持し、riverpod providerに保持されます）
+    │   │   ├── default
+    │   │   │   ├── reading_books_view_model.dart               （読書中書籍一覧の状態値を定義）
+    │   │   │   ├── reading_progress_animation_view_model.dart  （読書中書籍進捗の状態種別と状態値を定義）
+    │   │   │   ├── reading_support_animation_view_model.dart   （激励一喝の状態種別と状態値を定義）
+    │   │   │   └── view_model_packges.dat    　　　　　　        （defaultディレクトリ用のバレルファイル）
+    │   │   └── view_model_packges.dat　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
+    │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
+    │   │   ├── default
+    │   │   │   ├── home
+    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット
+    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット
+    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット
+    │   │   │   ├── reading
+    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット
+    │   │   │   ├── reading_graph
+    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット
+    │   │   │   ├── settings
+    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
+    │   │   │   └── widget_packages.dart                        （defaultディレクトリ用のバレルファイル）
+    │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
+    │   └── rouging                                              GoRoutrの Type-Safe Routeを定義
+    └── test                                                     Unit test と Widget test を定義
+```
+
 - 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
 
 ----------
@@ -111,6 +155,8 @@ UIウィジェット・パッケージ全体のバレルファイル [lib/src/pr
 他の export 行がコメントアウトされていることを確認します。  
 
 ```dart
+// UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
+
 // デフォルト設定 （ui_widget/default）
 export 'default/widget_packages.dart';
 
@@ -143,15 +189,190 @@ _ハンズオン・リポジトリを Gitクローンしてから、バレルフ
   - _ハンズオン・プロジェクトの Flutter実行環境は、iOS/Android の他に Web も有効にしているので、  
     iOS シミュレータや Android エミュレーターでなく、Chromeで動作確認することもできます。_  
 
-_**〜 この「ベースUI を見てみよう。」章は、ただいま作成作業中です。 〜**_
-
 #### 読了したページの更新に伴う進捗率達成メッセージを表示する。
+- ホーム画のFlutter入門をタップして、書籍編集画面を開きます。  
+  <img width="600" alt="書籍編集画面オープン" src="./images/hands-on_base_step_1.png" />
+
+- 読書完了ページ数に 10 を入力して「編集する」のタップで、ホーム画面に戻れば、  
+  総ページ数の 10%が達成されているので、進捗率 10%達成メッセージがオーバーラップ表示されます。  
+  <img width="600" alt="読了ページ更新＋進捗率達成表示" src="./images/hands-on_base_step_2.png" />
 
 #### 読了したページの進捗をグラフで表示する。
+- ホーム画のFlutter入門をタップして、書籍編集画面を開き、アプリバーにある円グラフアイコンをタップして、  
+  グラフ画面を開けば、読了ページ数と総ページ数から、進捗率がドーナツグラフで表示されます。  
+  <img width="800" alt="読了進捗率ドーナツグラフ表示" src="./images/hands-on_base_step_3.png" />
 
 #### 激励や一喝のメッセージを表示する。
+_この機能要件は、読書支援アプリが表示されたタイミングやアラーム設定など、  
+何らかのイベントを契機に **激励や一喝のメッセージをオーバーラップ表示** させるものですが、  
+模擬アプリでは、イベント発行のためにアラームプラグインなどを組み込まないことにしているため、  
+設定画面の読書開始や読書終了スイッチの ON により、擬似イベントを発行していることに留意ください。_
+
+- ホーム画のアプリバーにある歯車アイコンをタップして、設定画面を開き、  
+  読書開始イベントのスイッチを ONにして、アプリバーのバックアイコンでホーム画面に戻らせます。
+  <img width="800" alt="書籍編集画面オープン" src="./images/hands-on_base_step_4.png" />
+
+- イベント ON から10秒経過すると、激励メッセージがオーバーラップ表示されます。  
+  <img width="600" alt="読了ページ更新" src="./images/hands-on_base_step_5.png" />
+
+#### その他（基本要件確認）
+カスタムUIを利用しない読書支援アプリの基本要件についても確認してみてください。
+
+- **基本要件**  
+  - **設定画面（SettingsPage）** での `書籍の新規追加`、  
+  - **ホーム画面（HomePage）** での `一覧表示やタップした書籍の選択`、  
+  - **書籍編集画面（ReadingBookPage）** での`書籍情報の編集や、書籍の削除`
+
+##### 書籍の新規追加
+- ホーム画のアプリバーにある歯車アイコンをタップして、設定画面を開きます。  
+  <img width="600" alt="設定画面オープン" src="./images/hands-on_basic_step_1.png" />
+
+- 書籍名と総ページ数を入力して「新規追加」をタップすると、ホーム画面に書籍が追加されています。  
+  <img width="600" alt="書籍新規追加" src="./images/hands-on_basic_step_2.png" />
+
+##### 一覧から選択した書籍の編集
+- ホーム画の書籍一覧からMCPサーバー入門をタップして、書籍編集画面を開きます。  
+  <img width="600" alt="書籍編集画面オープン" src="./images/hands-on_basic_step_3.png" />
+
+- 書籍名をMCPサーバー実践に変更して「編集する」をタップすると、ホーム画面の書籍名がMCPサーバー実践に更新されています。  
+  <img width="600" alt="書籍情報更新" src="./images/hands-on_basic_step_4.png" />
+
+##### 一覧から選択した書籍の削除
+- ホーム画の書籍一覧からMCPサーバー実践をタップして、書籍編集画面を開き、  
+  「書籍を削除する」をタップして、確認ダイアログでも「削除」をタップします。  
+  <img width="800" alt="書籍編集画面オープン＋削除操作" src="./images/hands-on_basic_step_5.png" />
+
+- ホーム画面の書籍一覧からMCPサーバ実践が削除されています。  
+  <img width="260" alt="書籍削除" src="./images/hands-on_basic_step_6.png" />
+
+#### 自動テストについて
+前段の **基本要件** については、Unit test も提供されていますので、あわせて御確認ください。
+
+テストでは、各モデル機能をチェックする `riverpod`を介した **書籍の追加や編集と削除の単体テスト** と  
+`Integration test`を模した、**画面操作のリアクションをチェックする Widget test** が設けられています。
+
+- **macOS/Linux 環境の方へ**  
+  ターミナルで `make unit-test` を実行して、  
+  ターミナルに出力される、テストステップと実行結果のログメッセージを確認してください。
+
+- **Windows 環境の方へ**  
+  ターミナルで `fvm flutter test test/` を実行して、  
+  ターミナルに出力される、テストステップと実行結果のログメッセージを確認してください。
 
 ### ベースUI コードを確認する。
+
+#### ベースUIコードに関連するファイル構成
+```text
+lib
+└── src
+    ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
+    │   └── scren
+    │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
+    │       └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
+    ├── presentation
+    │   ├── model    （各ViewModelオブジェクトは、状態種別と状態値を保持し、riverpod providerに保持されます）
+    │   │   ├── default
+    │   │   │   ├── reading_books_view_model.dart               （読書中書籍一覧の状態値を定義）
+    │   │   │   ├── reading_progress_animation_view_model.dart  （読書中書籍進捗の状態種別と状態値を定義）
+    │   │   │   ├── reading_support_animation_view_model.dart   （激励一喝の状態種別と状態値を定義）
+    │   │   │   └── view_model_packges.dat    　　　　　　        （defaultディレクトリ用のバレルファイル）
+    │   │   └── view_model_packges.dat　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
+    │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
+    │   │   ├── default
+    │   │   │   ├── home
+    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット
+    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット
+    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット
+    │   │   │   ├── reading
+    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット
+    │   │   │   ├── reading_graph
+    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット
+    │   │   │   ├── settings
+    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
+    │   │   │   └── widget_packages.dart                        （defaultディレクトリ用のバレルファイル）
+    │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
+```
+
+#### ページウィジェット コード
+- **screen**
+  - **home（書籍一覧画面）**
+    - [home_page.dart](../lib/src/app/screen/home/home_page.dart)  
+      読書中書籍一覧画面のページウィジェット  
+      -  _読書中書籍一覧表示のUIウィジェットに、`readingBooksProvider.notifier` を監視させてバインドします。_
+      -  _読書中書籍進捗表示のUIウィジェットに、`readingSupportAnimationsProvider.notifier` を監視させてバインドします。_
+      -  _激励一喝表示のUIウィジェットに、`readingProgressAnimationsProvider.notifier` を監視させてバインドします。_
+
+  - **reading（書籍編集画面）**
+    - [reading_book_page.dart](../lib/src/app/screen/reading/reading_book_page.dart)  
+      読書中書籍編集画面のページウィジェット  
+      -  _読書中書籍編集表示のUIウィジェットに、`readingBooksProvider.notifier` を監視させてバインドします。_
+
+  - **reading_graph（書籍進捗率グラフ画面）**
+    - [reading_graph_page.dart](../lib/src/app/screen/reading_graph/reading_graph_page.dart)  
+      読書中書籍進捗率グラフのページウィジェット  
+      -  _読書中書籍進捗グラフ表示のUIウィジェットに、`readingBooksProvider.notifier` を監視させてバインドします。_
+
+  - **settings（設定画面）**
+    - [settings_page.dart](../lib/src/app/screen/settings/settings_page.dart)  
+      設定画面のページウィジェット  
+      -  _設定表示のUIウィジェットに、`readingBooksProvider.notifier` を監視させてバインドします。_
+
+#### ベースUI コード
+- **ベースUIコード**  
+  - **home（書籍一覧画面のUI表示）**  
+    - [currently_tasks_widget.dart](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart)  
+      読書中書籍一覧表示のUIウィジェット
+
+    - [reading_progress_animations_widget.dart](../lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart)  
+      読書中書籍進捗表示のUIウィジェット
+
+    - [reading_support_animations_widget.dart](../lib/src/presentation/ui_widget/default/home/reading_support_animations_widget.dart)  
+      激励一喝表示のUIウィジェット
+
+  - **reading（書籍編集画面のUI表示）**  
+    - [reading_book_widget.dart](../lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart)  
+      読書中書籍編集表示のUIウィジェット
+
+  - **reading_graph（書籍進捗率グラフ画面のUI表示）**  
+    - [reading_book_graph_widget.dart](../lib/src/presentation/ui_widget/default/reading_graph/reading_book_graph_widget.dart)  
+      読書中書籍進捗グラフ表示のUIウィジェット
+
+  - **settings（設定画面のUI表示）**  
+    - [reading_book_settings_widget.dart](../lib/src/presentation/ui_widget/default/settings/reading_book_settings_widget.dart)  
+      設定表示のUIウィジェット
+
+- **UIウィジェット - バレルファイル**
+  - **UIウィジェット全体統括用**  
+    [widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart)  
+
+    - **defaultディレクトリ用**  
+      [widget_packages.dart](../lib/src/presentation/ui_widget/default/widget_packages.dart)  
+
+#### ViewModel コード
+_**ViewModel**は、`default`、`complete`、`challenge`ともに **defaultのコードを共用** しています。_
+
+- **ViewModelコード**  
+  - **default**  
+    - [reading_books_view_model.dart](../lib/src/presentation/model/default/reading_books_view_model.dart)  
+      読書中書籍一覧の状態値を保持する ViewModel  
+      _オブジェクトは、`readingBooksProvider` に保持されます。_
+
+    - [reading_progress_animations_view_model.dart](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart)  
+      読書中書籍進捗の状態種別と状態値を保持する ViewModel  
+      _オブジェクトは、`readingProgressAnimationsProvider` に保持されます。_
+
+    - [reading_support_animations_view_model.dart](../lib/src/presentation/model/default/reading_support_animations_view_model.dart)  
+      激励一喝の状態種別と状態値を保持する ViewModel  
+      _オブジェクトは、`readingSupportAnimationsProvider` に保持されます。_
+
+- **ViewModel - バレルファイル**
+  - **ViewModel全体統括用**  
+    [view_model_packages.dart](../lib/src/presentation/model/view_model_packages.dart)
+
+    - **defaultディレクトリ用**  
+      [view_model_packages.dart](../lib/src/presentation/model/default/view_model_packages.dart)
 
 ----------
 
@@ -200,8 +421,7 @@ export 'challenge/widget_packages.dart';
 これらの技術を活用して、読書進捗に応じた応援メッセージを画面に表示します。各書籍の読了ページ数を変更し「編集する」ボタンを押下すると一覧ページに遷移します。この時に表示する応援メッセージを華やかにします。現時点では応援メッセージは表示されません。
 
 #### ステップ1: アニメーション設定の分割
-- ステップ1からステップ3までの完成例
-
+- ステップ1からステップ3までの完成例  
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
 
 ステップ1では、アニメーションを実現するための「再生時間」と「動き」の設定を用意します。このステップでは二つのオブジェクトを用意します。
@@ -482,8 +702,7 @@ Future<void> _startAnimationSequence() async {
   unawaited(_backgroundController.repeat(reverse: true));
 ```
 
-- ステップ1からステップ3までの完成例（再掲）
-
+- ステップ1からステップ3までの完成例（再掲）  
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
 
 
@@ -491,8 +710,7 @@ Future<void> _startAnimationSequence() async {
 なお、本サンプルアプリでは、応援メッセージは10秒後に自動的に非表示になるよう実装しています。
 
 ### ステップ4: ２層目の波紋
-- ステップ4の完成例
-
+- ステップ4の完成例  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffec.png" />
 
 アニメーションを重ねていることを体験するために、もう一つ重ねます。前ステップの放射グラデーションの上に波紋の表現を重ねます。
@@ -565,8 +783,7 @@ child: Stack(
 
 ```
 
-- ステップ4の完成例（再掲）
-
+- ステップ4の完成例（再掲）  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffec.png" />
 
 #### まとめ
@@ -586,8 +803,7 @@ child: Stack(
 １つのUI表現のなかで複数の異なる時間軸のアニメーション値（animation.value）を利用し、応援メッセージの中心となるコンテンツを作成します。
 
 #### ステップ1: 複数のコントローラーを統合的に監視
-- ステップ1の完成例
-
+- ステップ1の完成例  
   <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
 
 
@@ -682,8 +898,7 @@ child: Stack(
     ),
 ```
 
-- ステップ1の完成例（再掲）
-
+- ステップ1の完成例（再掲）  
   <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
 
 
@@ -692,8 +907,7 @@ child: Stack(
 よって`Listenable.merge`の特徴はまだ発揮されていません。他のコントローラーの値を利用しているのは`_buildMainContent()`の中です。後続のステップで修正します。
 
 #### ステップ2: 応援メッセージを配置
-- ステップ2の完成例
-
+- ステップ2の完成例  
   <img width="300" alt="動きのないメインコンテンツ" src="./images/hands-on_MainContent_2.png" />
 
 
@@ -768,15 +982,13 @@ Widget _buildMainContent() {
         ),
 ```
 
-- ステップ2の完成例（再掲）
-
+- ステップ2の完成例（再掲）  
   <img width="300" alt="動きのないメインコンテンツ" src="./images/hands-on_MainContent_2.png" />
 
 中央に表示されたコンテンツが`ProgressCircleWidget`です。現時点ではサイズは固定、進捗プログレスも動かない状態ですが、次のステップで修正します。
 
 #### ステップ3: アニメーションの値で動きを実現
-- ステップ3の完成例
-
+- ステップ3の完成例  
   <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
 
 応援メッセージを表す`ProgressCircleWidget`内で、アニメーション値を利用して動きをつけます。
@@ -955,8 +1167,7 @@ Widget build(BuildContext context) {
               ),
 ```
 
-- ステップ3の完成例（再掲）
-
+- ステップ3の完成例（再掲）  
   <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
 
 
@@ -965,8 +1176,7 @@ Widget build(BuildContext context) {
 これで応援アニメーションの主要な実装は完了しました。次のステップでは、おまけとして他のアニメーション表現を重ねます。
 
 #### ステップ4: 【おまけ】他のアニメーションを重ねる
-- ステップ4の完成例
-
+- ステップ4の完成例  
   <img width="300" alt="完成した応援のメインコンテンツ" src="./images/hands-on_MainContent_4.png" />
 
 
@@ -1013,8 +1223,7 @@ SparkleEffectWidget(
 ),
 ```
 
-- ステップ4の完成例（再掲）
-
+- ステップ4の完成例（再掲）  
   <img width="300" alt="完成した応援のメインコンテンツ" src="./images/hands-on_MainContent_4.png" />
 
 #### まとめ
@@ -1031,8 +1240,7 @@ SparkleEffectWidget(
 アニメーションの遅延実行やトランジションを適用したウィジェット切り替えを学習します。
 
 ### ステップ1: 画面表示完了後に円グラフ描画を予約
-- ステップ1からステップ2までの完成例
-
+- ステップ1からステップ2までの完成例  
   <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
 
 
@@ -1131,15 +1339,13 @@ progressController!.reset();
 unawaited(progressController!.forward());
 ```
 
-- ステップ1からステップ2までの完成例（再掲）
-
+- ステップ1からステップ2までの完成例（再掲）  
   <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
 
 
 
 ### ステップ3: 完読時には専用メッセージ表示
-- ステップ3の完成例
-
+- ステップ3の完成例  
   <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
 
 完読時は円グラフの中央にお祝いメッセージが表示されるように修正します。表示するウィジェットを切り替える際にトランジションアニメーションを適用するように`AnimatedSwitcher`を利用します。
@@ -1210,8 +1416,7 @@ return AnimatedSwitcher(
 );
 ```
 
-- ステップ3の完成例（再掲）
-
+- ステップ3の完成例（再掲）  
   <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
 
 
