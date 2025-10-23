@@ -108,6 +108,27 @@ lib
     │   │   │   ├── settings
     │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
     │   │   │   └── widget_packages.dart                        （defaultディレクトリ用のバレルファイル）
+    │   │   ├── challenge
+    │   │   │   ├── home                                        （詳細構成については、completeを参照）
+    │   │   │   ├── reading                                     （詳細構成については、completeを参照）
+    │   │   │   ├── reading_graph                               （詳細構成については、completeを参照）
+    │   │   │   ├── settings                                    （詳細構成については、completeを参照）
+    │   │   │   └── widget_packages.dart                        （challengeディレクトリ用のバレルファイル）
+    │   │   ├── complete
+    │   │   │   ├── home
+    │   │   │   │   ├── components
+    │   │   │   │   │   └── progress                             読書中書籍進捗表示のUIコンポーネントを定義
+    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット
+    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット
+    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット
+    │   │   │   ├── reading
+    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット
+    │   │   │   ├── reading_graph
+    │   │   │   │   ├── components                               読書中書籍進捗グラフ表示のUIコンポーネントを定義
+    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット
+    │   │   │   ├── settings
+    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
+    │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
     │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
     │   └── rouging                                              GoRoutrの Type-Safe Routeを定義
     └── test                                                     Unit test と Widget test を定義
