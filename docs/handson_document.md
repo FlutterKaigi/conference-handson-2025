@@ -75,7 +75,7 @@ lib
 └── src
     ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
     │   └── scren
-    │       ├── home           読書中書籍一案・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
     │       └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
@@ -267,7 +267,7 @@ lib
 └── src
     ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
     │   └── scren
-    │       ├── home           読書中書籍一案・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
     │       └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
@@ -294,6 +294,24 @@ lib
     │   │   │   └── widget_packages.dart                        （defaultディレクトリ用のバレルファイル）
     │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
 ```
+
+#### ページウィジェット コード
+- **screen**
+  - **home（読書中書籍一覧画面）**
+    - [home_page.dart](../lib/src/app/screen/home/home_page.dart)  
+      読書中書籍一覧画面のページウィジェット
+
+  - **reading（読書中書籍編集画面）**
+    - [reading_book_page.dart](../lib/src/app/screen/reading/reading_book_page.dart)  
+      読書中書籍編集画面のページウィジェット
+
+  - **reading_graph（読書中書籍進捗率グラフ画面）**
+    - [reading_graph_page.dart](../lib/src/app/screen/reading_graph/reading_graph_page.dart)  
+      読書中書籍進捗率グラフのページウィジェット
+
+  - **settings（設定画面）**
+    - [settings_page.dart](../lib/src/app/screen/settings/settings_page.dart)  
+      設定画面のページウィジェット
 
 #### ベースUI コード
 - **ベースUIコード**  
