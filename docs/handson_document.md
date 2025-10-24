@@ -1462,15 +1462,99 @@ return AnimatedSwitcher(
 
 ## 完成版カスタムUI と比較しよう。
 
+Android Studio などの IDEを使っている方は、`lib/src/presentation/ui_widget/challenge/`ディレクトリと  
+`lib/src/presentation/ui_widget/complete/`ディレクトリを選択してから、マウス右クリックを行い、  
+ポップアップメニューから **compare Directories** を選択して比較してみてください。 
+
+- _ハンズオンでの作業がうまく行っていれば、目立った違いが出ていないと思います。_
+- _ここで食い違いが見つかりましたら、challengeディレクトリのカスタムUIコードを修正してください。_
+
 ### complete バレルファイルを有効にする。
+
+完成版カスタムUIのコードファイルは、
+`lib/src/presentation/ui_widget/complete/`ディレクトリに配置されているので、  
+**completeディレクトリのバレルファイル(`lib/src/presentation/ui_widget/complete/widget_packages.dart`)** が有効になるよう、  
+**UIウィジェット・パッケージ全体のバレルファイル** を修正します。
+
+UIウィジェット・パッケージ全体のバレルファイル [lib/src/presentation/ui_widget/widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart) を開いて、  
+デフォルト設定(`complete/widget_packages.dart`)の export 行のコメントアウトのみを外して、  
+他の export 行をコメントアウトしてください。
+
+```dart
+// UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
+
+// デフォルト設定 （ui_widget/default）
+// export 'default/widget_packages.dart';
+
+// 完成形設定 （ui_widget/complete）
+export 'complete/widget_packages.dart';
+
+// ハンズオン設定 （ui_widget/challenge）
+// export 'challenge/widget_packages.dart';
+```
 
 ### 完成版カスタムUI の機能要件表現を確認する。
 
+ui_widget/completeディレクトリ配下の 完成形カスタムUIのコードを参照させるようにしたので、  
+**[ベースUI を使った機能要件表現を確認する](./handson_document.md#%E3%83%99%E3%83%BC%E3%82%B9ui-%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%9F%E6%A9%9F%E8%83%BD%E8%A6%81%E4%BB%B6%E8%A1%A8%E7%8F%BE%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B)** 章の
+**[読了したページの更新に伴う進捗率達成メッセージを表示する。](./handson_document.md#%E8%AA%AD%E4%BA%86%E3%81%97%E3%81%9F%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AE%E6%9B%B4%E6%96%B0%E3%81%AB%E4%BC%B4%E3%81%86%E9%80%B2%E6%8D%97%E7%8E%87%E9%81%94%E6%88%90%E3%83%A1%E3%83%83%E3%82%BB%E3%83%BC%E3%82%B8%E3%82%92%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B)** と  
+**[読了したページの進捗をグラフで表示する。](./handson_document.md#%E8%AA%AD%E4%BA%86%E3%81%97%E3%81%9F%E3%83%9A%E3%83%BC%E3%82%B8%E3%81%AE%E9%80%B2%E6%8D%97%E3%82%92%E3%82%B0%E3%83%A9%E3%83%95%E3%81%A7%E8%A1%A8%E7%A4%BA%E3%81%99%E3%82%8B)** での操作を参考に、完成形カスタムUIでのデザインやアニメーション表現を確認してください。
+
+_アニメーション表現は、読了したページ数が 規定の進捗率（10%, 50%, 80%, 100%）を初めて超えたときに変化しますので、  
+機能要件表現を確認をされる際は、これら規定の進捗率を考慮しながら読了ページを更新してみてください。_
+
 ### 完成版カスタムUI コードを確認する。
+
+#### 完成形カスタムUIコードに関連するファイル構成
+```text
+lib
+└── src
+    ├── presentation
+    │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
+    │   │   ├── complete
+    │   │   │   ├── home
+    │   │   │   │   ├── components
+    │   │   │   │   │   └── progress                             読書中書籍進捗表示のUIコンポーネントを定義
+    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット　　　（defaultと同実装）
+    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット　　　（completeカスタム）
+    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット　　　　　　（defaultと同実装）
+    │   │   │   ├── reading
+    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット　　　（defaultと同実装）
+    │   │   │   ├── reading_graph
+    │   │   │   │   ├── components                               読書中書籍進捗グラフ表示のUIコンポーネントを定義
+    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット（completeカスタム）
+    │   │   │   ├── settings
+    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット　　　　　　　　（defaultと同実装）
+    │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
+    │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
+```
+
+#### 完成形カスタムUI コード
+- **完成形カスタムUIコード**
+  - **home（書籍一覧画面のUI表示）**
+    - [reading_progress_animations_widget.dart](../lib/src/presentation/ui_widget/complete/home/reading_progress_animations_widget.dart)  
+      読書中書籍進捗表示のUIウィジェット
+
+  - **reading_graph（書籍進捗率グラフ画面のUI表示）**
+    - [reading_book_graph_widget.dart](../lib/src/presentation/ui_widget/complete/reading_graph/reading_book_graph_widget.dart)  
+      読書中書籍進捗グラフ表示のUIウィジェット
+
+- **UIウィジェット - バレルファイル**
+  - **UIウィジェット全体統括用**  
+    [widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart)
+
+    - **completeディレクトリ用**  
+      [widget_packages.dart](../lib/src/presentation/ui_widget/complete/widget_packages.dart)
 
 ----------
 
 ## 宿題
+
+**読了したページの更新に伴う進捗率達成メッセージ** や **読了したページの進捗のグラフ表示** のカスタムUIがあるのに、  
+**激励や一喝のメッセージ** はどこに行ったのだろうと思われているのではないでしょうか。
+
+この機能要件については、ハンズオンチームでのカスタムUI実装をしていないので、  
+これは、ハンズオンに参加してくださったみなさまへの宿題とさせていただきます。
 
 ----------
 
