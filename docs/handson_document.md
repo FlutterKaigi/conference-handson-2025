@@ -108,6 +108,27 @@ lib
     │   │   │   ├── settings
     │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
     │   │   │   └── widget_packages.dart                        （defaultディレクトリ用のバレルファイル）
+    │   │   ├── challenge
+    │   │   │   ├── home                                        （詳細構成については、completeを参照）
+    │   │   │   ├── reading                                     （詳細構成については、completeを参照）
+    │   │   │   ├── reading_graph                               （詳細構成については、completeを参照）
+    │   │   │   ├── settings                                    （詳細構成については、completeを参照）
+    │   │   │   └── widget_packages.dart                        （challengeディレクトリ用のバレルファイル）
+    │   │   ├── complete
+    │   │   │   ├── home
+    │   │   │   │   ├── components
+    │   │   │   │   │   └── progress                             読書中書籍進捗表示のUIコンポーネントを定義
+    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット
+    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット
+    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット
+    │   │   │   ├── reading
+    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット
+    │   │   │   ├── reading_graph
+    │   │   │   │   ├── components                               読書中書籍進捗グラフ表示のUIコンポーネントを定義
+    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット
+    │   │   │   ├── settings
+    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
+    │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
     │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
     │   └── rouging                                              GoRoutrの Type-Safe Routeを定義
     └── test                                                     Unit test と Widget test を定義
@@ -431,7 +452,7 @@ export 'challenge/widget_packages.dart';
 - `duration`: アニメーションの再生時間を指定します。`Duration`クラスを使って時間を指定します。
 - `vsync`: アニメーションを画面のリフレッシュレートと同期させるための引数です。これにより、アニメーションがカクつかずに、非常に滑らかに見えます。
 
-`Animation` は`AnimationController`の進行度を、具体的な動きのパターンに変換します。ここで使用する`CurvedAnimation`はアニメーションの進行に緩急をつけ滑らかな動きにすることができます。コンストラクタでは以下の設定をしています。
+`Animation` は`AnimationController`の進行度を、具体的な動きのパターンに変換します。ここで使用する`CurvedAnimation`はアニメーションの進行に緩急をつけ滑らかな動きにできます。コンストラクタでは以下の設定をしています。
 
 - `parent`: アニメーションの「時間軸」となる`AnimationController`を指定します。
 - `curve`: アニメーションの動きを指定します。`Curves.easeInOutSine`は、滑らかに加速と減速を繰り返す波のような動きを生成します。これにより、背景のグラデーションが穏やかに膨張・収縮するような効果を生み出します。
@@ -760,7 +781,7 @@ child: Stack(
     // ),
 ```
 
-コメントの解除で波紋アニメーションを配置します。`Stack`を使うことでウィジェットを重ねて表示することができます。
+コメントの解除で波紋アニメーションを配置します。`Stack`を使うことでウィジェットを重ねて表示できます。
 
 **修正後**
 ```dart
@@ -1421,7 +1442,7 @@ return AnimatedSwitcher(
 
 
 #### まとめ
-アニメーションの遅延実行やトランジションアニメーションを適用したウィジェット切り替えを学習しました。これらの技術を通じて、単なる静的なUIではなく、ユーザーの操作に自然に応答する動的なUIを構築することができます。
+アニメーションの遅延実行やトランジションアニメーションを適用したウィジェット切り替えを学習しました。これらの技術を通じて、単なる静的なUIではなく、ユーザーの操作に自然に応答する動的なUIを構築できます。
 
 
 ### 完成させたカスタムUI の機能要件表現を確認する。
@@ -1434,22 +1455,107 @@ return AnimatedSwitcher(
   - 本の総ページ数に対する現在の進捗や残りページ数を視覚的に表現する。
   - 瞬間的な表示ではなく、徐々に描画することで進捗の積み重ねの視覚的表現を強化し、努力の肯定感を高める。
 
-シンプルなUIでも機能は満たせますが、アニメーションを実装することで、ユーザーへの印象づけや動機づけなど、体験を向上させることができます。
+シンプルなUIでも機能は満たせますが、アニメーションを実装することで、ユーザーへの印象づけや動機づけなど、体験の向上ができます。
 
 
 ----------
 
 ## 完成版カスタムUI と比較しよう。
 
+Android Studio などの IDEを使っている方は、`lib/src/presentation/ui_widget/challenge/`ディレクトリと  
+`lib/src/presentation/ui_widget/complete/`ディレクトリを選択してから、マウス右クリックを行って、  
+ポップアップメニューから **compare Directories** を選択して両者を比較してみてください。 
+
+- _ハンズオンでの作業がうまく行っていれば、目立った違いが出ていないと思います。_
+- _ここで食い違いが見つかりましたら、challengeディレクトリのカスタムUIコードを修正してください。_
+
 ### complete バレルファイルを有効にする。
+
+完成版カスタムUIのコードファイルは、
+`lib/src/presentation/ui_widget/complete/`ディレクトリに配置されているので、  
+**completeディレクトリのバレルファイル(`lib/src/presentation/ui_widget/complete/widget_packages.dart`)** が有効になるよう、  
+**UIウィジェット・パッケージ全体のバレルファイル** を修正します。
+
+UIウィジェット・パッケージ全体のバレルファイル [lib/src/presentation/ui_widget/widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart) を開いて、  
+デフォルト設定(`complete/widget_packages.dart`)の export 行のコメントアウトのみを外して、  
+他の export 行をコメントアウトしてください。
+
+```dart
+// UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
+
+// デフォルト設定 （ui_widget/default）
+// export 'default/widget_packages.dart';
+
+// 完成形設定 （ui_widget/complete）
+export 'complete/widget_packages.dart';
+
+// ハンズオン設定 （ui_widget/challenge）
+// export 'challenge/widget_packages.dart';
+```
 
 ### 完成版カスタムUI の機能要件表現を確認する。
 
+ui_widget/completeディレクトリ配下の 完成形カスタムUIのコードを参照させるようにしたので、  
+**①[ベースUI を使った機能要件表現を確認する](#%E3%83%99%E3%83%BC%E3%82%B9ui-%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%9F%E6%A9%9F%E8%83%BD%E8%A6%81%E4%BB%B6%E8%A1%A8%E7%8F%BE%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B)** 章の
+**読了したページの更新に伴う進捗率達成メッセージを表示する。** と  
+**読了したページの進捗をグラフで表示する。** での操作を参考に、完成形カスタムUIでのデザインやアニメーション表現を確認してください。
+
+- _①リンクURLが「ベースUIを使った機能要件表現を確認する」ベースになるため、右クリックして別ウィンドウでお開きください。_
+- _アニメーション表現は、読了したページ数が 規定の進捗率（10%, 50%, 80%, 100%）に初めて達したときに変化しますので、  
+  機能要件表現を確認をされる際は、これら規定の進捗率を考慮しながら読了ページを更新してみてください。_
+
 ### 完成版カスタムUI コードを確認する。
+
+#### 完成形カスタムUIコードに関連するファイル構成
+```text
+lib
+└── src
+    ├── presentation
+    │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
+    │   │   ├── complete
+    │   │   │   ├── home
+    │   │   │   │   ├── components
+    │   │   │   │   │   └── progress                             読書中書籍進捗表示のUIコンポーネントを定義
+    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット　　　（defaultと同実装）
+    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット　　　（completeカスタム）
+    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット　　　　　　（defaultと同実装）
+    │   │   │   ├── reading
+    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット　　　（defaultと同実装）
+    │   │   │   ├── reading_graph
+    │   │   │   │   ├── components                               読書中書籍進捗グラフ表示のUIコンポーネントを定義
+    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット（completeカスタム）
+    │   │   │   ├── settings
+    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット　　　　　　　　（defaultと同実装）
+    │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
+    │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
+```
+
+#### 完成形カスタムUI コード
+- **完成形カスタムUIコード**
+  - **home（書籍一覧画面のUI表示）**
+    - [reading_progress_animations_widget.dart](../lib/src/presentation/ui_widget/complete/home/reading_progress_animations_widget.dart)  
+      読書中書籍進捗表示のUIウィジェット
+
+  - **reading_graph（書籍進捗率グラフ画面のUI表示）**
+    - [reading_book_graph_widget.dart](../lib/src/presentation/ui_widget/complete/reading_graph/reading_book_graph_widget.dart)  
+      読書中書籍進捗グラフ表示のUIウィジェット
+
+- **UIウィジェット - バレルファイル**
+  - **UIウィジェット全体統括用**  
+    [widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart)
+
+    - **completeディレクトリ用**  
+      [widget_packages.dart](../lib/src/presentation/ui_widget/complete/widget_packages.dart)
 
 ----------
 
 ## 宿題
+
+**読了したページの更新に伴う進捗率達成メッセージ** や **読了したページの進捗のグラフ表示** のカスタムUIがあるのに、  
+**激励や一喝のメッセージ** はどこに行ったのだろうと思われているのではないでしょうか。
+
+この機能要件については、ハンズオンチームでのカスタムUI実装をしていないので、  
+これは、ハンズオンに参加してくださったみなさまへの宿題とさせていただきます。
 
 ----------
 
