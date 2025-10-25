@@ -2,23 +2,29 @@
 
 ## 概要
 
-インタラクティブドーナツチャートは、読書進捗を視覚的に表現する高度なグラフィックUIコンポーネントです。CustomPainterを使用したCanvas描画とアニメーションを組み合わせ、ユーザーの操作に反応するインタラクティブな体験を提供します。
+インタラクティブドーナツチャートは、読書進捗を視覚的に表現する高度なグラフィックUIコンポーネントです。  
+CustomPainterを使用したCanvas描画とアニメーションを組み合わせ、ユーザーの操作に反応するインタラクティブな体験を提供します。
 
 ## 実装のポイント
 
 ### 1. アーキテクチャ設計
 
 ```
-interactive_donut_chart/
-├── reading_book_graph_widget.dart    # メインウィジェット
-├── components/
-    ├── progress_donut_chart.dart     # ドーナツチャート本体
-    ├── progress_donut_chart_painter.dart # Canvas描画ロジック
-    ├── donut_chart_center_content.dart   # 中央コンテンツ
-    ├── background_glow.dart          # 背景グロー効果
-    ├── progress_info.dart            # 統計情報表示
-    ├── stat_item.dart                # 統計アイテム
-    └── title_section.dart            # タイトルセクション
+lib
+└── src
+    └── presentation
+        └── ui_widget
+            └── complete
+                └── reading_grapht
+                    ├── components                             読書中書籍進捗グラフ表示のUIコンポーネントを定義
+                    │   ├── progress_donut_chart.dart          ドーナツチャート本体
+                    │   ├── progress_donut_chart_painter.dart  Canvas描画ロジック
+                    │   ├── donut_chart_center_content.dart    中央コンテンツ
+                    │   ├── background_glow.dart               背景グロー効果
+                    │   ├── progress_info.dart                 統計情報表示
+                    │   ├── stat_item.dart                     統計アイテム
+                    │   └── title_section.dart                 タイトルセクション
+                    └── reading_book_graph_widget.dart         読書中書籍進捗グラフ表示のUIウィジェット
 ```
 
 責任の分離により、複雑なグラフィック処理を管理しやすい構造にしています。
