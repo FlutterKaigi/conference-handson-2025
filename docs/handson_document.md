@@ -185,6 +185,13 @@ Android や iOS セットアップをされていない場合は、Chromeブラ�
 - _`make`コマンドは、macOS/Linux であれば標準で組み込まれているのでインストールする必要はありません。  
   Windows の場合は、`Makefile`の中を見て`fvm flutter run`などのコマンド実態を直接実行してください。_
 
+- **補足**
+  - _3.35.1 以上の Flutter SDK が利用できる環境であれば、  
+    fvm を使わなくても（fvm のインストールしなくても）コンパイル環境を確保できます。  
+  - _その場合は、`fvm`や `make run` や `make unit-test` などのコマンドを一切使わずに  
+    `Makefile`の中で行っているコマンド実態の `flutter run`や `flutter test test/`もしくは  
+    Android Studio などの IDE が用意しているアプリ実行やテスト実行機能を利用することもできます。_
+
 #### fvm インストール
 
 fvm をインストールされていない方は、以下を実行してください。  
@@ -249,7 +256,7 @@ _ハンズオン・リポジトリを Gitクローンしてから、バレルフ
   起動中の iOSシミュレーターや Android エミュレータをデバイスとして選択してください。
 
 - **補足**  
-  - _3.32.8 以上の Flutter SDK が利用できるのであれば、  
+  - _3.35.1 以上の Flutter SDK が利用できるのであれば、  
     ターミナルで `make run` や `fvm flutter run` を使わなくても、  
     Android Studio のアプリ実行 ⇒ `Run 'main.dart'`が利用可能です。_
 
