@@ -1600,7 +1600,8 @@ lib
     - **completeディレクトリ用**  
       [widget_packages.dart](../lib/src/presentation/ui_widget/complete/widget_packages.dart)
 
-- 【参照】完成形カスタムUIの機能要件実装設計ガイド
+- **【補足】完成形カスタムUIの機能要件実装設計ガイド**  
+  _よろしければ、カスタムUI実装設計時のキーポイント説明も御参照ください。_  
   - **読書中書籍進捗グラフ表示**  
     [インタラクティブドーナツチャート実装ガイド](./ui_widget/interactive_donut_chart_guide.md)
 
