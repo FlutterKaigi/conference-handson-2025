@@ -152,10 +152,56 @@ lib
 
 ここからは、**ハンズオンに参加してくださったみなさまの作業** について説明させていただきます。  
 
-_**〜 この「ハンズオン開発環境を作ろう。」章は、ただいま作成作業中です。 〜**_
+### Flutter開発環境構築
+
+Flutter開発環境および Android や iOS 開発のセットアップされていない場合は、  
+公式サイト [Docs | Flutter](https://docs.flutter.dev/) で説明されている、以下の設定が完了している必要があります。
+
+- Flutterセットアップ  
+  [Set up and test drive Flutter](https://docs.flutter.dev/get-started/quick)
+
+  - Android 開発セットアップ  
+    [Set up Android development](https://docs.flutter.dev/platform-integration/android/setup)
+
+  - iOS 開発セットアップ  
+    [Set up iOS development](https://docs.flutter.dev/platform-integration/ios/setup)
+
+_このハンズオン・プロジェクトは、Flutter Web にも対応しています。  
+Android や iOS セットアップをされていない場合は、Chromeブラウザを使った動作確認もできます。_
 
 ### ハンズオン環境構築
 
+ハンズオン・プロジェクトでは、**[fvm](https://pub.dev/packages/fvm)** を使って Flutter バージョンを統一させていますので、  
+ハンズオン・プロジェクトのルートディレクトリにて`fvm use`コマンドを実行しておいてください。
+
+- _**fvm** を使っていない方は、下段の説明を参考に `fvm のインストール`を行ってください。_
+
+また模擬アプリの起動やユニットテストを簡易化するため Makefile を利用しています。  
+これにより `make run` や `make unit-test` コマンドが利用できます。
+
+この他にもコマンドがありますが、 flutter コマンドを fvm を介して実行させているだけなので、  
+プロジェクトのルートにある `Makefile`の中を見ていただければ、 どんなコマンドで何ができるのかすぐに理解できると思います。
+
+- _`make`コマンドは、macOS/Linux であれば標準で組み込まれているのでインストールする必要はありません。  
+  Windows の場合は、`Makefile`の中を見て`fvm flutter run`などのコマンド実態を直接実行してください。_
+
+#### fvm インストール
+
+fvm をインストールされていない方は、以下を実行してください。  
+
+**fvm ツールのインストールコマンド（Linux/macOS）**
+```bash
+curl -fsSL https://fvm.app/install.sh | bash
+```
+**fvm ツールのインストールコマンド（Windows）**
+```powershell
+choco install fvm
+```
+
+_インストール後は、ハンズオン・プロジェクトのルートディレクトリで、`fvm use` を実行してください。_
+
+#### その他
+**ハンズオン環境構築（ハンズオン・プロジェクト）の技術詳細については、下記ドキュメントを御確認ください。**
 
 - 【参照】プロジェクト開発環境構築 - [README.md](../README.md)
 

@@ -89,8 +89,8 @@ Android Studio の Flutter/Dart 関連の設定を行います。
    ⇒ プロジェクトの .fvm/flutter_sdk/bin/cache/dart-sdk① になります。  
    Android Studio は絶対パス指定を要求するので具体的な①パスは、以下の ①のようにになることと、  
    設定後はシンボリックリンクの実態先② に変わることに注意してください。
-- ①/Users/rie/yumemi/code_check/search_repositories_on_github/.fvm/flutter_sdk/bin/cache/dart-sdk
-- ②/Users/rie/fvm/versions/3.27.3/bin/cache/dart-sdk
+   - ①/Users/rie/projects/sample/.fvm/flutter_sdk/bin/cache/dart-sdk
+   - ②/Users/rie/fvm/versions/3.27.3/bin/cache/dart-sdk
 
 3. Flutter SDK 設定  
    Settings > Languages & Frameworks > Flutter > SDK (current project only) >  
@@ -98,18 +98,18 @@ Android Studio の Flutter/Dart 関連の設定を行います。
    ⇒ プロジェクトの .fvm/flutter_sdk/bin/cache/dart-sdk① になります。  
    Android Studio は絶対パス指定を要求するので具体的な①パスは、以下の ①のようにになることと、  
    設定後はシンボリックリンクの実態先② に変わることに注意してください。
-- ①/Users/rie/yumemi/code_check/search_repositories_on_github/.fvm/flutter_sdk
-- ②/Users/rie/fvm/versions/3.27.3
+   - ①/Users/rie/projects/sample/.fvm/flutter_sdk
+   - ②/Users/rie/fvm/versions/3.27.3
 
 4. Dart フォーマット設定  
    フォーマット桁数を Flutter lint 想定に合わせるため 80桁に指定してください。
-- Settings > Editor > Code Style > Dart > Editor > Line length [80]  
-  （dart format に合わせたフォーマット桁数）
+   - Settings > Editor > Code Style > Dart > Editor > Line length [80]  
+     （dart format に合わせたフォーマット桁数）
 
 5. Flutter フォーマット設定  
    ファイルセーブごとにインポートの修正とフォーマットを適用するため以下の設定を行ってください。
-- Settings > Languages & Frameworks > Flutter > Editor > [v] Format code on save
-- Settings > Languages & Frameworks > Flutter > Editor > [v] Organize imports on save
+   - Settings > Languages & Frameworks > Flutter > Editor > [v] Format code on save
+   - Settings > Languages & Frameworks > Flutter > Editor > [v] Organize imports on save
 
 **補足 Format 関係の設定について**  
 Flutter lint は、analysis_options.yaml に設定されたルールに従いますが、  
@@ -170,7 +170,7 @@ Flutter 3.35 / Dart 3.9 から、`Dart and MCP Server` が利用できるよう�
 
 ### Issues テンプレートの設定
 
-### Pull Reauest テンプレートの設定
+### Pull Request テンプレートの設定
 
 ### dependabot 設定
 
