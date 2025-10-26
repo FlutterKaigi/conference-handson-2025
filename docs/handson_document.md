@@ -84,6 +84,8 @@ _これにより機能要件の追加や変更における、修正範囲の限�
     - **[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)** が、DB等のインフラストラクチャをラップしてデータを管理するステートモデルを保持して、  
     - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データのカレント値を表す不変データの **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)） 
       [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** を提供します。  
+      _模擬アプリでは、データの永続化などを行いません。  
+      このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。_
 
   - **プレゼンテーションレイヤ** の依存関係  
     _ここでは、UIウィジェットを [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) に仮定しています。_  
@@ -117,7 +119,7 @@ _これにより機能要件の追加や変更における、修正範囲の限�
 また **アプリケーションモデル** は、コンストラクタ引数オプションで、  
 ステートモデル（状態データ）をラップする`ドメインモデルのオブジェクトを外部から依存注入できる`ようにしているだけでなく、  
 そして **ドメインモデル** もコンストラクタ引数オプションで、`任意のステータスモデルのオブジェクトを外部から依存注入できる`うえ、  
-さらに **ステータスモデル** も、コンストラクタ引数オプションで、`任意のデータ値を外部から依存注入できる`ようにしています。  
+さらに **ステートモデル** も、コンストラクタ引数オプションで、`任意のデータ値を外部から依存注入できる`ようにしています。  
 
 _これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** や 
 **[Widget test](../test/riverpod_reading_books_widget_test.dart)** で、  
