@@ -86,32 +86,33 @@ _これにより機能要件の追加や変更における、修正範囲の限�
       [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** を提供します。  
 
   - **プレゼンテーションレイヤ** の依存関係  
-    _ここでは、UIウィジェットとして[読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart)を仮定しています。_  
+    _ここでは、UIウィジェットを [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) に仮定しています。_  
     - **ページウィジェット** は、  
-      [ホームページウィジェット](../lib/src/app/screen/home/home_page.dart)が UIウィジェットを保持するので、
+      [ホームページウィジェット](../lib/src/app/screen/home/home_page.dart) が UIウィジェットを保持するので、
       `状態データ更新とUIウィジェットの表示更新を同期させる`ため、  
-      状態データとViewModelを提供する riverpodプロバイダーの監視と、UIウィジェットへのプロバイダーオブジェクトの提供を行います。 
+      状態データとViewModelを提供する riverpodプロバイダーの監視と、UIウィジェットへのプロバイダーオブジェクトの  
+      提供を行います。 
     - **UIウィジェット** は、  
-      [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart)であれば、
+      [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) であれば、
       `表示種別に従ったアニメの表示|非表示と書籍名を表示させる`ため、  
       プロバイダーより提供された状態データから取得した表示種別の他に、  
-      [WidgetRef](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/WidgetRef-class.html)を介して
-      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart)から表示データ値を取得して描画を行います。  
+      [WidgetRef](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/WidgetRef-class.html) を介して
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) から表示データ値を取得して描画を行います。  
     - **プロバイダー** は、  
-      riverpodの [NotifierProvider](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider-class.html)を表し、  
-      [notifierプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider/notifier.html)から
-      対応する[ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart)を取得して、
-      [stateプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/AnyNotifier/state.html)の値を取得して返します。
+      riverpodの [NotifierProvider](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider-class.html) を表し、  
+      [notifierプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider/notifier.html) から
+      対応する [ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) を取得して、
+      [stateプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/AnyNotifier/state.html) の値を取得して返します。
     - **ViewModel** は、  
-      [読書進捗率達成 ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart)であれば、
+      [読書進捗率達成 ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) であれば、
       状態データとして 読了率 enum を返し、  
-      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart)であれば、
-      状態データとして[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)を介して  
-      [ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)から
-      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart)を取得して返します。
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) であれば、
+      状態データとして [ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart) を介して  
+      [ステートモデル](../lib/src/domain/model/reading_books_state_model.dart) から
+      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) を取得して返します。
     - **ValueObject** は、  
-      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart)であれば、  
-      読書中書籍情報の一覧として [読書中書籍 ValueObject](../lib/src/domain/model/reading_books_value_object.dart)の一覧を返します。
+      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) であれば、  
+      読書中書籍情報の一覧として [読書中書籍 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) の一覧を返します。
 
 また**アプリケーションモデル**は、コンストラクタ引数オプションで、  
 ステートモデル（状態データ）をラップする`ドメインモデルのオブジェクトを外部から依存注入できる`ようにしているだけでなく、  
@@ -123,7 +124,7 @@ _これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** 
 **任意のデータ値の手動生成とアプリケーションモデルへの依存注入ができる** ようになっています。_
 
 その他の事項として、ハンズオンプロジェクトでは、
-**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、
+**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、  
 実験的なコード生成を行っています。
 
 - 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
