@@ -97,14 +97,14 @@ _これにより機能要件の追加や変更における、修正範囲の限�
     - **UIウィジェット** は、  
       [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) であれば、
       `表示種別に従ったアニメの表示|非表示と書籍名を表示させる`ため、  
-      プロバイダーより提供された状態データから取得した表示種別の他に、  
+      プロバイダーより提供された状態データ（表示種別）の他に、  
       [WidgetRef](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/WidgetRef-class.html) を介して
-      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) から表示データ値を取得して描画を行います。  
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) から表示データ値（読書中書籍情報の書籍名）を取得して描画を行います。  
     - **プロバイダー** は、  
       riverpodの [NotifierProvider](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider-class.html) を表し、  
       [notifierプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider/notifier.html) から
       対応する [ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) を取得して、
-      [stateプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/AnyNotifier/state.html) の値を取得して返します。
+      [stateプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/AnyNotifier/state.html) の値を状態データとして返します。
     - **ViewModel** は、  
       [読書進捗率達成 ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) であれば、
       状態データとして 読了率 enum を返し、  
