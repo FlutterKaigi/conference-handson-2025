@@ -55,19 +55,78 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
 
 ## 模擬アプリとしてのハンズオン・プロジェクト
 
+### 全体方針
 1. 実装詳細を理解してもらうためコード生成を使わない。  
-2. 画面遷移に `go_router`、状態管理に `riverpod` を使い、不変状態値には `freezed を使わない愚直実装` を行う。  
+2. 画面遷移に `go_router`、状態管理に `flutter_riverpod` を使うが、不変状態値には `freezed を使わない愚直実装` を行う。  
+   またウィジェット内部状態の簡素化も `hooks_riverpod を使わない実装` で行い、プラグイン依存を基礎機能に限定させる。
 3. 読書管理する書籍の新規追加や情報編集と削除の Unit test と Widget test を利用した簡易結合テストを実装する。  
 4. 模擬アプリのため、読書中書籍情報の永続化やアラームは利用しない。このため擬似的に挙動を起こすようにする。  
 
-_**〜 この「模擬アプリとしてのハンズオン・プロジェクト」章は、ただいま作成作業中です。 〜**_
+### 基本設計
+**保守性**、 **拡張性**、 **理解容易性** を向上させる設計方針を満たすよう、  
+アプリ全体で `レイヤードアーキテクチャ`を採用し、UIウィジェットには `MVVM アーキテクチャ`を適用します。  
 
-### システム設計
+- レイヤードアーキテクチャにより、  
+  上位レイヤーは下位レイヤーにのみ依存させ、逆を認めない原則 ⇒  
+  `上位レイヤーが、下位レイヤーのオブジェクトを保持する。`  
+  `上位レイヤーは、下位レイヤーに公開インターフェース（状態取得 と 状態更新通知）のみを提供する。`により、  
+  一方向の依存関係 ⇒ `上位下達の経路フロー`の実現と厳守を行い、設計方針を満足させます。
 
-### アーキテクチャ設計
+ビジネスロジックやデータアクセスの本体は、状態データレイヤに、  
+UIウィジェットでの状態データの取得や更新依頼は、プレゼンテーションレイヤに実装することで **関心事の分離** を図ります。  
 
-### フィーチャー設計
+_これにより機能要件の追加や変更における、修正範囲の限定化（最小化）と影響範囲の明確化（依存関係制御）を確保して、  
+保守性や拡張性およびコードの見通し（理解性）を向上させます。_
 
+- 関心事レイヤ構成  
+  - **状態データレイヤ** の依存関係  
+    - **[アプリケーションモデル](../lib/src/application/model/application_model.dart)** が、状態データの取得や更新通知のインターフェースを提供するドメインモデルを保持し、  
+    - **[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)** が、DB等のインフラストラクチャをラップしてデータを管理するステートモデルを保持して、  
+    - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データのカレント値を表す不変データの **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)） 
+      [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** を提供します。  
+
+  - **プレゼンテーションレイヤ** の依存関係  
+    _ここでは、UIウィジェットとして[読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart)を仮定しています。_  
+    - **ページウィジェット** は、  
+      [ホームページウィジェット](../lib/src/app/screen/home/home_page.dart)が UIウィジェットを保持するので、
+      `状態データ更新とUIウィジェットの表示更新を同期させる`ため、  
+      状態データとViewModelを提供する riverpodプロバイダーの監視と、UIウィジェットへのプロバイダーオブジェクトの提供を行います。 
+    - **UIウィジェット** は、  
+      [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart)であれば、
+      `表示種別に従ったアニメの表示|非表示と書籍名を表示させる`ため、  
+      プロバイダーより提供された状態データから取得した表示種別の他に、  
+      [WidgetRef](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/WidgetRef-class.html)を介して
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart)から表示データ値を取得して描画を行います。  
+    - **プロバイダー** は、  
+      riverpodの [NotifierProvider](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider-class.html)を表し、  
+      [notifierプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider/notifier.html)から
+      対応する[ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart)を取得して、
+      [stateプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/AnyNotifier/state.html)の値を取得して返します。
+    - **ViewModel** は、  
+      [読書進捗率達成 ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart)であれば、
+      状態データとして 読了率 enum を返し、  
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart)であれば、
+      状態データとして[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)を介して  
+      [ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)から
+      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart)を取得して返します。
+    - **ValueObject** は、  
+      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart)であれば、  
+      読書中書籍情報の一覧として [読書中書籍 ValueObject](../lib/src/domain/model/reading_books_value_object.dart)の一覧を返します。
+
+また**アプリケーションモデル**は、コンストラクタ引数オプションで、  
+ステートモデル（状態データ）をラップする`ドメインモデルのオブジェクトを外部から依存注入できる`ようにしているだけでなく、  
+そして**ドメインモデル**もコンストラクタ引数オプションで、`任意のステータスモデルのオブジェクトを外部から依存注入できる`うえ、  
+更に**ステータスモデル**も、コンストラクタ引数オプションで、`任意のデータ値を外部から依存注入できる`ようにしています。  
+
+_これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** や 
+**[Widget test](../test/riverpod_reading_books_widget_test.dart)** で、  
+**任意のデータ値の手動生成とアプリケーションモデルへの依存注入ができる** ようになっています。_
+
+その他の事項として、ハンズオンプロジェクトでは、
+**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、
+実験的なコード生成を行っています。
+
+- 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
 
 #### ハンズオン・プロジェクト全体構成
 ```text
@@ -134,15 +193,21 @@ lib
     └── test                                                     Unit test と Widget test を定義
 ```
 
-- 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
+_**〜 この「模擬アプリとしてのハンズオン・プロジェクト」章は、ただいま作成作業中です。 〜**_
+
+### システム設計
+
+### アーキテクチャ設計
+
+### フィーチャー設計
 
 ----------
 
 ## ベースUI とカスタムUI のコードや見栄えの比較ができる工夫
 
-### ConsumerStagedWidget
-
 ### バレルファイル
+
+### ConsumerStagedWidget
 
 ----------
 
