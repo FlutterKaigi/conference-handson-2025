@@ -221,7 +221,7 @@ lib
 
 ### ハンズオン・プロジェクト独自のライブラリ
 
-### 不変データクラス作成
+#### 不変データクラス作成
 riverpod を使う上で不変データの保証が必須です。
 一般的に riverpod で不変データを扱うには、**[freezed](https://pub.dev/packages/freezed)** が使われますが、  
 今回は愚直に、`hashCode`と`== オペレーター`のオーバーライドおよび、`JSON serialize | deserialize`の実装を行います。
