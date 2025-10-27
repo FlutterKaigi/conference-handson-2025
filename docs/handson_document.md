@@ -219,6 +219,25 @@ lib
 
 - 【参照】[pubspec.yaml](../pubspec.yaml)
 
+### ハンズオン・プロジェクト独自のライブラリ
+
+### 不変データクラス作成
+riverpod を使う上で不変データの保証が必須です。
+一般的に riverpod で不変データを扱うには、**[freezed](https://pub.dev/packages/freezed)** が使われますが、  
+今回は愚直に、`hashCode`と`== オペレーター`のオーバーライドおよび、`JSON serialize | deserialize`の実装を行います。
+
+- ハンズオンプロジェクトでは、`hashCode`と`== オペレーター`のオーバーライドを行う  
+  プラグイン [equatable](https://pub.dev/packages/equatable) のユーティリティ [equatable_utils.dart](https://github.com/felangel/equatable/blob/fc5cf81060b3aab54fc6e641ebdfe998b00a619b/lib/src/equatable_utils.dart) のコードを利用させてもらい、  
+  ハンズオン・プロジェクト用修正版 [lib/src/fundamental/model/equatable_utils.dart](../lib/src/fundamental/model/equatable_utils.dart) ユーティリティを作りました。  
+  　
+- どのようにこのユーティリティを使うのかは、  
+  `読書中書籍情報`と`読書中書籍情報一覧`の不変データクラス 
+  **[ReadingBookValueObject](../lib/src/domain/model/reading_book_value_object.dart)** と
+  **[ReadingBooksValueObject](../lib/src/domain/model/reading_books_value_object.dart)** の実装を確認下さい。  
+
+  - 併せて [ValueObject](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/model/base_objects_model.dart#L191-L268) 抽象クラスと、
+    `JSON serialize | deserialize`を担う、**fromJson()** と **toJson()** の実装も確認ください。
+
 ### システム設計
 
 ### アーキテクチャ設計
