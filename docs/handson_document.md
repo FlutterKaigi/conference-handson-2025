@@ -63,6 +63,8 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
 4. 模擬アプリのため、読書中書籍情報の永続化やアラームは利用しない。このため擬似的に挙動を起こすようにする。  
 
 ### 基本設計
+
+#### アーキテクチャ
 **保守性**、 **拡張性**、 **理解容易性** を向上させる設計方針を満たすよう、  
 アプリ全体で `レイヤードアーキテクチャ`を採用し、UIウィジェットには `MVVM アーキテクチャ`を適用します。  
 
@@ -81,9 +83,11 @@ _これにより機能要件の追加や変更における、修正範囲の限�
 - 関心事のレイヤ構成  
   - **状態データレイヤ** の依存関係  
     - **[アプリケーションモデル](../lib/src/application/model/application_model.dart)** が、状態データの取得や更新通知のインターフェースを提供するドメインモデルを保持し、  
-    - **[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)** が、DB等のインフラストラクチャをラップしてデータを管理するステートモデルを保持して、  
-    - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データのカレント値を表す不変データの **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)） 
-      [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** を提供します。  
+    - **[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)** が、状態データの値の保持や更新および提供を行うステートモデルを保持して、  
+    - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データが依存する DB等の機能を提供するインフラストラクチャを保持して、    
+    - **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)）
+      [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** が、状態データのカレント値を表す不変データのクラス定義を担い、  
+    - **[インフラストラクチャ](../lib/src/infrastructure/package_info.dart)** が、プラグインによるDB等の基盤機能をラップするオブジェクトを保持します。  
       _模擬アプリでは、データの永続化などを行いません。  
       このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。_
 
@@ -116,17 +120,18 @@ _これにより機能要件の追加や変更における、修正範囲の限�
       [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) であれば、  
       読書中書籍情報の一覧として [読書中書籍 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) の一覧を返します。
 
-また **アプリケーションモデル** は、コンストラクタ引数オプションで、  
+#### 自動テスト
+**アプリケーションモデル** は、コンストラクタ引数オプションで、  
 ステートモデル（状態データ）をラップする`ドメインモデルのオブジェクトを外部から依存注入できる`ようにしているだけでなく、  
 そして **ドメインモデル** もコンストラクタ引数オプションで、`任意のステータスモデルのオブジェクトを外部から依存注入できる`うえ、  
-さらに **ステートモデル** も、コンストラクタ引数オプションで、`任意のデータ値を外部から依存注入できる`ようにしています。  
+さらに **ステートモデル** も、コンストラクタ引数オプションで、`任意のデータ値を外部から依存注入できる`ようにします。  
 
 _これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** や 
 **[Widget test](../test/riverpod_reading_books_widget_test.dart)** で、  
 **任意のデータ値の手動生成とアプリケーションモデルへの依存注入ができる** ようになっています。_
 
-その他の事項として、ハンズオンプロジェクトでは、
-**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、  
+#### コード生成実験
+ハンズオンプロジェクトでは、**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、  
 実験的なコード生成を行っています。
 
 - 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
@@ -196,13 +201,13 @@ lib
     └── test                                                     Unit test と Widget test を定義
 ```
 
-_**〜 この「模擬アプリとしてのハンズオン・プロジェクト」章は、ただいま作成作業中です。 〜**_
-
 ### システム設計
 
 ### アーキテクチャ設計
 
 ### フィーチャー設計
+
+_**〜 この「模擬アプリとしてのハンズオン・プロジェクト」章は、ただいま作成作業中です。 〜**_
 
 ----------
 
