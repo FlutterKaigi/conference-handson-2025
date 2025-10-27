@@ -197,9 +197,27 @@ lib
     │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
     │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
     │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
-    │   └── rouging                                              GoRoutrの Type-Safe Routeを定義
+    │   └── rouging                                              GoRoutrの Named Routeを定義
     └── test                                                     Unit test と Widget test を定義
 ```
+
+### 使用プラグイン
+
+ハンズオン・プロジェクトでは、`何がどうなっているのか`というコード実装詳細を見て理解してもらうため、  
+便利なライブラリによる、処理実態の隠蔽化や、不慣れだと意図が判らない拡張機能をなるべく避けるようにしました。  
+これにより使用するプラグインには、`コード生成を行わない`、`基礎機能に限定する` という制約をつけています。
+
+このため 利用プラグインは、 **[go_router](https://pub.dev/packages/go_router)** と
+**[flutter_riverpod](https://pub.dev/packages/flutter_riverpod)** に留めています。
+
+- **go_router プラグイン利用の実装箇所**  
+  ハンズオン・プロジェクトでは、画面遷移のために [名前付きルート｜Named routes topic](https://pub.dev/documentation/go_router/latest/topics/Named%20routes-topic.html) を使い、  
+  [lib/src/routing/app_router.dart](../lib/src/routing/app_router.dart) でルーティング定義を行っています。
+
+- **flutter_riverpod プラグイン利用の実装箇所**  
+  riverpod 利用箇所については、ページウィジェットや UIウィジェットのプロバイダー実装箇所を参照ください。
+
+- 【参照】[pubspec.yaml](../pubspec.yaml)
 
 ### システム設計
 
