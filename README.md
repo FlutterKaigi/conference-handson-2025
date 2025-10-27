@@ -188,7 +188,7 @@ MaterialApp プロパティの theme /darkTheme 用の Theme を設定し、
 このプロジェクトでは、FlutterKaigi 2024 公式アプリの `analysis_options.yaml`をベースに、独自のルールを適用しています。
 
 ### 宣言型画面遷移対応
-画面遷移に go_router の Type-safe Route を利用しています。
+画面遷移に go_router の Named routes を利用しています。
 
 ### アプリケーションレベルのエラーハンドリング対応
 
