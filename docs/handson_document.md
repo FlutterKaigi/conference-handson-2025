@@ -228,11 +228,11 @@ riverpod を使う上で不変データの保証が必須です。
 
 - ハンズオンプロジェクトでは、`hashCode`と`== オペレーター`のオーバーライドを行う  
   プラグイン [equatable](https://pub.dev/packages/equatable) のユーティリティ [equatable_utils.dart](https://github.com/felangel/equatable/blob/fc5cf81060b3aab54fc6e641ebdfe998b00a619b/lib/src/equatable_utils.dart) のコードを利用させてもらい、  
-  ハンズオン・プロジェクト用修正版 [lib/src/fundamental/model/equatable_utils.dart](../lib/src/fundamental/model/equatable_utils.dart) ユーティリティを作りました。  
-  　
+  ハンズオン・プロジェクト用修正版 [lib/src/fundamental/model/equatable_utils.dart](../lib/src/fundamental/model/equatable_utils.dart) ユーティリティを作りました。
+
 - どのようにこのユーティリティを使うのかは、`読書中書籍情報`と`読書中書籍情報一覧`の不変データクラス  
   **[ReadingBookValueObject](../lib/src/domain/model/reading_book_value_object.dart)** と
-  **[ReadingBooksValueObject](../lib/src/domain/model/reading_books_value_object.dart)** の実装を確認下さい。  
+  **[ReadingBooksValueObject](../lib/src/domain/model/reading_books_value_object.dart)** の実装コードを確認下さい。  
 
   - 併せてこれらの不変データクラスで `JSON serialize | deserialize`を担う、**toJson()** と **fromJson()** のコードおよび、  
     [ValueObject](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/model/base_objects_model.dart#L191-L268) 抽象クラスも確認ください。
