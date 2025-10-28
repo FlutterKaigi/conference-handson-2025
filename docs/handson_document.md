@@ -249,9 +249,27 @@ riverpod を使う上で不変データの保証が必須です。
 ウィジェットのサブツリー内で ListView 一覧表示を行う場合、ウィジェット内部状態に ScrollController が必要になるときもあります。  
 一般的にウィジェットの内部状態を扱うときは、StatefulWidget＋Stateクラス作成の煩雑さを避けるため
 **[hooks_riverpod](https://pub.dev/packages/hooks_riverpod)** が使われますが、  
-ハンズオンプロジェクトでは、StatefulWidget をラップして、派生先ウィジェットでStateクラスを作る必要のない、  
+プラグイン使用を基礎機能に限定するよう、StatefulWidget をラップして、派生先ウィジェットでStateクラスを作る必要のない、  
 **[StagedWidget](../lib/src/fundamental/ui_widget/staged_widget.dart) 抽象基盤クラス** と
 **[ConsumerStagedWidget](../lib/src/fundamental/ui_widget/consumer_staged_widget.dart) 抽象基盤クラス** を用意しました。  
+
+- こららの抽象基盤クラスの使い方は、  
+  **[App](../lib/src/app/app.dart)** や
+  **[CurrentlyTasksWidget](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart)** の実装コードを確認下さい。
+
+  - 具体的には、  
+    ウィジェット内部状態型 **T** を 
+    [_App<**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L10-L11) 
+    または [_CurrentlyTasksWidget<R,**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L10-L11) のように、  
+    派生先ウィジェットのジェネリクスで指定し、
+    **[createWidgetState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L28-L30)** で `内部状態オブジェクト` を定義すれば、  
+    **[initState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L32-L36)** や
+    **[disposeState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L38-L42)** や
+    **[build](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L44-L78)** メソッドの state パラメータに内部状態オブジェクトが提供されるので、  
+    各メソッドごとに必要な処理を実装します。  
+
+
+
 
 ### システム設計
 
