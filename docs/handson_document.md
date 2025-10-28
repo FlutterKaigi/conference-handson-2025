@@ -239,7 +239,7 @@ riverpod を使う上で不変データの保証が必須です。
     **[props](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L108-L115)** に `値オブジェクトのプロパティ名一覧` を定義し、  
     **[hashCode](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L97-L98)** と
     **[operator ==](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L100-L106)** にボイラープレートコードを記述して、  
-    **[copyWith](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L81-L95)** に各プロパティの名前付引数と値指定時の更新ロジックを実装します。  
+    **[copyWith](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L81-L95)** を新規追加して、各プロパティの名前付引数と値指定時の更新ロジックを実装します。  
     _props は、値オブジェクト派生元の **[ValueObject](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/model/base_objects_model.dart#L191-L268) 抽象基盤クラス** により提供されます_
 
   - 併せてこれらの不変データクラスで `JSON serialize | deserialize`を担う、  
