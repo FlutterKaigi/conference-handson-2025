@@ -327,9 +327,9 @@ Flutter SDKが最新版（3.35.1 以上）であれば、それらを利用す�
 **模擬アプリの起動** や **ユニットテストの実行** には、`flutter run` や `flutter test test/` コマンドや、  
 `Android Studio` などの IDE が用意している、アプリ実行やテスト機能をご利用ください。
 
-何らかの理由で、Flutter SDKを 3.35.1 未満にする必要がある場合は、  
+_**何らかの理由で、Flutter SDKを 3.35.1 未満にする必要がある場合**は、  
 **[開発環境前提](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/README.md#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E5%89%8D%E6%8F%90)** を参照して、
-`fvm` と `Makefile`の`make run`や`make unit-test`コマンドをご利用ください。
+`fvm` と `Makefile`の`make run`や`make unit-test`コマンドをご利用ください。_
 
 - 【参照】プロジェクト開発環境構築 - [README.md](../README.md)
 
