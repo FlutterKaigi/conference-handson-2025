@@ -234,8 +234,16 @@ riverpod を使う上で不変データの保証が必須です。
   **[ReadingBookValueObject](../lib/src/domain/model/reading_book_value_object.dart)** と
   **[ReadingBooksValueObject](../lib/src/domain/model/reading_books_value_object.dart)** の実装コードを確認下さい。  
 
-  - 併せてこれらの不変データクラスで `JSON serialize | deserialize`を担う、**toJson()** と **fromJson()** のコードおよび、  
-    [ValueObject](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/model/base_objects_model.dart#L191-L268) 抽象クラスも確認ください。
+  - 具体的には、  
+    **[props](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L108-L115)** に `ValueObject プロパティ名一覧` を定義し、  
+    **[hashCode](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L97-L98)** と
+    **[operator ==](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L100-L106)** にボイラープレートコードを記述して、  
+    **[copyWith](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L81-L95)** を新規追加して、各プロパティ値の更新ロジックを実装します。  
+    _[ValueObject](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/model/base_objects_model.dart#L191-L268) 抽象クラスも確認ください。_
+
+  - 併せてこれらの不変データクラスで `JSON serialize | deserialize`を担う、  
+    **[toJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L64-L72)** と
+    **[fromJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L29-L37)** のコードも確認ください。
 
 ### システム設計
 
