@@ -249,7 +249,7 @@ riverpod を使う上で不変データの保証が必須です。
 ウィジェットのサブツリー内で ListView 一覧表示を行う場合、ウィジェット内部状態に ScrollController が必要になるときもあります。  
 一般的にウィジェットの内部状態を扱うときは、StatefulWidget＋Stateクラス作成の煩雑さを避けるため
 **[hooks_riverpod](https://pub.dev/packages/hooks_riverpod)** が使われますが、  
-プラグイン使用を基礎機能に限定するよう、StatefulWidget をラップして、派生先ウィジェットでStateクラスを作る必要のない、  
+今回は、プラグイン使用を基礎機能に限定するよう、StatefulWidget をラップして、派生先ウィジェットでStateクラスを作る必要のない、  
 **[StagedWidget](../lib/src/fundamental/ui_widget/staged_widget.dart) 抽象基盤クラス** と
 **[ConsumerStagedWidget](../lib/src/fundamental/ui_widget/consumer_staged_widget.dart) 抽象基盤クラス** を用意しました。  
 
