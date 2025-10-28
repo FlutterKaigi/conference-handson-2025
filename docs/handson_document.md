@@ -245,6 +245,14 @@ riverpod を使う上で不変データの保証が必須です。
     **[toJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L64-L72)** と
     **[fromJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L29-L37)** のコードも確認ください。
 
+#### StatefulWidget ラッパー作成
+ウィジェットのサブツリー内で ListView 一覧表示を行う場合、ウィジェット内部状態に ScrollController が必要になるときもあります。  
+一般的にウィジェットの内部状態を扱うときは、StatefulWidget＋Stateクラス作成の煩雑さを避けるため
+**[hooks_riverpod](https://pub.dev/packages/hooks_riverpod)** が使われますが、  
+ハンズオンプロジェクトでは、StatefulWidget をラップして、派生先ウィジェットでStateクラスを作る必要のない、  
+**[StagedWidget](../lib/src/fundamental/ui_widget/staged_widget.dart) 抽象基盤クラス** と
+**[ConsumerStagedWidget](../lib/src/fundamental/ui_widget/consumer_staged_widget.dart) 抽象基盤クラス** を用意しました。  
+
 ### システム設計
 
 ### アーキテクチャ設計
