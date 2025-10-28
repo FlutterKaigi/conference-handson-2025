@@ -88,8 +88,9 @@ _これにより機能要件の追加や変更における、修正範囲の限�
     - **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)）
       [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** が、状態データのカレント値を表す不変データのクラス定義を担い、  
     - **[インフラストラクチャ](../lib/src/infrastructure/package_info.dart)** が、プラグインによるDB等の基盤機能をラップするオブジェクトを保持します。  
-      _模擬アプリでは、データの永続化などを行いません。  
-      このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。_
+      - _模擬アプリでは、データの永続化などを行いません。  
+        このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。  
+        読書中書籍一覧は 永続化保存されないため、**ステートモデルの初期化処理で [ダミーデータ](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_books_state_model.dart#L51-L69)を設定** しています。_
 
   - **プレゼンテーションレイヤ** の依存関係  
     _ここでは、UIウィジェットを [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) に仮定しています。_  
