@@ -259,7 +259,7 @@ riverpod を使う上で不変データの保証が必須です。
 
   - 具体的には、  
     ウィジェット内部状態型 **T** を 
-    [_App<**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L10-L11) 
+    [_App<**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/app/app.dart#L9-L10) 
     または [_CurrentlyTasksWidget<R,**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L10-L11) のように、  
     派生先ウィジェットのジェネリクスで指定し、
     **[createWidgetState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L28-L30)** で `内部状態オブジェクト` を定義すれば、  
