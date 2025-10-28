@@ -13,7 +13,7 @@ final GoRouter appRouter = GoRouter(
   routes: <RouteBase>[
     GoRoute(
       path: AppRoutes.home.path,
-      name: AppRoutes.home.name, // ルート名 (型安全なナビゲーションで使用)
+      name: AppRoutes.home.name, // ルート名 (名前付きルートをナビゲーションで使用)
       builder: (BuildContext context, GoRouterState state) {
         return const HomePage();
       },

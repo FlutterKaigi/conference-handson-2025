@@ -55,19 +55,87 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
 
 ## 模擬アプリとしてのハンズオン・プロジェクト
 
+### 全体方針
 1. 実装詳細を理解してもらうためコード生成を使わない。  
-2. 画面遷移に `go_router`、状態管理に `riverpod` を使い、不変状態値には `freezed を使わない愚直実装` を行う。  
+2. 画面遷移に `go_router`、状態管理に `flutter_riverpod` を使うが、不変状態値には `freezed を使わない愚直実装` を行う。  
+   またウィジェット内部状態の簡素化も `hooks_riverpod を使わない実装` で行い、プラグイン依存を基礎機能に限定させる。
 3. 読書管理する書籍の新規追加や情報編集と削除の Unit test と Widget test を利用した簡易結合テストを実装する。  
 4. 模擬アプリのため、読書中書籍情報の永続化やアラームは利用しない。このため擬似的に挙動を起こすようにする。  
 
-_**〜 この「模擬アプリとしてのハンズオン・プロジェクト」章は、ただいま作成作業中です。 〜**_
+### 基本設計
 
-### システム設計
+#### アーキテクチャ
+**保守性**、 **拡張性**、 **理解容易性** を向上させる設計方針を満たすよう、  
+アプリ全体で `レイヤードアーキテクチャ`を採用し、UIウィジェットには `MVVM アーキテクチャ`を適用します。  
 
-### アーキテクチャ設計
+- レイヤードアーキテクチャにより、  
+  上位レイヤーは下位レイヤーにのみ依存させ、逆を認めない原則 ⇒  
+  `上位レイヤーが、下位レイヤーのオブジェクトを保持する。`  
+  `上位レイヤーは、下位レイヤーに公開インターフェース（状態取得 と 状態更新通知）のみを提供する。`により、  
+  一方向の依存関係 ⇒ `上位下達の経路フロー`の実現と厳守を行い、設計方針を満足させます。
 
-### フィーチャー設計
+ビジネスロジックやデータアクセスの本体は、状態データレイヤに、  
+UIウィジェットでの状態データの取得や更新依頼は、プレゼンテーションレイヤに実装することで **関心事の分離** を図ります。  
 
+_これにより機能要件の追加や変更における、修正範囲の限定化（最小化）と影響範囲の明確化（依存関係制御）を確保して、  
+保守性や拡張性およびコードの見通し（理解性）を向上させます。_
+
+- 関心事のレイヤ構成  
+  - **状態データレイヤ** の依存関係  
+    - **[アプリケーションモデル](../lib/src/application/model/application_model.dart)** が、状態データの取得や更新通知のインターフェースを提供するドメインモデルを保持し、  
+    - **[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)** が、状態データの値の保持や更新および提供を行うステートモデルを保持して、  
+    - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データが依存する DB等の機能を提供するインフラストラクチャを保持して、    
+    - **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)）
+      [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** が、状態データのカレント値を表す不変データのクラス定義を担い、  
+    - **[インフラストラクチャ](../lib/src/infrastructure/package_info.dart)** が、プラグインによるDB等の基盤機能をラップするオブジェクトを保持します。  
+      - _模擬アプリでは、データの永続化などを行いません。  
+        このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。  
+        これにより読書中書籍一覧が永続化できないので、**ステートモデルの初期化処理では [ダミーデータ](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_books_state_model.dart#L51-L69) を設定** しています。_
+
+  - **プレゼンテーションレイヤ** の依存関係  
+    _ここでは、UIウィジェットを [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) に仮定しています。_  
+    - **ページウィジェット** は、  
+      [ホームページウィジェット](../lib/src/app/screen/home/home_page.dart) が UIウィジェットを保持するので、
+      `状態データ更新とUIウィジェットの表示更新を同期させる`ため、  
+      状態データとViewModelを提供する riverpodプロバイダーの監視と、UIウィジェットへのプロバイダーオブジェクトの  
+      提供を行います。 
+    - **UIウィジェット** は、  
+      [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) であれば、
+      `表示種別に従ったアニメの表示|非表示と書籍名を表示させる`ため、  
+      プロバイダーより提供された状態データ（表示種別）の他に、  
+      [WidgetRef](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/WidgetRef-class.html) を介して
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) から表示データ値（読書中書籍情報の書籍名）を取得して描画を行います。  
+    - **プロバイダー** は、  
+      riverpodの [NotifierProvider](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider-class.html) を表し、  
+      [notifierプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider/notifier.html) から
+      対応する [ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) を取得して、
+      [stateプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/AnyNotifier/state.html) の値を状態データとして返します。
+    - **ViewModel** は、  
+      [読書進捗率達成 ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) であれば、
+      状態データとして 読了率 enum を返し、  
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) であれば、
+      状態データとして [ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart) を介して  
+      [ステートモデル](../lib/src/domain/model/reading_books_state_model.dart) から
+      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) を取得して返します。
+    - **ValueObject** は、  
+      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) であれば、  
+      読書中書籍情報の一覧として [読書中書籍 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) の一覧を返します。
+
+#### 自動テスト
+**アプリケーションモデル** は、コンストラクタ引数オプションで、  
+ステートモデル（状態データ）をラップする`ドメインモデルのオブジェクトを外部から依存注入できる`ようにしているだけでなく、  
+そして **ドメインモデル** もコンストラクタ引数オプションで、`任意のステータスモデルのオブジェクトを外部から依存注入できる`うえ、  
+さらに **ステートモデル** も、コンストラクタ引数オプションで、`任意のデータ値を外部から依存注入できる`ようにします。  
+
+_これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** や 
+**[Widget test](../test/riverpod_reading_books_widget_test.dart)** で、  
+**任意のデータ値の手動生成とアプリケーションモデルへの依存注入ができる** ようになっています。_
+
+#### コード生成実験
+ハンズオンプロジェクトでは、**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、  
+実験的なコード生成を行っています。
+
+- 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
 
 #### ハンズオン・プロジェクト全体構成
 ```text
@@ -130,19 +198,84 @@ lib
     │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
     │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
     │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
-    │   └── rouging                                              GoRoutrの Type-Safe Routeを定義
+    │   └── rouging                                              GoRoutrの Named Routeを定義
     └── test                                                     Unit test と Widget test を定義
 ```
 
-- 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
+### 使用プラグイン
+
+ハンズオン・プロジェクトでは、`何がどうなっているのか`というコード実装詳細を見て理解してもらうため、  
+便利なライブラリによる、処理実態の隠蔽化や、不慣れだと意図が判らない拡張機能をなるべく避けるようにしました。  
+これにより使用するプラグインには、`コード生成を行わない`、`基礎機能に限定する` という制約をつけています。
+
+このため 利用プラグインは、 **[go_router](https://pub.dev/packages/go_router)** と
+**[flutter_riverpod](https://pub.dev/packages/flutter_riverpod)** に留めています。
+
+- **go_router プラグイン利用の実装箇所**  
+  ハンズオン・プロジェクトでは、画面遷移のために [名前付きルート｜Named routes topic](https://pub.dev/documentation/go_router/latest/topics/Named%20routes-topic.html) を使い、  
+  [lib/src/routing/app_router.dart](../lib/src/routing/app_router.dart) でルーティング定義を行っています。
+
+- **flutter_riverpod プラグイン利用の実装箇所**  
+  riverpod 利用箇所については、ページウィジェットや UIウィジェットのプロバイダー実装箇所を参照ください。
+
+- 【参照】[pubspec.yaml](../pubspec.yaml)
+
+### ハンズオン・プロジェクト独自のライブラリ
+
+#### 不変データクラス作成
+riverpod を使う上で不変データの保証が必須です。
+一般的に riverpod で不変データを扱うには、**[freezed](https://pub.dev/packages/freezed)** が使われますが、  
+今回は愚直に、`hashCode`と`== オペレーター`のオーバーライドおよび、`JSON serialize | deserialize`の実装を行います。
+
+- ハンズオンプロジェクトでは、`hashCode`と`== オペレーター`のオーバーライドを行う  
+  プラグイン [equatable](https://pub.dev/packages/equatable) のユーティリティ [equatable_utils.dart](https://github.com/felangel/equatable/blob/fc5cf81060b3aab54fc6e641ebdfe998b00a619b/lib/src/equatable_utils.dart) のコードを利用させてもらい、  
+  ハンズオン・プロジェクト用修正版 [lib/src/fundamental/model/equatable_utils.dart](../lib/src/fundamental/model/equatable_utils.dart) ユーティリティを作りました。
+
+- どのようにこのユーティリティを使うのかは、`読書中書籍情報`と`読書中書籍情報一覧`の不変データクラス  
+  **[ReadingBookValueObject](../lib/src/domain/model/reading_book_value_object.dart)** と
+  **[ReadingBooksValueObject](../lib/src/domain/model/reading_books_value_object.dart)** の実装コードを確認下さい。  
+
+  - 具体的には、  
+    **[props](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L108-L115)** に `値オブジェクトのプロパティ名一覧` を定義し、  
+    **[hashCode](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L97-L98)** と
+    **[operator ==](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L100-L106)** にボイラープレートコードを記述して、  
+    **[copyWith](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L81-L95)** を新規追加して、各プロパティの名前付引数と値指定時の更新ロジックを実装します。  
+    _props は、値オブジェクト派生元の **[ValueObject](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/model/base_objects_model.dart#L191-L268) 抽象基盤クラス** により提供されます_
+
+  - 併せてこれらの不変データクラスで `JSON serialize | deserialize`を担う、  
+    **[toJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L64-L72)** と
+    **[fromJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L29-L37)** のコードも確認ください。
+
+#### StatefulWidget ラッパー作成
+ウィジェットのサブツリー内で ListView 一覧表示を行う場合、ウィジェット内部状態に ScrollController が必要になるときもあります。  
+一般的にウィジェットの内部状態を扱うときは、StatefulWidget＋Stateクラス作成の煩雑さを避けるため
+**[hooks_riverpod](https://pub.dev/packages/hooks_riverpod)** が使われますが、  
+今回は、プラグイン使用を基礎機能に限定するよう、StatefulWidget をラップして、派生先ウィジェットでStateクラスを作る必要のない、  
+**[StagedWidget](../lib/src/fundamental/ui_widget/staged_widget.dart) 抽象基盤クラス** と
+**[ConsumerStagedWidget](../lib/src/fundamental/ui_widget/consumer_staged_widget.dart) 抽象基盤クラス** を用意しました。  
+
+- こららの抽象基盤クラスの使い方は、  
+  **[App](../lib/src/app/app.dart)** や
+  **[CurrentlyTasksWidget](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart)** の実装コードを確認下さい。
+
+  - 具体的には、  
+    ウィジェット内部状態型 **T** を 
+    [_App<**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/app/app.dart#L9-L10) 
+    または [_CurrentlyTasksWidget<R,**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L10-L11) のように、  
+    派生先ウィジェットのジェネリクスで指定し、
+    **[createWidgetState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L28-L30)** で `内部状態オブジェクト` を定義すれば、  
+    **[initState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L32-L36)** や
+    **[disposeState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L38-L42)** や
+    **[build](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L44-L78)** メソッドの state パラメータに内部状態オブジェクトが提供されるので、  
+    各メソッドごとに必要な処理を実装します。  
 
 ----------
 
 ## ベースUI とカスタムUI のコードや見栄えの比較ができる工夫
 
-### ConsumerStagedWidget
-
 ### バレルファイル
+
+### ConsumerStagedWidget
 
 ----------
 
