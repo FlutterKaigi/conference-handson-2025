@@ -299,6 +299,18 @@ Flutter開発環境および Android や iOS 開発のセットアップされ�
   - iOS 開発セットアップ  
     [Set up iOS development](https://docs.flutter.dev/platform-integration/ios/setup)
 
+Flutter開発環境(IDE)に `VSCODE` や `Android Studio` を使う場合は、  
+公式サイト [Tools | Flutter](https://docs.flutter.dev/tools) で説明されている、以下の設定が完了している必要があります。
+
+- Flutter Developing Tools  
+  [Tools | Flutter](https://docs.flutter.dev/tools)
+
+  - Android Studio と IntelliJ  
+    [Android Studio and IntelliJ | Flutter](https://docs.flutter.dev/tools/android-studio)
+
+  - VSCODE  
+    [VS Code | Flutter](https://docs.flutter.dev/tools/vs-code)
+
 _このハンズオン・プロジェクトは、Flutter Web にも対応しています。  
 Android や iOS セットアップをされていない場合は、Chromeブラウザを使った動作確認もできます。_
 
