@@ -299,6 +299,10 @@ Flutter開発環境および Android や iOS 開発のセットアップされ�
   - iOS 開発セットアップ  
     [Set up iOS development](https://docs.flutter.dev/platform-integration/ios/setup)
 
+  - _**Flutter SDK バージョンは、最新版にアップグレードしておいてください。**  
+    (2025/11/01 現在) Flutter 3.35.7 channel stable, Dart 3.9.2, DevTools 2.48.0_
+    - _過去のバージョンを使う必要がある場合は、後述の **`fvm`** をご利用ください。_
+
 Flutter開発環境(IDE)に `VSCODE` や `Android Studio` を使う場合は、  
 公式サイト [Tools | Flutter](https://docs.flutter.dev/tools) で説明されている、以下の設定が完了している必要があります。
 
@@ -316,44 +320,16 @@ Android や iOS セットアップをされていない場合は、Chromeブラ�
 
 ### ハンズオン環境構築
 
-ハンズオン・プロジェクトでは、**[fvm](https://pub.dev/packages/fvm)** を使って Flutter バージョンを統一させていますので、  
-ハンズオン・プロジェクトのルートディレクトリにて`fvm use`コマンドを実行しておいてください。
+ハンズオン・プロジェクトでは、チーム開発のため **[fvm](https://pub.dev/packages/fvm)** を使って Flutter バージョンを統一させており、  
+また [Makefile](../Makefile) を利用して、模擬アプリの起動やユニットテストの実行も簡易化もしていますが、  
+Flutter SDKが最新版（3.35.1 以上）であれば、それらを利用する必要はありません。
 
-- _**fvm** を使っていない方は、下段の説明を参考に `fvm のインストール`を行ってください。_
+**模擬アプリの起動** や **ユニットテストの実行** には、`flutter run` や `flutter test test/` コマンドや、  
+`Android Studio` などの IDE が用意している、アプリ実行やテスト機能をご利用ください。
 
-また模擬アプリの起動やユニットテストを簡易化するため Makefile を利用しています。  
-これにより `make run` や `make unit-test` コマンドが利用できます。
-
-この他にもコマンドがありますが、 flutter コマンドを fvm を介して実行させているだけなので、  
-プロジェクトのルートにある `Makefile`の中を見ていただければ、 どんなコマンドで何ができるのかすぐに理解できると思います。
-
-- _`make`コマンドは、macOS/Linux であれば標準で組み込まれているのでインストールする必要はありません。  
-  Windows の場合は、`Makefile`の中を見て`fvm flutter run`などのコマンド実態を直接実行してください。_
-
-- **補足**
-  - _3.35.1 以上の Flutter SDK が利用できる環境であれば、  
-    fvm を使わなくても（fvm のインストールしなくても）コンパイル環境を確保できます。_  
-  - _その場合は、`fvm`や `make run` や `make unit-test` などのコマンドを一切使わずに  
-    `Makefile`の中で行っているコマンド実態の `flutter run`や `flutter test test/`もしくは  
-    Android Studio などの IDE が用意しているアプリ実行やテスト実行機能を利用することもできます。_
-
-#### fvm インストール
-
-fvm をインストールされていない方は、以下を実行してください。  
-
-**fvm ツールのインストールコマンド（Linux/macOS）**
-```bash
-curl -fsSL https://fvm.app/install.sh | bash
-```
-**fvm ツールのインストールコマンド（Windows）**
-```powershell
-choco install fvm
-```
-
-_インストール後は、ハンズオン・プロジェクトのルートディレクトリで、`fvm use` を実行してください。_
-
-#### その他
-**ハンズオン環境構築（ハンズオン・プロジェクト）の技術詳細については、下記ドキュメントを御確認ください。**
+何らかの理由で、Flutter SDKを 3.35.1 未満にする必要がある場合は、  
+**[開発環境前提](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/README.md#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E5%89%8D%E6%8F%90)** を参照して、
+`fvm` と `Makefile`の`make run`や`make unit-test`コマンドをご利用ください。
 
 - 【参照】プロジェクト開発環境構築 - [README.md](../README.md)
 
@@ -392,18 +368,19 @@ _ハンズオン・リポジトリを Gitクローンしてから、バレルフ
 前ステップで、ui_widget/defaultディレクトリ配下の ベースUIのコードを参照させるようにしました。  
 これで模擬アプリを起動すれば、ベースUIによる各種機能要件の表示が行われるようになっています。
 
-- **macOS/Linux 環境の方へ**  
-  ターミナルで `make run` を実行して、  
-  起動中の iOSシミュレーターや Android エミュレータをデバイスとして選択してください。
+- **Flutter SDK が最新版の場合(Flutter SDK 3.35.1 以上)**  
+  ターミナルで `flutter run` を実行するか、  
+  `Android Studio` のアプリ実行 ⇒ `Run 'main.dart'`を利用ください。
 
-- **Windows 環境の方へ**  
-  ターミナルで `fvm flutter run` を実行して、  
-  起動中の iOSシミュレーターや Android エミュレータをデバイスとして選択してください。
+  - **fvm を利用する場合(Flutter SDK 3.35.1 未満)**
 
-- **補足**  
-  - _3.35.1 以上の Flutter SDK が利用できるのであれば、  
-    ターミナルで `make run` や `fvm flutter run` を使わなくても、  
-    Android Studio のアプリ実行 ⇒ `Run 'main.dart'`が利用可能です。_
+    - **macOS/Linux 環境の方へ**  
+      ターミナルで `make run` を実行して、  
+      起動中の iOSシミュレーターや Android エミュレータをデバイスとして選択してください。
+
+    - **Windows 環境の方へ**  
+      ターミナルで `fvm flutter run` を実行して、  
+      起動中の iOSシミュレーターや Android エミュレータをデバイスとして選択してください。
 
   - _ハンズオン・プロジェクトの Flutter実行環境は、iOS/Android の他に Web も有効にしているので、  
     iOS シミュレータや Android エミュレーターでなく、Chromeで動作確認することもできます。_  
@@ -470,13 +447,20 @@ _この機能要件は、読書支援アプリが表示されたタイミング�
 テストでは、各モデル機能をチェックする `riverpod`を介した **書籍の追加や編集と削除の単体テスト** と  
 `Integration test`を模した、**画面操作のリアクションをチェックする Widget test** が設けられています。
 
-- **macOS/Linux 環境の方へ**  
-  ターミナルで `make unit-test` を実行して、  
-  ターミナルに出力される、テストステップと実行結果のログメッセージを確認してください。
+- **Flutter SDK が最新版の場合(Flutter SDK 3.35.1 以上)**  
+  ターミナルで `flutter test test/` を実行して、  
+  ターミナルに出力される、テストステップと実行結果のログメッセージを確認してください。  
+  あるいは、`Android Studio` などの単体テスト機能を利用ください。
 
-- **Windows 環境の方へ**  
-  ターミナルで `fvm flutter test test/` を実行して、  
-  ターミナルに出力される、テストステップと実行結果のログメッセージを確認してください。
+  - **fvm を利用する場合(Flutter SDK 3.35.1 未満)**  
+
+    - **macOS/Linux 環境の方へ**  
+      ターミナルで `make unit-test` を実行して、  
+      ターミナルに出力される、テストステップと実行結果のログメッセージを確認してください。
+
+    - **Windows 環境の方へ**  
+      ターミナルで `fvm flutter test test/` を実行して、  
+      ターミナルに出力される、テストステップと実行結果のログメッセージを確認してください。
 
 ### ベースUI コードを確認する。
 
