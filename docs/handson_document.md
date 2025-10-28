@@ -268,17 +268,6 @@ riverpod を使う上で不変データの保証が必須です。
     **[build](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L44-L78)** メソッドの state パラメータに内部状態オブジェクトが提供されるので、  
     各メソッドごとに必要な処理を実装します。  
 
-
-
-
-### システム設計
-
-### アーキテクチャ設計
-
-### フィーチャー設計
-
-_**〜 この「模擬アプリとしてのハンズオン・プロジェクト」章は、ただいま作成作業中です。 〜**_
-
 ----------
 
 ## ベースUI とカスタムUI のコードや見栄えの比較ができる工夫
