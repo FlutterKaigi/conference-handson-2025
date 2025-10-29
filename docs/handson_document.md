@@ -333,6 +333,11 @@ _**何らかの理由で、Flutter SDKを 3.35.1 未満にする必要がある�
 
 - 【参照】プロジェクト開発環境構築 - [README.md](../README.md)
 
+### リポジトリのクローン
+Flutter開発環境構築とハンズオン環境構築が完了しましたら、  
+ハンズオン・リポジトリ **[conference-handson-2025](https://github.com/FlutterKaigi/conference-handson-2025)** をクローンして、  
+お使いの Android Studio や VSCODE などの IDE で、リポジトリのプロジェクト・ルートを、開いてください。
+
 ----------
 
 ## ベースUI を見てみよう。
