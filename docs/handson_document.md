@@ -303,7 +303,7 @@ Flutter開発環境および Android や iOS 開発のセットアップされ�
     (2025/11/01 現在) Flutter 3.35.7 channel stable, Dart 3.9.2, DevTools 2.48.0_
     - _過去のバージョンを使う必要がある場合は、後述の **`fvm`** をご利用ください。_
 
-Flutter開発環境(IDE)に `VSCODE` や `Android Studio` を使う場合は、  
+Flutter開発環境(IDE)に `VS Code` や `Android Studio` を使う場合は、  
 公式サイト [Tools | Flutter](https://docs.flutter.dev/tools) で説明されている、以下の設定が完了している必要があります。
 
 - Flutter Developing Tools  
@@ -312,7 +312,7 @@ Flutter開発環境(IDE)に `VSCODE` や `Android Studio` を使う場合は、
   - Android Studio と IntelliJ  
     [Android Studio and IntelliJ | Flutter](https://docs.flutter.dev/tools/android-studio)
 
-  - VSCODE  
+  - VS Code  
     [VS Code | Flutter](https://docs.flutter.dev/tools/vs-code)
 
 _このハンズオン・プロジェクトは、Flutter Web にも対応しています。  
@@ -336,7 +336,7 @@ _**何らかの理由で、Flutter SDKを 3.35.1 未満にする必要がある�
 ### リポジトリのクローン
 Flutter開発環境構築とハンズオン環境構築が完了しましたら、  
 ハンズオン・リポジトリ **[conference-handson-2025](https://github.com/FlutterKaigi/conference-handson-2025)** をクローンして、  
-お使いの Android Studio や VSCODE などの IDE で、リポジトリのプロジェクト・ルートを開いてください。
+お使いの Android Studio や VS Code などの IDE で、リポジトリのプロジェクト・ルートを開いてください。
 
 ----------
 
