@@ -15,7 +15,7 @@
     `ビルドおよびリビルド時に、ウィジェット内での最新の状態値の取得と UI表示への反映`ができるようにします。
 
 * **②状況に応じた UI表示の切り替え**  
-  * デフォルト：ビルドおよびリビルド時の UI表示内容は、オーバーライドされた`build`メソッドにより、  
+  * デフォルト：ビルドおよびリビルド時の UI表示内容は、オーバーライドされた [build](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L148-L154) メソッドにより、  
     コンストラクタ・パラメータの`provider関数`が返す **状態値&lt;R&gt;** の反映を行います。  
 
   * オプション：`provider関数`が表す **状態値 ⇒ 状況種別**に応じて、**いくつかのパターンの`build`メソッド**を切り替えたい場合は、  
@@ -60,31 +60,88 @@ fundamental/
 ```
 
 
-## 実装のポイント
+## このプロジェクトでの使用例
 
 ### 1. 依存パッケージ
 
-状態管理 ⇒ UI 状態値の表示更新反映のため、[Riverpod](https://pub.dev/packages/flutter_riverpod)
-の利用を想定しています。
+状態管理 ⇒ UI 状態値の表示更新反映のため、[flutter_riverpod](https://pub.dev/packages/flutter_riverpod) を利用しています。
+
+- 【参照】flutter_riverpod プラグイン導入 - **[pubspec.yaml](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/pubspec.yaml#L15)**
 
 
 ### 2. ConsumerStagedWidget 派生ウィジェットの実装例
 
-#### default/home パッケージにおける派生ウィジェット
+#### default/home 読書進捗率達成表示用 派生ウィジェット
 
+ConsumerStagedWidget 派生ウィジェットの実装例として、  
+defaultディレクトリの読書進捗率達成表示用 UIウィジェット（[ReadingProgressAnimationsWidget](../../../lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart)）について解説します。
+
+はじめに、**読書進捗率達成表示用 UIウィジェットの実装先** は、  
+`UIウィジェット・クラス定義先` と `UIウィジェットのインスタンスの生成先（Widgetツリーへのバインド先）`に大きく分かれていることに留意ください。
+
+- **[HomePage](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/app/screen/home/home_page.dart#L8-L45)**  
+  **読書進捗率達成表示用 - ConsumerStagedWidget 派生ウィジェット生成先**  
 ```
 presentation/
 ├── app/
     └── screnn/
         └── home/
-            └── home_page.dart  # 派生ウイジェットの利用定義元
+            └── home_page.dart    派生ウイジェットの利用先（生成定義元）
 ```
 
+- **[ReadingProgressAnimationsWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart#L7-L138)**  
+  **読書進捗率達成表示用 - ConsumerStagedWidget 派生ウィジェット定義先**  
 ```
 presentation/
 ├── ui_widget/
     └── default/
         └── home/
-            ├── currently_tasks_widget.dart     # 読書中書籍一覧表示用 派生ウイジェット（構造定義）
-            └── support_animations_widget.dart  # 応援アニメーション表示用 派生ウイジェット（構造定義）
+            └── reading_progress_animations_widget.dart   派生ウイジェット（構造定義元）
 ```
+
+#### ①状況に応じた UI表示｜表示更新
+
+**[HomePage ページウィジェット](../../../lib/src/app/screen/home/home_page.dart)** の
+[buildメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/app/screen/home/home_page.dart#L12-L44) では、  
+`UI表示の状態データを提供する riverpod プロバイダーの監視`と `プロバイダから状態値を取得`するため、  
+[ReadingProgressAnimationsWidget](../../../lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart) の
+provider コンストラクタ・パラメータに `(WidgetRef ref) => ref.watch(readingBooksProvider)` 関数を渡してインスタンス生成を行い、
+`Widgetツリーに 読書進捗率達成表示用 UIウィジェットをバインド`させています。
+
+これにより、**[アニメーション種別](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L17-L24)の状態データ** と
+**[読書進捗率達成アニメーション ViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** を提供する
+**[readingSupportAnimationsProvider](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L7-L15)** から、
+アニメーション種別が更新されるごとに 読書進捗率達成表示用 UIウィジェットがリビルドされ、それに伴い状態データ（アニメーション種別）も取得できるようになります。
+
+```dart
+      body: Stack(
+        children: <Widget>[
+          // 下層: 読書中書籍一覧
+          CurrentlyTasksWidget(
+            provider: (WidgetRef ref) => ref.watch(readingBooksProvider),
+          ),
+          // 中層: 読書応援・アニメーション表示
+          ReadingSupportAnimationsWidget(
+            provider: (WidgetRef ref) =>
+                ref.watch(readingSupportAnimationsProvider),
+          ),
+          // 上層: 読書進捗達成・アニメーション表示
+          ReadingProgressAnimationsWidget(
+            provider: (WidgetRef ref) =>
+                ref.watch(readingProgressAnimationsProvider),
+          ),
+        ],
+      ),
+```
+
+```dart
+/// アニメーション種別
+enum ProgressAnimationTypeEnum {
+  none, // 何も表示しない
+  progressRate10, // 読了率 10%
+  progressRate50, // 読了率 50%
+  progressRate80, // 読了率 80%
+  progressRate100, // 読了率 100%（読了）
+}
+```
+
