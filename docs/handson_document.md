@@ -299,7 +299,7 @@ _今回の使い方では、default、complete、challenge 何れかの UIコー
 ハンズオンプロジェクトは、勉強用の模擬アプリのため、アプリで参照されないコードの発生を許容しています。  
 また一般的には、 不必要な export を避けること、循環参照にならないようにする注意が必要なことに御留意ください。_
 
-- 【参照】プロジェクト実装概要 - **[バレルファイル ガイド](fundamental/barrel_file_guide.md)**  
+- 【参照】プロジェクトでの実装概要 - **[バレルファイル 実装ガイド](fundamental/barrel_file_guide.md)**  
 
 ### ConsumerStagedWidget について
 
@@ -310,7 +310,7 @@ _今回の使い方では、default、complete、challenge 何れかの UIコー
 `プロバイダーからの状態値取得と、状態値による状況評価と、状況ごとに UI表示を変えるための` **selectBuild メソッド** と、  
 `評価値ごとの UIウィジェット構築定義 ⇒ build関数を複数定義できるようにする` **build 〜 build19 メソッド** を追加しています。
 
-- 【参照】プロジェクト実装概要 - **[ConsumerStagedWidget 実装ガイド](fundamental/ui_widget/consumer_staged_widget_guide.md)**
+- 【参照】プロジェクトでの実装概要 - **[ConsumerStagedWidget 実装ガイド](fundamental/ui_widget/consumer_staged_widget_guide.md)**
 
 ----------
 
