@@ -1,14 +1,8 @@
 # バレルファイル 解説ガイド
-**【注意】最終実装をベースにドキュメントの再作成が必要です。**  
-このドキュメントは、(2025/10/17)時点の実装を基に作られています。  
-このため最終実装をベースにした再作成が必要です。
 
 ## 概要
 
-**バレルファイル（Barrel File）** は、複数のファイルからのエクスポートを1つのファイルにまとめることで、
-インポート文を簡潔にし、コードの可読性と保守性を向上させる Dart/Flutter の設計パターンです。
-
-このプロジェクトでは、`widget_packages.dart` という命名規則でバレルファイルを使用しており、
+このプロジェクトでは、`*_packages.dart` という命名規則でバレルファイルを使用しており、  
 UI Widget や ViewModel などのモジュール単位で関連ファイルをグループ化しています。
 
 
@@ -25,6 +19,7 @@ import 'package:app/src/presentation/ui_widget/default/home/reading_progress_ani
 import 'package:app/src/presentation/ui_widget/default/home/reading_support_animations_widget.dart';
 import 'package:app/src/presentation/ui_widget/default/reading/reading_book_widget.dart';
 import 'package:app/src/presentation/ui_widget/default/reading_graph/reading_book_graph_widget.dart';
+import 'package:app/src/presentation/ui_widget/default/settings/reading_book_settings_widget.dart';
 ```
 
 **バレルファイルを使う場合：**
@@ -34,17 +29,17 @@ import 'package:app/src/presentation/ui_widget/widget_packages.dart';
 
 ### 2. モジュール構造の明確化
 
-関連するファイルをグループ化することで、プロジェクトの構造が明確になり、
+関連するファイルをグループ化することで、プロジェクトの構造が明確になり、  
 どのファイルがどのモジュールに属しているかが一目でわかるようになります。
 
 ### 3. リファクタリングの容易さ
 
-ファイルの場所や名前を変更する際、バレルファイルのエクスポート文のみを更新すれば、
+ファイルの場所や名前を変更する際、バレルファイルのエクスポート文のみを更新すれば、  
 インポートしている側のコードを変更する必要がありません。
 
 ### 4. カプセル化と API の制御
 
-バレルファイルを通じて、モジュールの公開 API を明示的に定義できます。
+バレルファイルを通じて、モジュールの公開 API を明示的に定義できます。  
 エクスポートされていないファイルは、モジュール内部の実装詳細として隠蔽されます。
 
 
@@ -71,13 +66,13 @@ export 'default/settings/reading_book_settings_widget.dart';
 ```
 lib/src/presentation/
 ├── ui_widget/
-│   ├── widget_packages.dart              # トップレベル・バレルファイル
+│   ├── widget_packages.dart      トップレベル・バレルファイル
 │   ├── default/
-│   │   └── widget_packages.dart          # デフォルト実装のバレルファイル
-│   ├── morphing_button/
-│   │   └── widget_packages.dart          # Morphing Button 実装のバレルファイル
-│   ├── hero/
-│   │   └── widget_packages.dart          # Hero アニメーション実装のバレルファイル
+│   │   └── widget_packages.dart  デフォルトUI実装のバレルファイル
+│   ├── challenge/
+│   │   └── widget_packages.dart  ハンズオン作業用のバレルファイル
+│   ├── complete/
+│   │   └── widget_packages.dart  完成形カスタムUI実装のバレルファイル
 │   └── ...
 ```
 
@@ -88,18 +83,20 @@ lib/src/presentation/
 // デフォルト設定 （ui_widget）
 export 'default/widget_packages.dart';
 
-// 各UIパッケージ設定 設定 （ui_widget）
-// export 'hero/widget_packages.dart';
-// export 'interactive_donut_chart/widget_packages.dart';
-// export 'morphing_button/widget_packages.dart';
-// export 'enhanced_progress/widget_packages.dart';
+// 完成形設定 （ui_widget/complete）
+// export 'complete/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+
+// ハンズオン設定 （ui_widget/challenge）
+// export 'challenge/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 ```
 
 この構造により、開発者ごとの実装や機能ごとの実装を切り替えることが容易になります。
 
-**サブレベルのバレルファイル (`morphing_button/widget_packages.dart`)：**
+**サブレベルのバレルファイル (`custom_reading_book/widget_packages.dart`)：**
 ```dart
-// Morphing Reading Log Button 実装のためのバレルパッケージです。
+// カスタム読書中書籍編集 UI実装のためのバレルパッケージです。
+
+// デフォルト実装を引き継ぎます。
 export '../default/custom_ui/toggle_switch.dart';
 export '../default/home/currently_tasks_widget.dart';
 export '../default/home/reading_progress_animations_widget.dart';
@@ -107,11 +104,12 @@ export '../default/home/reading_support_animations_widget.dart';
 export '../default/reading_graph/reading_book_graph_widget.dart';
 export '../default/settings/reading_book_settings_widget.dart';
 
+// 読書中書籍編集
 export 'reading/reading_book_widget.dart';
 ```
 
-このアプローチにより、特定の機能実装では、デフォルト実装の一部を再利用しながら、
-一部のウィジェットのみを独自実装に置き換えることができます。
+このアプローチにより、特定の機能実装では、デフォルト実装を再利用しながら、  
+一部のウィジェットのみを独自実装に置き換えることもできます。
 
 
 ## このプロジェクトでの使用例
@@ -124,8 +122,6 @@ lib/src/presentation/ui_widget/
 ├── widget_packages.dart
 ├── default/
 │   ├── widget_packages.dart
-│   ├── custom_ui/
-│   │   └── toggle_switch.dart
 │   ├── home/
 │   │   ├── currently_tasks_widget.dart
 │   │   ├── reading_progress_animations_widget.dart
@@ -135,7 +131,7 @@ lib/src/presentation/ui_widget/
 
 **使用方法：**
 ```dart
-// ページの実装ファイルでバレルファイルをインポート
+// ページの実装ファイルで UIウィジェットのバレルファイルをインポート
 import 'package:app/src/presentation/ui_widget/widget_packages.dart';
 
 class HomePage extends StatelessWidget {
@@ -144,9 +140,9 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          CurrentlyTasksWidget(),          // バレルファイル経由で利用可能
-          ReadingProgressAnimationsWidget(), // バレルファイル経由で利用可能
-          ReadingSupportAnimationsWidget(),  // バレルファイル経由で利用可能
+          CurrentlyTasksWidget(),            // バレルファイル経由で利用
+          ReadingProgressAnimationsWidget(), // バレルファイル経由で利用
+          ReadingSupportAnimationsWidget(),  // バレルファイル経由で利用
         ],
       ),
     );
@@ -185,7 +181,7 @@ import 'package:app/src/presentation/model/view_model_packages.dart';
 
 ### 2. コメントの追加
 
-各バレルファイルには、その目的を説明するコメントを追加することを推奨します。
+各バレルファイルには、その目的を説明するヘッダー コメントを追加しています。
 
 ```dart
 // UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
@@ -199,34 +195,40 @@ import 'package:app/src/presentation/model/view_model_packages.dart';
 // デフォルト設定 （ui_widget）
 export 'default/widget_packages.dart';
 
-// 開発者ごとの実装
-// export 'hero/widget_packages.dart';
-// export 'morphing_button/widget_packages.dart';
+// 完成形設定 （ui_widget/complete）
+// export 'complete/widget_packages.dart'; // model設置はありません。（model/default を利用します）
+
+// ハンズオン設定 （ui_widget/challenge）
+// export 'challenge/widget_packages.dart'; // model設置はありません。（model/default を利用します）
 ```
 
 ### 4. 実装の切り替え
 
-コメントアウトを活用することで、異なる実装を簡単に切り替えることができます。
-これはハンズオンや実験的な機能の開発に特に有用です。
+コメントアウトを活用することで、異なる実装を簡単に切り替えられます。
 
 ```dart
 // デフォルト実装を使用
 export 'default/widget_packages.dart';
 
-// カスタム実装に切り替える場合は、上記をコメントアウトして以下を有効化
-// export 'morphing_button/widget_packages.dart';
+// 完成形実装に切り替える場合は、上記をコメントアウトして以下を有効化
+// export 'complete/widget_packages.dart';
 ```
 
 ### 5. 部分的な再利用
 
-サブレベルのバレルファイルでは、デフォルト実装の一部を再利用しながら、
-特定のファイルのみを独自実装に置き換えることができます。
+サブレベルのバレルファイルでは、デフォルト実装の一部を再利用しながら、  
+特定のファイルのみを独自実装に置き換えられます。
 
 ```dart
 // デフォルト実装の大部分を再利用
-export '../default/custom_ui/toggle_switch.dart';
 export '../default/home/currently_tasks_widget.dart';
+export '../default/home/reading_progress_animations_widget.dart';
+export '../default/home/reading_support_animations_widget.dart';
+/*
+export '../default/reading/reading_book_widget.dart';
+*/
 export '../default/reading_graph/reading_book_graph_widget.dart';
+export '../default/settings/reading_book_settings_widget.dart';
 
 // このウィジェットのみカスタム実装を使用
 export 'reading/reading_book_widget.dart';
@@ -237,17 +239,17 @@ export 'reading/reading_book_widget.dart';
 
 ### 1. 循環参照を避ける
 
-バレルファイルが互いにインポートし合うと、循環参照が発生する可能性があります。
+バレルファイルが互いにインポートし合うと、循環参照が発生する可能性があります。  
 階層構造を明確にし、依存関係を一方向に保つようにしてください。
 
 ### 2. 過度な使用を避ける
 
-すべてのファイルをバレルファイル経由でエクスポートする必要はありません。
+すべてのファイルをバレルファイル経由でエクスポートする必要はありません。  
 本当に関連性の高いファイルのみをグループ化し、適切な粒度を保つことが重要です。
 
 ### 3. 名前の衝突に注意
 
-異なるファイルから同じ名前のクラスや関数をエクスポートすると、名前の衝突が発生します。
+異なるファイルから同じ名前のクラスや関数をエクスポートすると、名前の衝突が発生します。  
 必要に応じて `show` や `hide` を使用してエクスポート内容を制御してください。
 
 ```dart
@@ -258,11 +260,6 @@ export 'file1.dart' show Widget1, Widget2;
 export 'file2.dart' hide InternalHelper;
 ```
 
-### 4. テストのインポート
-
-テストファイルでバレルファイルを使用する場合、テストしたい実装が正しくエクスポートされているか確認してください。
-
-
 ## まとめ
 
 バレルファイルは、Flutter/Dart プロジェクトにおいて以下のメリットをもたらします：
@@ -272,5 +269,5 @@ export 'file2.dart' hide InternalHelper;
 - **モジュール化**: 関連ファイルのグループ化により構造が明確になる
 - **柔軟性**: 実装の切り替えが容易になる
 
-このプロジェクトでは、`widget_packages.dart` という命名規則と階層的な構造を採用することで、
+このプロジェクトでは、`widget_packages.dart` という命名規則と階層的な構造を採用することで、  
 ハンズオンにおける複数の実装パターンの管理を効率的に行っています。
