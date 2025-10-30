@@ -1,34 +1,43 @@
-# ConsumerStagedWidget カスタム・ウィジェット実装ガイド
+# ConsumerStagedWidget カスタム・ウィジェット解説ガイド
 
 ## 概要
 
-**ConsumerStagedWidget<R,T>** カスタム・ウィジェットは、  
+**[ConsumerStagedWidget<R,T>](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L53-L478)** は、  
 **①状況に応じた UI表示｜表示更新**、**②状況に応じた UI表示の切り替え**、**③内部状態の定義**、**④ライフサイクルのハンドリング**を  
-*State派生クラスを定義することなく、Widget クラス内のみで行える*ようにした [StatefulWidget](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html) ラッパーです。
+*State派生クラスを定義することなく、Widget クラス内のみで行える*ようにした [StatefulWidget](https://api.flutter.dev/flutter/widgets/StatefulWidget-class.html) のラッパーです。
 
 * **①状況に応じた UI表示｜表示更新**  
-  * Riverpodの`WidgetRef.watch(プロバイダ)`で UI表示が依存する状態値を提供する`プロバイダ`を監視させて、  
-  状態値の変更によりリビルドが行われるようにします。
+  * riverpodの [WidgetRef.watch(プロバイダ)](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/WidgetRef/watch.html) で、  
+  UI表示が依存する状態値を提供する [プロバイダ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider-class.html) を監視させて、  
+  状態値の変更によりウィジェットのリビルドが行われるようにします。
+
+  * また、その`プロバイダ・オブジェクト`を **[コンストラクタ・パラメータ注入](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L61-L86)** することで、  
+    `ビルドおよびリビルド時に、ウィジェット内での最新の状態値の取得と UI表示への反映`ができるようにします。
 
 * **②状況に応じた UI表示の切り替え**  
-  * ビルドおよびリビルド時の UI表示内容は、`build`メソッドをオーバライドして、  
-    コンストラクタ・パラメータの`provider関数`が返す **状態値&lt;R&gt;** が反映されるようにします。  
+  * デフォルト：ビルドおよびリビルド時の UI表示内容は、オーバーライドされた`build`メソッドにより、  
+    コンストラクタ・パラメータの`provider関数`が返す **状態値&lt;R&gt;** の反映を行います。  
 
-  * オプション：`provider関数`が表す **状態値 ⇒ 状況種別**に応じて、**いくつかのパターンの`build`メソッド**を利用したい場合は、  
-    状況ごとのパターンに合わせて **ビルドメソッド（`build, build2 〜 build20`）のオーバーライド**を行い、  
-    状況種別とビルドメソッドの index(`0〜19`)が対応するように、**ビルダー選択メソッド（`selectBuilder`）をオーバーライド**します。  
-    *メソッド・オーバーライドでなく、**コンストラクタ・オプションパラメータで `buildersリスト`や `selectBuilder関数`を定義**することもできます。*  
+  * オプション：`provider関数`が表す **状態値 ⇒ 状況種別**に応じて、**いくつかのパターンの`build`メソッド**を切り替えたい場合は、  
+    状況ごとのパターンに合わせて **ビルドメソッド（[build, build2 〜 build20](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L148-L287)）のオーバーライド**を行い、  
+    状況種別とビルドメソッドの index `0〜19` が対応するように、**ビルダー選択メソッド（[selectBuilder](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L133-L146)）をオーバーライド**します。  
+    　  
+    *メソッド・オーバーライドでなく、  
+    **コンストラクタ・オプションパラメータの [buildersリスト](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L78-L81) や
+    [selectBuilder関数](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L83-L86) に定義**することもできます。*  
 
   * 活用例：非同期データの取得のため、最初はローディング表示、データ取得後にアイコン表示、  
     もしくはデータ取得エラー表示に切り替えたい場合、[FutureBuilder](https://api.flutter.dev/flutter/widgets/FutureBuilder-class.html)を使わなくても、  
-    `provider関数`で enum [loading, complete, error] を返し、  
+    `provider関数`で `enum [loading, complete, error]` を返し、  
     **ビルドメソッド**で ローディング｜アイコン｜エラー用にビルドメソッドをオーバーライドして、  
-    **ビルダー選択メソッド**で enum index の返却をオーバーライドさせることで対応することができます。
+    **ビルダー選択メソッド**で `enum index` を返却するようにメソッド・オーバーライドすれば対応できます。
 
 * **③内部状態の定義**  
   * **ウィジェットの内部状態型 T を ウィジェット ジェネリクス&lt;T&gt;に指定して、  
-    ウィジェット内部状態オブジェクトの生成メソッド（`createWidgetStateメソッド`）** をオーバーライドすれば、  
-    ウィジェット内（State派生クラスではない）の `initStateメソッド`と`disposeStaeメソッド`や`buildメソッド`に、  
+    ウィジェット内部状態オブジェクトの生成メソッド（[createWidgetState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L95-L96)）** をオーバライドしてそれが返るようにすれば、  
+    ウィジェット内（State派生クラスではない）の [initStateメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L98-L101) と
+    [disposeStaeメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L103-L108) や
+    [buildメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L148-L154) に、  
     `内部状態オブジェクト<T> state パラメータ`が提供されるだけでなく、**const ウィジェット生成**も可能になります。
  
   * 活用例：ウィジェット内にスクロールエリアがあり、独自の`ScrollController`を使いたいのであれば、  
@@ -36,8 +45,9 @@
     **const ウィジェット生成が可能**なだけでなく、`buildメソッド・パラメータ state`に ScrollControllerオブジェクトも提供されます。
 
 * **④ライフサイクルのハンドリング**  
-  * オプション：コンストラクタ・オプションパラメータの `isWidgetsBindingObserve`に`true`を指定すると、  
-     [AppLifecycleState](https://api.flutter.dev/flutter/dart-ui/AppLifecycleState.html)に対応する ライフサイクル・ハンドラメソッド（`onResume 〜 onHidden`）へのコールバックが発生します。
+  * オプション：コンストラクタ・オプションパラメータの [isWidgetsBindingObserve](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L71) に`true`を指定すると、  
+     [AppLifecycleState](https://api.flutter.dev/flutter/dart-ui/AppLifecycleState.html)に対応する
+     ライフサイクル・ハンドラメソッド（[onResume 〜 onHidden](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L313-L328)）へのコールバックが発生します。
 
   * 活用例：アプリがバックグラウンドの間はカウントダウンタイマーを停止させたいのであれば、  
      `onPausedハンドラメソッド`でタイマー停止、`onResumeハンドラメソッド`でタイマー再開を行う処理をオーバーライドします。
