@@ -249,7 +249,7 @@ UIウィジェットの **[build 〜 build5 メソッド](https://github.com/Flu
 このため ViewModel は、  
 **[animationType ゲッター](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L32-L36)** で`アニメーション種別を取得`して、
 **[updateAnimationType メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L87-L101)** で`アニメーション種別を更新`するだけでなく、  
-以前の読了ページ数と現在の読書進捗率から、最新のアニメーション種別を判断する
+以前の読了ページ数と現在の読書進捗率からアニメーション種別を更新する
 **[updateAnimationTypeIfProgressChange メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L45-L85)** で、  
 `読書中書籍情報からカレント読了達成率を算定`して、さらに`カレント読了達成率と同期させるためアニメーション種別の更新`ができるようにしています。
 
