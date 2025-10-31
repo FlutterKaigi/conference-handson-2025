@@ -151,3 +151,23 @@ enum ProgressAnimationTypeEnum {
 }
 ```
 
+#### ②状況に応じた UI表示の切り替え
+
+`読書進捗率達成表示用 UIウィジェット`の
+**[ReadingProgressAnimationsWidget](../../../lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart)** は、  
+プロバイダから取得した状態値(アニメーション種別 ⇒ none,10%,50%,80%,100%の読了達成率）に従って、UI表示を切り替えます。
+
+このため UIウィジェットは、`アニメーション種別を、暗黙的に派生元の基盤内で provider パラメータ関数から取得`して、  
+UIウィジェットの **[build 〜 build5 メソッド]()をオーバライド** して、`アニメーション種別ごとの UI表示構築を定義`して、  
+**[selectBuild メソッド]()をオーバーライド** して、`アニメーション種別と buildメソッドを対応させる関数を定義`します。
+
+`読書進捗率達成アニメーション ViewModel`の
+**[ReadingProgressAnimationsViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** は、  
+読書中書籍情報からカレント読了達成率の算定および、アニメーション種別の取得と更新のビジネスロジックを提供します。
+
+このため ViewModel は、
+**[animationType ゲッター](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L32-L36)** で`アニメーション種別を取得`して、  
+**[updateAnimationType メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L87-L101)** で`アニメーション種別を更新`するだけでなく、  
+**[updateAnimationTypeIfProgressChange メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L45-L85)** で、
+`読書中書籍情報からカレント読了達成率を算定`して、  
+さらに`カレント読了達成率と同期させるためアニメーション種別を更新`します。
