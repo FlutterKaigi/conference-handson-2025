@@ -15,7 +15,7 @@ lib
     └── presentation
         └── ui_widget
             └── complete
-                └── reading_grapht
+                └── reading_graph
                     ├── components                             読書中書籍進捗グラフ表示のUIコンポーネントを定義
                     │   ├── progress_donut_chart.dart          ドーナツチャート本体
                     │   ├── progress_donut_chart_painter.dart  Canvas描画ロジック
