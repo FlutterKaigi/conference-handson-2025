@@ -111,9 +111,9 @@ provider コンストラクタ・パラメータ関数に
 
 - _provider コンストラクタ・パラメータ関数の `(WidgetRef ref) => ref.watch(readingBooksProvider)` は、  
   **[アニメーション種別](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L17-L24)の状態データ** と
-  **[読書進捗率達成アニメーション ViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** を提供する
-  **[readingProgressAnimationsProvider](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L7-L15)** について、  
-  `状態データの変化を riverpod に監視させる`、`関数の評価により状態データ（アニメーション種別）が取得できる`という、２つの役目を持っています。_
+  **[読書進捗率達成アニメーション ViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** を管理する
+  **[readingProgressAnimationsProvider](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L7-L15)** に関して、
+  `状態データの変化を riverpod に監視させる`、`関数の評価により状態データ（アニメーション種別）が取得させる`という、２つの役目を持っています。_
 
 - _これにより`状態更新による 読書進捗率達成表示用 UIウィジェットのリビルド`と、  
   `パラメータ関数評価による 最新状態データ（アニメーション種別）の取得`ができるようになります。_
