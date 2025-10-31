@@ -101,6 +101,8 @@ presentation/
 
 #### ①状況に応じた UI表示｜表示更新
 
+#### ページウィジェット
+
 **[HomePage ページウィジェット](../../../lib/src/app/screen/home/home_page.dart)** の
 [buildメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/app/screen/home/home_page.dart#L12-L44) では、  
 `UI表示の状態データを提供する riverpod プロバイダーの監視`と `プロバイダから状態値を取得`するため、  
@@ -152,6 +154,8 @@ enum ProgressAnimationTypeEnum {
 ```
 
 #### ②状況に応じた UI表示の切り替え
+
+#### UIウィジェット
 
 `読書進捗率達成表示用 UIウィジェット`の
 **[ReadingProgressAnimationsWidget](../../../lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart)** は、  
@@ -236,6 +240,8 @@ UIウィジェットの **[build 〜 build5 メソッド](https://github.com/Flu
   }
 ```
 
+#### VieewModel
+
 `読書進捗率達成アニメーション ViewModel`の
 **[ReadingProgressAnimationsViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** は、  
 読書中書籍情報からカレント読了達成率の算定および、アニメーション種別の取得と更新のビジネスロジックを提供します。
@@ -243,6 +249,81 @@ UIウィジェットの **[build 〜 build5 メソッド](https://github.com/Flu
 このため ViewModel は、  
 **[animationType ゲッター](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L32-L36)** で`アニメーション種別を取得`して、
 **[updateAnimationType メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L87-L101)** で`アニメーション種別を更新`するだけでなく、  
-**[updateAnimationTypeIfProgressChange メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L45-L85)** で、
-`読書中書籍情報からカレント読了達成率を算定`して、  
-さらに`カレント読了達成率と同期させるためアニメーション種別を更新`します。
+以前のアニメーション種別と現在の読書進捗率から、最新のアニメーション種別を判断する
+**[updateAnimationTypeIfProgressChange メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L45-L85)** で、  
+`読書中書籍情報からカレント読了達成率を算定`して、さらに`カレント読了達成率と同期させるためアニメーション種別の更新`ができるようにしています。
+
+- _updateAnimationTypeIfProgressChange メソッドは、  
+  読書中書籍編集 UIウィジェット（[ReadingBookWidget](../../../lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart)）の
+  "編集する" タップ時のフォーム・サブミット処理（**[_submitForm](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart#L52-L88)**）における、  
+  **[読書進捗率の変化による、アニメーション表示（アニメーション種別）の更新処置](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart#L80-L84)** から呼び出されています。_
+
+```dart
+  ProgressAnimationTypeEnum _animationType;
+
+  /// アニメーション種別
+  // ignore: unnecessary_getters_setters
+  ProgressAnimationTypeEnum get animationType => _animationType;
+```
+
+```dart
+  /// アニメーション種別更新
+  void updateAnimationType({required ProgressAnimationTypeEnum animationType}) {
+    _animationType = animationType;
+    _updateState();
+
+    Timer(const Duration(milliseconds: 10000), () {
+      _animationType = ProgressAnimationTypeEnum.none;
+      _updateState();
+    });
+  }
+
+  /// riverpod の state 更新
+  void _updateState() {
+    state = animationType;
+  }
+```
+
+```dart
+  /// （読書進捗率別）アニメーション種別更新
+  ///
+  /// 読書進捗率が 100%達成か、10%,50%,80%,100% を跨いでいれば、
+  /// アニメーション種別を更新して、進捗率に従ったアニメーションを表示させます。
+  ///
+  /// - [updatedBook] : 読書進捗率更新済書籍（書籍の総ページ数と現在の読了ページ数を持つ）
+  /// - [prevReadingPageNum] : 以前の読了ページ数
+  void updateAnimationTypeIfProgressChange({
+    required ReadingBookValueObject updatedBook,
+    required int prevReadingPageNum,
+  }) {
+    // 読書進捗更新前後のアニメーション種別を取得
+    final ProgressAnimationTypeEnum editedType = _checkProgressRate(
+      updatedBook.totalPages,
+      updatedBook.readingPageNum,
+    );
+    final ProgressAnimationTypeEnum prevType = _checkProgressRate(
+      updatedBook.totalPages,
+      prevReadingPageNum,
+    );
+
+    // 進捗率が更新された場合のみ、アニメーション種別を更新します。
+    if (prevType.index < editedType.index) {
+      updateAnimationType(animationType: editedType);
+    }
+  }
+
+  /// 読書進捗率チェッカー
+  ProgressAnimationTypeEnum _checkProgressRate(
+    int totalPages,
+    int readingPageNum,
+  ) {
+    final double rate = readingPageNum / totalPages;
+    return switch (rate) {
+      < 0.1 => ProgressAnimationTypeEnum.none,
+      < 0.5 => ProgressAnimationTypeEnum.progressRate10,
+      < 0.8 => ProgressAnimationTypeEnum.progressRate50,
+      < 1.0 => ProgressAnimationTypeEnum.progressRate80,
+      _ => ProgressAnimationTypeEnum.progressRate100,
+    };
+  }
+```
