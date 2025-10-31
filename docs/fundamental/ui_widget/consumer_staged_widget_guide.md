@@ -158,8 +158,84 @@ enum ProgressAnimationTypeEnum {
 プロバイダから取得した状態値(アニメーション種別 ⇒ none,10%,50%,80%,100%の読了達成率）に従って、UI表示を切り替えます。
 
 このため UIウィジェットは、`アニメーション種別を、暗黙的に派生元の基盤内で provider パラメータ関数から取得`して、  
-UIウィジェットの **[build 〜 build5 メソッド]()をオーバライド** して、`アニメーション種別ごとの UI表示構築を定義`して、  
-**[selectBuild メソッド]()をオーバーライド** して、`アニメーション種別と buildメソッドを対応させる関数を定義`します。
+UIウィジェットの **[build 〜 build5 メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart#L40-L117)をオーバライド** して、
+`アニメーション種別ごとの UI表示構築を定義`して、  
+**[selectBuild メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart#L30-L38)をオーバーライド** して、
+`アニメーション種別と buildメソッドを対応させる関数を定義`します。
+
+- _selectBuild メソッドの
+  `value パラメータには、provider パラメータ関数から取得されたアニメーション種別`が入り、  
+  `builders パラメータに与えられる buildメソッドの index番号リスト`は、派生元の **[buildList](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L289-L311)** から取得されます。  
+  そしてメソッドボディの `return builders[value.index];` 式により、  
+  アニメーション種別の enum index値と、buildメソッドの index値が対応するようにしています。_
+
+- _build 〜 build5 の各メソッドには、  
+  アニメーション種別 enum index 番号にに対応する UI表示を構築するコードを定義します。  
+  使用していませんが`value パラメータには、provider パラメータ関数から取得されたアニメーション種別`が入ります。  
+  また `state パラメータは UIウィジェットの内部状態`ですが、この UIウィジェットでは内部状態を使わないので null が入ります。_
+
+
+```dart
+  @override
+  /// [provider] が返す状態値の
+  /// [ProgressAnimationTypeEnum] に対応した build関数を返します。
+  ConsumerStagedBuild<ProgressAnimationTypeEnum, Object> selectBuild(
+    List<ConsumerStagedBuild<ProgressAnimationTypeEnum, Object>> builders,
+    ProgressAnimationTypeEnum value,
+  ) {
+    return builders[value.index];
+  }
+```
+
+```dart
+  @override
+  /// [ProgressAnimationTypeEnum.none] に対応した、デフォルトの build関数
+  Widget build(
+    BuildContext context,
+    WidgetRef ref,
+    ProgressAnimationTypeEnum value,
+    Object? state,
+  ) {
+    return const Offstage();
+  }
+
+  @override
+  /// [ProgressAnimationTypeEnum.progressRate10] に対応した、デフォルトの build関数
+  Widget build2(
+    BuildContext context,
+    WidgetRef ref,
+    ProgressAnimationTypeEnum value,
+    Object? state,
+  ) {
+    final String title =
+        ref.read(readingBooksProvider.notifier).editedReadingBook?.name ?? '';
+    return _buildHelper(
+      context: context,
+      animationText: '$title 読了率 10%を達成しました！ 🔥',
+      animationColor: Colors.blue,
+    );
+  }
+
+  〜〜 省略 〜〜
+
+  @override
+  /// [ProgressAnimationTypeEnum.progressRate100] に対応した、デフォルトの build関数
+  Widget build5(
+          BuildContext context,
+          WidgetRef ref,
+          ProgressAnimationTypeEnum value,
+          Object? state,
+          ) {
+    final String title =
+            ref.read(readingBooksProvider.notifier).editedReadingBook?.name ?? '';
+    return _buildHelper(
+      context: context,
+      animationText: '$title 読了おめでとうございます！ 🔥',
+      animationColor: Colors.blue,
+    );
+  }
+```
+
 
 `読書進捗率達成アニメーション ViewModel`の
 **[ReadingProgressAnimationsViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** は、  
