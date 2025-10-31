@@ -241,53 +241,8 @@ UIウィジェットの **[build 〜 build5 メソッド](https://github.com/Flu
 読書中書籍情報からカレント読了達成率の算定および、アニメーション種別の取得と更新のビジネスロジックを提供します。
 
 このため ViewModel は、  
-**[animationType ゲッター](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L32-L36)** で`アニメーション種別を取得`して、
+**[animationType ゲッター](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L32-L36)** で`アニメーション種別を取得`して、  
 **[updateAnimationType メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L87-L101)** で`アニメーション種別を更新`するだけでなく、  
 **[updateAnimationTypeIfProgressChange メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L45-L85)** で、
 `読書中書籍情報からカレント読了達成率を算定`して、  
 さらに`カレント読了達成率と同期させるためアニメーション種別を更新`します。
-
-- _build 〜 build5 メソッドは、_
-
-
-
-
-`読書中書籍情報から総ページ数と読了ページ数、および前回の取得`と、
-
-読書中書籍情報から、最新の読書進捗達成率を判定して、アニメーション種別を更新するビジネスロジック、
-アニメーション種別を状態データとして、読書進捗率を判定し、
-
-riverpod Notifierをベースに、アニメーション種別を状態データ
-読了達成率を判定するビジネスロジックは、 読書進捗率達成アニメーション ViewModel に
-
-このため ViewModel は、
-カレント読了率算出のために`読書中書籍情報から、総ページ数と 読了ページ数の取得`と、
-
-アニメーション表示なし、10%達成表示 〜 100%達成読了表示、
-
-これには、
-
-selectBuild 関数には、、
-
-**[アニメーション種別](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L17-L24)の状態データ** と
-**[読書進捗率達成アニメーション ViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** を管理する  
-**[readingProgressAnimationsProvider](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L7-L15)** に関して、
-
-readingProgressAnimationsProvider から取得した、状態値から
-provider コンストラクタ・パラメータ関数から取得した
-
-デフォルト：ビルドおよびリビルド時の UI表示内容は、オーバーライドされた build メソッドにより、
-コンストラクタ・パラメータのprovider関数が返す 状態値<R> の反映を行います。
-
-オプション：provider関数が表す 状態値 ⇒ 状況種別に応じて、いくつかのパターンのbuildメソッドを切り替えたい場合は、
-状況ごとのパターンに合わせて ビルドメソッド（build, build2 〜 build20）のオーバーライドを行い、
-状況種別とビルドメソッドの index 0〜19 が対応するように、ビルダー選択メソッド（selectBuilder）をオーバーライドします。
-　
-メソッド・オーバーライドでなく、
-コンストラクタ・オプションパラメータの buildersリスト や selectBuilder関数 に定義することもできます。
-
-活用例：非同期データの取得のため、最初はローディング表示、データ取得後にアイコン表示、
-もしくはデータ取得エラー表示に切り替えたい場合、FutureBuilderを使わなくても、
-provider関数で enum [loading, complete, error] を返し、
-ビルドメソッドで ローディング｜アイコン｜エラー用にビルドメソッドをオーバーライドして、
-ビルダー選択メソッドで enum index を返却するようにメソッド・オーバーライドすれば対応できます。
