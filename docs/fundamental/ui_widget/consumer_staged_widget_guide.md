@@ -36,7 +36,7 @@
   * **ウィジェットの内部状態型 T を ウィジェット ジェネリクス&lt;T&gt;に指定して、  
     ウィジェット内部状態オブジェクトの生成メソッド（[createWidgetState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L95-L96)）** をオーバライドしてそれが返るようにすれば、  
     ウィジェット内（State派生クラスではない）の [initStateメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L98-L101) と
-    [disposeStaeメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L103-L108) や
+    [disposeStateメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L103-L108) や
     [buildメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/ui_widget/consumer_staged_widget.dart#L148-L154) に、  
     `内部状態オブジェクト<T> state パラメータ`が提供されるだけでなく、**const ウィジェット生成**も可能になります。
  
@@ -54,9 +54,9 @@
 
 ```
 fundamental/
-├── ui_widget/
-    ├── consumer_staged_widget.dart   # カスタム・ウイジェット（構造定義）
-    └── staged_widget.dart            # カスタム・ウイジェット（構造定義）
+└── ui_widget/
+    ├── consumer_staged_widget.dart    カスタム・ウイジェット（構造定義）
+    └── staged_widget.dart             カスタム・ウイジェット（構造定義）
 ```
 
 
@@ -77,13 +77,13 @@ ConsumerStagedWidget 派生ウィジェットの実装例として、
 defaultディレクトリの読書進捗率達成表示用 UIウィジェット（[ReadingProgressAnimationsWidget](../../../lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart)）について解説します。
 
 はじめに、**読書進捗率達成表示用 UIウィジェットの実装先** は、  
-`UIウィジェット・クラス定義先` と `UIウィジェットのインスタンスの生成先（Widgetツリーへのバインド先）`に大きく分かれていることに留意ください。
+`UIウィジェット・クラス定義先` と `UIウィジェットのインスタンスの生成先（Widgetツリーへのバインド先）`に分かれていることに留意ください。
 
 - **[HomePage](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/app/screen/home/home_page.dart#L8-L45)**  
   **読書進捗率達成表示用 - ConsumerStagedWidget 派生ウィジェット生成先**  
 ```
 presentation/
-├── app/
+└── app/
     └── screnn/
         └── home/
             └── home_page.dart    派生ウイジェットの利用先（生成定義元）
@@ -93,7 +93,7 @@ presentation/
   **読書進捗率達成表示用 - ConsumerStagedWidget 派生ウィジェット定義先**  
 ```
 presentation/
-├── ui_widget/
+└── ui_widget/
     └── default/
         └── home/
             └── reading_progress_animations_widget.dart   派生ウイジェット（構造定義元）
@@ -105,13 +105,18 @@ presentation/
 [buildメソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/app/screen/home/home_page.dart#L12-L44) では、  
 `UI表示の状態データを提供する riverpod プロバイダーの監視`と `プロバイダから状態値を取得`するため、  
 [ReadingProgressAnimationsWidget](../../../lib/src/presentation/ui_widget/default/home/reading_progress_animations_widget.dart) の
-provider コンストラクタ・パラメータに `(WidgetRef ref) => ref.watch(readingBooksProvider)` 関数を渡してインスタンス生成を行い、
+provider コンストラクタ・パラメータ関数に  
+`(WidgetRef ref) => ref.watch(readingBooksProvider)` を渡してインスタンス生成を行い、  
 `Widgetツリーに 読書進捗率達成表示用 UIウィジェットをバインド`させています。
 
-これにより、**[アニメーション種別](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L17-L24)の状態データ** と
-**[読書進捗率達成アニメーション ViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** を提供する
-**[readingSupportAnimationsProvider](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L7-L15)** から、
-アニメーション種別が更新されるごとに 読書進捗率達成表示用 UIウィジェットがリビルドされ、それに伴い状態データ（アニメーション種別）も取得できるようになります。
+- _provider コンストラクタ・パラメータ関数の `(WidgetRef ref) => ref.watch(readingBooksProvider)` は、  
+  **[アニメーション種別](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L17-L24)の状態データ** と
+  **[読書進捗率達成アニメーション ViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** を提供する
+  **[readingProgressAnimationsProvider](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L7-L15)** について、  
+  `状態データの変化を riverpod に監視させる`、`関数の評価により状態データ（アニメーション種別）が取得できる`という、２つの役目を持っています。_
+
+- _これにより`状態更新による 読書進捗率達成表示用 UIウィジェットのリビルド`と、  
+  `パラメータ関数評価による 最新状態データ（アニメーション種別）の取得`ができるようになります。_
 
 ```dart
       body: Stack(
