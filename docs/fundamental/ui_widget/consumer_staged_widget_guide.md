@@ -255,7 +255,7 @@ UIウィジェットの **[build 〜 build5 メソッド](https://github.com/Flu
 
 - _updateAnimationTypeIfProgressChange メソッドは、  
   読書中書籍編集 UIウィジェット（[ReadingBookWidget](../../../lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart)）の
-  "編集する" タップ時のフォーム・サブミット処理（**[_submitForm](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart#L52-L88)**）における、  
+  "編集する" タップ時のフォーム・サブミット処理（**[_submitForm](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart#L52-L88)**）で、  
   **[読書進捗率の変化による、アニメーション表示（アニメーション種別）の更新処置](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/reading/reading_book_widget.dart#L80-L84)** から呼び出されています。_
 
 ```dart
