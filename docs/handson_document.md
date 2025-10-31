@@ -1,6 +1,5 @@
 # FlutterKaigi 2025 ハンズオン・ドキュメント
 
-現時点のドキュメントは、作りかけです。
 ----------
 
 ## はじめに
@@ -273,9 +272,44 @@ riverpod を使う上で不変データの保証が必須です。
 
 ## ベースUI とカスタムUI のコードや見栄えの比較ができる工夫
 
-### バレルファイル
+ハンズオンのサブテーマは、**「ベースUIと カスタムUIのコードや見栄えの比較ができる」** です。  
+これは、**ベースUI**、**カスタムUI**、**ハンズオン作業中**...それぞれの UIコードについて、  
+1. `作業ブランチを切り替えることなく、それぞれの UIコードが比較できる` だけでなく、  
+2. `模擬アプリの UI表現が、手軽に切り替えられる` ことを要求しています。
 
-### ConsumerStagedWidget
+_この要件を満たすため、以下の工夫を行っています。_
+
+- ハンズオン・プロジェクトでは、`ベースUI`、`カスタムUI`、`ハンズオン作業中`の 各UIコードを、  
+  **defaultディレクトリ**、**completeディレクトリ**、**challengeディレクトリ** に分けて配置することで、  
+  一番目の `作業ブランチを切り替えることなく、それぞれのUIコードが確認できる` ようにしています。
+
+- そして、二番目の`模擬アプリが参照する UI表現の切り替え`は、  
+  **バレルファイル** に、`どのディレクトリ配下の UIコードを import する`のかを記述して、  
+  `ページウィジェットは、バレルファイルから import した UIウィジェットを表示する`ことで実現します。
+
+- さらに、`プレゼンテーションレイヤの依存関係の複雑さを隠蔽`するため、  
+  StatefulWidget ラッパーの **ConsumerStagedWidget** にウィジェット内部状態管理だけでなく、  
+  `状況ごとのビルドコードの切り替えや、riverpod プロバイダーとのボイラープレートコードの移譲機能`を追加しました。  
+
+### バレルファイルについて
+
+バレルファイル(Barrel files)は、複数のファイルを 1つの import文で済ませるための単一のファイルです。  
+_今回の使い方では、default、complete、challenge 何れかの UIコードしかアプリで利用されなくなりますが、  
+ハンズオンプロジェクトは、勉強用の模擬アプリのため、アプリで参照されないコードの発生を許容しています。  
+また一般的には、 不必要な export を避けること、循環参照にならないようにする注意が必要なことに御留意ください。_
+
+- 【参照】プロジェクトでの実装解説 - **[バレルファイル 解説ガイド](fundamental/barrel_file_guide.md)**  
+
+### ConsumerStagedWidget について
+
+たとえば、読了ページの更新ごとに、読了ページ数から(10%,50%,80%,100%の)進捗率達成状況をチェックして、  
+閾値を超えていないので何も表示しないか、達成率別のメッセージを表示する、状況に応じたウィジェット再構築が行われるよう、    
+
+**ConsumerStagedWidget** に、`riverpod プロバイダーの` **コンストラクタ・パラメータ注入** と、  
+`プロバイダーからの状態値取得と、状態値による状況評価と、状況ごとに UI表示を変えるための` **selectBuild メソッド** と、  
+`評価値ごとの UIウィジェット構築定義 ⇒ build関数を複数定義できるようにする` **build 〜 build19 メソッド** を追加しています。
+
+- 【参照】プロジェクトでの実装解説 - **[ConsumerStagedWidget 解説ガイド](fundamental/ui_widget/consumer_staged_widget_guide.md)**
 
 ----------
 
@@ -303,7 +337,7 @@ Flutter開発環境および Android や iOS 開発のセットアップされ�
     (2025/11/01 現在) Flutter 3.35.7 channel stable, Dart 3.9.2, DevTools 2.48.0_
     - _過去のバージョンを使う必要がある場合は、後述の **`fvm`** をご利用ください。_
 
-Flutter開発環境(IDE)に `VSCODE` や `Android Studio` を使う場合は、  
+Flutter開発環境(IDE)に `VS Code` や `Android Studio` を使う場合は、  
 公式サイト [Tools | Flutter](https://docs.flutter.dev/tools) で説明されている、以下の設定が完了している必要があります。
 
 - Flutter Developing Tools  
@@ -312,7 +346,7 @@ Flutter開発環境(IDE)に `VSCODE` や `Android Studio` を使う場合は、
   - Android Studio と IntelliJ  
     [Android Studio and IntelliJ | Flutter](https://docs.flutter.dev/tools/android-studio)
 
-  - VSCODE  
+  - VS Code  
     [VS Code | Flutter](https://docs.flutter.dev/tools/vs-code)
 
 _このハンズオン・プロジェクトは、Flutter Web にも対応しています。  
@@ -332,6 +366,11 @@ _**何らかの理由で、Flutter SDKを 3.35.1 未満にする必要がある�
 `fvm` と `Makefile`の`make run`や`make unit-test`コマンドをご利用ください。_
 
 - 【参照】プロジェクト開発環境構築 - [README.md](../README.md)
+
+### リポジトリのクローン
+Flutter開発環境構築とハンズオン環境構築が完了しましたら、  
+ハンズオン・リポジトリ **[conference-handson-2025](https://github.com/FlutterKaigi/conference-handson-2025)** をクローンして、  
+お使いの Android Studio や VS Code などの IDE で、リポジトリのプロジェクト・ルートを開いてください。
 
 ----------
 
