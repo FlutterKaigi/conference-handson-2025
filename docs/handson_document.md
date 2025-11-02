@@ -952,7 +952,7 @@ Future<void> _startAnimationSequence() async {
 なお、本サンプルアプリでは、応援メッセージは10秒後に自動的に非表示になるよう実装しています。
 
 ### ステップ4: ２層目の波紋
-- ステップ4の完成例
+- ステップ4の完成例  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffect.png" />
 
 アニメーションを重ねていることを体験するために、もう一つ重ねます。前ステップの放射グラデーションの上に波紋の表現を重ねます。
@@ -1025,7 +1025,7 @@ child: Stack(
 
 ```
 
-- ステップ4の完成例（再掲）
+- ステップ4の完成例（再掲）  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffect.png" />
 
 #### まとめ
