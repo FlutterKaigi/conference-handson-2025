@@ -240,7 +240,7 @@ UIウィジェットの **[build 〜 build5 メソッド](https://github.com/Flu
   }
 ```
 
-#### VieewModel
+#### ViewModel
 
 `読書進捗率達成アニメーション ViewModel`の
 **[ReadingProgressAnimationsViewModel](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/model/default/reading_progress_animations_view_model.dart#L26-L102)** は、  

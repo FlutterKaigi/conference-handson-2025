@@ -141,7 +141,7 @@ _これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** 
 lib
 └── src
     ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
-    │   └── scren
+    │   └── screen
     │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
@@ -160,8 +160,8 @@ lib
     │   │   │   ├── reading_books_view_model.dart               （読書中書籍一覧の状態値を定義）
     │   │   │   ├── reading_progress_animation_view_model.dart  （読書中書籍進捗の状態種別と状態値を定義）
     │   │   │   ├── reading_support_animation_view_model.dart   （激励一喝の状態種別と状態値を定義）
-    │   │   │   └── view_model_packges.dat    　　　　　　        （defaultディレクトリ用のバレルファイル）
-    │   │   └── view_model_packges.dat　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
+    │   │   │   └── view_model_packages.dart    　　　　　　        （defaultディレクトリ用のバレルファイル）
+    │   │   └── view_model_packages.dart　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
     │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
     │   │   ├── default
     │   │   │   ├── home
@@ -197,7 +197,7 @@ lib
     │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
     │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
     │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
-    │   └── rouging                                              GoRoutrの Named Routeを定義
+    │   └── routing                                              GoRoutrの Named Routeを定義
     └── test                                                     Unit test と Widget test を定義
 ```
 
@@ -477,7 +477,7 @@ _この機能要件は、読書支援アプリが表示されたタイミング�
   「書籍を削除する」をタップして、確認ダイアログでも「削除」をタップします。  
   <img width="800" alt="書籍編集画面オープン＋削除操作" src="./images/hands-on_basic_step_5.png" />
 
-- ホーム画面の書籍一覧からMCPサーバ実践が削除されています。  
+- ホーム画面の書籍一覧からMCPサーバー実践が削除されています。  
   <img width="260" alt="書籍削除" src="./images/hands-on_basic_step_6.png" />
 
 #### 自動テストについて
@@ -508,7 +508,7 @@ _この機能要件は、読書支援アプリが表示されたタイミング�
 lib
 └── src
     ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
-    │   └── scren
+    │   └── screen
     │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
@@ -519,8 +519,8 @@ lib
     │   │   │   ├── reading_books_view_model.dart               （読書中書籍一覧の状態値を定義）
     │   │   │   ├── reading_progress_animation_view_model.dart  （読書中書籍進捗の状態種別と状態値を定義）
     │   │   │   ├── reading_support_animation_view_model.dart   （激励一喝の状態種別と状態値を定義）
-    │   │   │   └── view_model_packges.dat    　　　　　　        （defaultディレクトリ用のバレルファイル）
-    │   │   └── view_model_packges.dat　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
+    │   │   │   └── view_model_packages.dart    　　　　　　        （defaultディレクトリ用のバレルファイル）
+    │   │   └── view_model_packages.dart　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
     │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
     │   │   ├── default
     │   │   │   ├── home
@@ -953,7 +953,7 @@ Future<void> _startAnimationSequence() async {
 
 ### ステップ4: ２層目の波紋
 - ステップ4の完成例  
-  <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffec.png" />
+  <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffect.png" />
 
 アニメーションを重ねていることを体験するために、もう一つ重ねます。前ステップの放射グラデーションの上に波紋の表現を重ねます。
 
@@ -1026,7 +1026,7 @@ child: Stack(
 ```
 
 - ステップ4の完成例（再掲）  
-  <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffec.png" />
+  <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffect.png" />
 
 #### まとめ
 この工程では、アニメーションの「時間」と「動き」を、`AnimationController`と`Animation`で個別に定義することで、複雑な演出を構造的に管理できることを確認しました。`AnimatedBuilder`ではアニメーション値に応じて変化する表現を実装しました。さらに、`Stack`ウィジェットを利用して、複数の装飾を重ねて華やかなアニメーションを実装する手法を学びました。
