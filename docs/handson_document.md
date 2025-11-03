@@ -130,9 +130,9 @@ _これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** 
 **[Widget test](../test/riverpod_reading_books_widget_test.dart)** で、  
 **任意のデータ値の手動生成とアプリケーションモデルへの依存注入ができる** ようになっています。_
 
-#### コード生成実験
+#### AI コード生成実験
 ハンズオンプロジェクトでは、**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、  
-実験的なコード生成を行っています。
+実験的な AI コード生成を行っています。
 
 - 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
 
