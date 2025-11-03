@@ -376,7 +376,7 @@ Flutter開発環境構築とハンズオン環境構築が完了しましたら�
 Android Studio なら `pubspec.yaml`を開き、画面上部にある `Pub get` ([画像](images/hands-on_setup_flutter_pub_get.png))をクリックしてください。
 
 _Android Studio をお使いで、Markdownファイルのコードフェンス・エラー([画像](./images/hands-on_setup_show_problems_in_code_fences.png))が気になる場合は、  
-`hide problems in code fences fix`([画像](./images/hands-on_setup_hide_problems_in_code_fences.png))をお試しください。_
+赤い電球アイコンを右クリックして `hide problems in code fences fix`([画像](./images/hands-on_setup_hide_problems_in_code_fences.png))をお試しください。_
 
 ----------
 
