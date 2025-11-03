@@ -1583,7 +1583,7 @@ lib
 
 - **修正前**  
 **ReadingBookGraphWidget.build()** 
-[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
+[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
 ```dart
 // ステップ1: 画面表示完了後に円グラフ描画を予約
 // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1595,7 +1595,7 @@ lib
 
 - **修正後**  
 **ReadingBookGraphWidget.build()** 
-[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
+[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
 ```dart
 // ステップ1: 画面表示完了後に円グラフ描画を予約
 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1620,8 +1620,8 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
 - **修正前**  
 **DonutAnimationState.animateToProgress()** 
-[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
-[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
+[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
+[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
 ```dart
 // ステップ2: 進捗に合わせた終了値を指定し開始
 // progressAnimation =
@@ -1643,8 +1643,8 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
 - **修正後**  
 **DonutAnimationState.animateToProgress()** 
-[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
-[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
+[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
+[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
 ```dart
 // ステップ2: 進捗に合わせた終了値を指定し開始
 progressAnimation =
@@ -1703,7 +1703,7 @@ lib
 
 - **修正前**  
 **DonutAnimationState.animateToProgress()** 
-[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
+[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
 ```dart
 // ステップ3: 完読時には専用メッセージ表示
 // return AnimatedSwitcher(
@@ -1728,7 +1728,7 @@ return Container(
 
 - **修正後**  
 **DonutAnimationState.animateToProgress()** 
-[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
+[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
 ```dart
 // ステップ3: 完読時には専用メッセージ表示
 return AnimatedSwitcher(
