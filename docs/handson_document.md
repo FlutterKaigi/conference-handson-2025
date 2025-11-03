@@ -1581,7 +1581,9 @@ lib
 
 修正前は進捗円グラフの描画処理がコメントアウトされています。
 
-**修正前**
+- **修正前**  
+**ReadingBookGraphWidget.build()** 
+[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
 ```dart
 // ステップ1: 画面表示完了後に円グラフ描画を予約
 // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1591,7 +1593,9 @@ lib
 
 円グラフの描画を行う`animateToProgress`メソッドの呼び出しを含むコールバック関数を遅延実行に指定します。
 
-**修正後**
+- **修正後**  
+**ReadingBookGraphWidget.build()** 
+[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
 ```dart
 // ステップ1: 画面表示完了後に円グラフ描画を予約
 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -1614,7 +1618,10 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
 修正前は動きの定義と実行それぞれコメントアウトされています。
 
-**修正前**
+- **修正前**  
+**DonutAnimationState.animateToProgress()** 
+[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
+[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
 ```dart
 // ステップ2: 進捗に合わせた終了値を指定し開始
 // progressAnimation =
@@ -1634,7 +1641,10 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
 緩急のある動きを定義し、非同期でアニメーションの実行を指示します。
 
-**修正後**
+- **修正後**  
+**DonutAnimationState.animateToProgress()** 
+[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
+[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
 ```dart
 // ステップ2: 進捗に合わせた終了値を指定し開始
 progressAnimation =
@@ -1691,7 +1701,9 @@ lib
 
 作業前の時点では仮の実装があります。ここでは残ページ数を表示するウィジェットを指定しています。
 
-**修正前**
+- **修正前**  
+**DonutAnimationState.animateToProgress()** 
+[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
 ```dart
 // ステップ3: 完読時には専用メッセージ表示
 // return AnimatedSwitcher(
@@ -1714,7 +1726,9 @@ return Container(
 完読時には残ページ数ではなく専用メッセージを表示するように`AnimatedSwitcher`で切り替えます。
 `isCompleted`の値は円グラフが1周すると`true`に変わります。その時に、自動的に表示内容が「残り〇ページ」を示す`ProgressContent`から、「完読達成！」を示す`CompletionContent`へと切り替わります。変化は600ミリ秒かけてトランジションアニメーションを適用します。
 
-**修正後**
+- **修正後**  
+**DonutAnimationState.animateToProgress()** 
+[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/issue_36/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
 ```dart
 // ステップ3: 完読時には専用メッセージ表示
 return AnimatedSwitcher(
