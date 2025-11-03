@@ -374,10 +374,10 @@ Flutter開発環境構築とハンズオン環境構築が完了しましたら�
 
 プロジェクトを開いたら、**外部パッケージを導入**するため、ターミナルで `flutter pub get`コマンドを実行するか、  
 Android Studio なら `pubspec.yaml`を開き、画面上部にある `Pub get` ([画像](images/hands-on_setup_flutter_pub_get.png))をクリックしてください。  
-_何らかの理由で、`fvm` をお使いの場合は、`fvm flutter pub get`をご利用ください。_
 
-_Android Studio をお使いで、Markdownファイルのコードフェンス・エラー([画像](./images/hands-on_setup_show_problems_in_code_fences.png))が気になる場合は、  
-赤い電球アイコンを右クリックして `hide problems in code fences fix`([画像](./images/hands-on_setup_hide_problems_in_code_fences.png))をお試しください。_
+- _何らかの理由で、`fvm` をお使いの場合は、`fvm flutter pub get`をご利用ください。_
+- _Android Studio をお使いで、Markdownファイルのコードフェンス・エラー([画像](./images/hands-on_setup_show_problems_in_code_fences.png))が気になる場合は、  
+  赤い電球アイコンを右クリックして `hide problems in code fences fix`([画像](./images/hands-on_setup_hide_problems_in_code_fences.png))をお試しください。_
 
 ----------
 
