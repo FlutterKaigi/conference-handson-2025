@@ -683,7 +683,9 @@ export 'challenge/widget_packages.dart';
 `Animation` は`AnimationController`の進行度を、具体的な動きのパターンに変換します。ここで使用する`CurvedAnimation`はアニメーションの進行に緩急をつけ滑らかな動きにできます。コンストラクタでは以下の設定をしています。
 
 - `parent`: アニメーションの「時間軸」となる`AnimationController`を指定します。
-- `curve`: アニメーションの動きを指定します。`Curves.easeInOutSine`は、滑らかに加速と減速を繰り返す波のような動きを生成します。これにより、背景のグラデーションが穏やかに膨張・収縮するような効果を生み出します。
+- `curve`: アニメーションの動きを指定します。`Curves.easeInOutSine`は、滑らかに加速して減速するパターンです。これを繰り返すことにより、背景のグラデーションが穏やかに膨張・収縮、を繰り返す波のような効果を生み出します。
+  - _**[Curves](https://api.flutter.dev/flutter/animation/Curves-class.html)クラス** は、「だんだん早く」や「徐々に遅く」など、複数のアニメーションの緩急変化パターンを提供するコンテナです。_
+    - _**[Curves.easeInOutSine](https://api.flutter.dev/flutter/animation/Curves/easeInOutSine-constant.html)** は、ゆっくりと始まり、加速し、ゆっくりと終わるアニメーション・パターンを表します。_
 
 このステップではグラデーションのアニメーション表現を代表して実装します。このグラデーションは重ねる装飾のうちの一番下地になります。他の表現についても同様の構造でオブジェクトを用意しています。
 
