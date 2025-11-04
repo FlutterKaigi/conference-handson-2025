@@ -86,6 +86,8 @@ _これにより機能要件の追加や変更における、修正範囲の限�
     - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データが依存する DB等の機能を提供するインフラストラクチャを保持して、    
     - **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)）
       [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** が、状態データのカレント値を表す不変データのクラス定義を担い、  
+      - _ValueObject は、  
+        ドメイン駆動設計（DDD）において、値そのものによって同一性を明示する、不変性のオブジェクトです。_  
     - **[インフラストラクチャ](../lib/src/infrastructure/package_info.dart)** が、プラグインによるDB等の基盤機能をラップするオブジェクトを保持します。  
       - _模擬アプリでは、データの永続化などを行いません。  
         このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。  
@@ -147,11 +149,16 @@ lib
     │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
     │       └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
     ├── application
-    │   └── model              アプリ・モデル　（ドメインモデルのオブジェクを保持）
+    │   └── model              アプリ・モデル
+    │       └── application_model.dart  　　　    （ドメインモデルを保持するアプリケーションモデルを定義）
     ├── domain
-    │   └── model              ドメイン・モデル（読書中書籍の状態モデルなどを定義）
+    │   └── model              ドメイン・モデル
+    │       ├── reading_books_domain_model.dart  （読書中書籍一覧のドメインモデルを定義）
+    │       ├── reading_books_state_model.dart   （読書中書籍一覧のステートモデルを定義）
+    │       ├── reading_books_value_object.dart  （読書中書籍一覧のValueObjectを定義）
+    │       └── reading_book_value_object.dart   （読書中書籍のValueObjectを定義）
     ├── fundamental
-    │   ├── model              基底基盤モデル　（ValueObjectなどを定義）
+    │   ├── model              基底基盤モデル　（状態モデルやValueObjectなどの基盤を定義）
     │   └── ui_widget          基底ウィジェット（ConsumerStagedWidgetなどを定義）
     ├── infrastructure
     ├── presentation
