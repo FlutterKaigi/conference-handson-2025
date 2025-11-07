@@ -367,9 +367,6 @@ Flutter開発環境(IDE)に `VS Code` や `Android Studio` を使う場合は、
   - VS Code  
     [VS Code | Flutter](https://docs.flutter.dev/tools/vs-code)
 
-_このハンズオン・プロジェクトは、Flutter Web にも対応しています。  
-Android や iOS セットアップをされていない場合は、Chromeブラウザを使った動作確認もできます。_
-
 ### ハンズオン環境構築
 
 ハンズオン・プロジェクトでは、チーム開発のため **[fvm](https://pub.dev/packages/fvm)** を使って Flutter バージョンを統一させており、  
