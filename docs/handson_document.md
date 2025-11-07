@@ -333,17 +333,24 @@ Flutter開発環境および Android や iOS 開発のセットアップされ�
 公式サイト [Docs | Flutter](https://docs.flutter.dev/) で説明されている、以下の設定が完了している必要があります。
 
 - Flutterセットアップ  
-  [Set up and test drive Flutter](https://docs.flutter.dev/get-started/quick)
+  _①②のインストール方法があります。_
 
+  - ①基本的なインストール方法  
+    [Install Flutter manually](https://docs.flutter.dev/install/manual)
+
+  - ②VS Code利用のインストール方法  
+    [Set up and test drive Flutter](https://docs.flutter.dev/get-started/quick)
+
+  - _**Flutter SDK バージョンは、最新版にアップグレードしておいてください。**  
+    (2025/11/01 現在) Flutter 3.35.7 channel stable, Dart 3.9.2, DevTools 2.48.0_
+    - _過去のバージョンを使う必要がある場合は、後述の **`fvm`** をご利用ください。_
+
+- モバイル開発セットアップ
   - Android 開発セットアップ  
     [Set up Android development](https://docs.flutter.dev/platform-integration/android/setup)
 
   - iOS 開発セットアップ  
     [Set up iOS development](https://docs.flutter.dev/platform-integration/ios/setup)
-
-  - _**Flutter SDK バージョンは、最新版にアップグレードしておいてください。**  
-    (2025/11/01 現在) Flutter 3.35.7 channel stable, Dart 3.9.2, DevTools 2.48.0_
-    - _過去のバージョンを使う必要がある場合は、後述の **`fvm`** をご利用ください。_
 
 Flutter開発環境(IDE)に `VS Code` や `Android Studio` を使う場合は、  
 公式サイト [Tools | Flutter](https://docs.flutter.dev/tools) で説明されている、以下の設定が完了している必要があります。
