@@ -352,6 +352,9 @@ Flutter開発環境および Android や iOS 開発のセットアップされ�
   - iOS 開発セットアップ  
     [Set up iOS development](https://docs.flutter.dev/platform-integration/ios/setup)
 
+  - _このハンズオン・プロジェクトは、Flutter Web にも対応しています。  
+    Android や iOS セットアップをされていない場合は、Chromeブラウザを使った動作確認もできます。_
+
 Flutter開発環境(IDE)に `VS Code` や `Android Studio` を使う場合は、  
 公式サイト [Tools | Flutter](https://docs.flutter.dev/tools) で説明されている、以下の設定が完了している必要があります。
 
