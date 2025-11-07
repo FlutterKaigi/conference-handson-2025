@@ -142,17 +142,18 @@ _これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** 
 ```text
 lib
 └── src
-    ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
-    │   └── screen
-    │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
-    │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
-    │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
-    │       └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
+    ├── app                    
+    │   ├── screen
+    │   │   ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │   │   ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │   │   ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
+    │   │   └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
+    │   └── app.dart           アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
     ├── application
-    │   └── model              アプリ・モデル
+    │   └── model
     │       └── application_model.dart  　　　    （ドメインモデルを保持するアプリケーションモデルを定義）
     ├── domain
-    │   └── model              ドメイン・モデル
+    │   └── model
     │       ├── reading_books_domain_model.dart  （読書中書籍一覧のドメインモデルを定義）
     │       ├── reading_books_state_model.dart   （読書中書籍一覧のステートモデルを定義）
     │       ├── reading_books_value_object.dart  （読書中書籍一覧のValueObjectを定義）
@@ -521,7 +522,7 @@ _この機能要件は、読書支援アプリが表示されたタイミング�
 ```text
 lib
 └── src
-    ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
+    ├── app
     │   └── screen
     │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
