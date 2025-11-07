@@ -363,7 +363,7 @@ Android や iOS セットアップをされていない場合は、Chromeブラ�
 
 ハンズオン・プロジェクトでは、チーム開発のため **[fvm](https://pub.dev/packages/fvm)** を使って Flutter バージョンを統一させており、  
 また [Makefile](../Makefile) を利用して、模擬アプリの起動やユニットテストの実行も簡易化もしていますが、  
-Flutter SDKが最新版（3.35.1 以上）であれば、それらを利用する必要はありません。
+Flutter SDKが開発時最新版の 3.35.1 以上であれば、それらを利用する必要はありません。
 
 **模擬アプリの起動** や **ユニットテストの実行** には、`flutter run` や `flutter test test/` コマンドや、  
 `Android Studio` などの IDE が用意している、アプリ実行やテスト機能をご利用ください。
