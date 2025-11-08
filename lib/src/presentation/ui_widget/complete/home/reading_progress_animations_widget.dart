@@ -404,9 +404,7 @@ class _ProgressAchievementAnimationState
               animation: Listenable.merge(<Listenable>[
                 _mainController,
                 _progressController,
-                _particleController,
                 _pulseController,
-                _sparkleController,
               ]),
               builder: (BuildContext context, Widget? child) {
                 return FadeTransition(

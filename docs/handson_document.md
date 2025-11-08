@@ -73,19 +73,94 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
   `上位レイヤーは、下位レイヤーに公開インターフェース（状態取得 と 状態更新通知）のみを提供する。`により、  
   一方向の依存関係 ⇒ `上位下達の経路フロー`の実現と厳守を行い、設計方針を満足させます。
 
-ビジネスロジックやデータアクセスの本体は、状態データレイヤに、  
-UIウィジェットでの状態データの取得や更新依頼は、プレゼンテーションレイヤに実装することで **関心事の分離** を図ります。  
+ビジネスロジックやデータアクセスの本体は、`状態データレイヤ`に、  
+UIウィジェットでの状態データの取得や更新依頼は、`プレゼンテーションレイヤ`に実装することで **関心事の分離** を図ります。  
 
 _これにより機能要件の追加や変更における、修正範囲の限定化（最小化）と影響範囲の明確化（依存関係制御）を確保して、  
 保守性や拡張性およびコードの見通し（理解性）を向上させます。_
 
-- 関心事のレイヤ構成  
+#### ハンズオン・プロジェクト全体構成
+```text
+lib
+└── src
+    ├── app                    
+    │   ├── screen
+    │   │   ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │   │   ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
+    │   │   ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
+    │   │   └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
+    │   └── app.dart           アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
+    ├── application
+    │   └── model
+    │       └── application_model.dart  　　　    （ドメインモデルを保持するアプリケーションモデルを定義）
+    ├── domain
+    │   └── model
+    │       ├── reading_books_domain_model.dart  （読書中書籍一覧のドメインモデルを定義）
+    │       ├── reading_books_state_model.dart   （読書中書籍一覧のステートモデルを定義）
+    │       ├── reading_books_value_object.dart  （読書中書籍一覧のValueObjectを定義）
+    │       └── reading_book_value_object.dart   （読書中書籍のValueObjectを定義）
+    ├── fundamental
+    │   ├── model              基底基盤モデル　（状態モデルやValueObjectなどの基盤を定義）
+    │   └── ui_widget          基底ウィジェット（ConsumerStagedWidgetなどを定義）
+    ├── infrastructure
+    ├── presentation
+    │   ├── model    （各ViewModelオブジェクトは、状態種別と状態値を保持し、riverpod providerに保持されます）
+    │   │   ├── default
+    │   │   │   ├── reading_books_view_model.dart               （読書中書籍一覧の状態値を定義）
+    │   │   │   ├── reading_progress_animation_view_model.dart  （読書中書籍進捗の状態種別と状態値を定義）
+    │   │   │   ├── reading_support_animation_view_model.dart   （激励一喝の状態種別と状態値を定義）
+    │   │   │   └── view_model_packages.dart                    （defaultディレクトリ用のバレルファイル）
+    │   │   └── view_model_packages.dart                        （ViewModel全体統括のバレルファイル）
+    │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
+    │   │   ├── default
+    │   │   │   ├── home
+    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット
+    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット
+    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット
+    │   │   │   ├── reading
+    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット
+    │   │   │   ├── reading_graph
+    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット
+    │   │   │   ├── settings
+    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
+    │   │   │   └── widget_packages.dart                        （defaultディレクトリ用のバレルファイル）
+    │   │   ├── challenge
+    │   │   │   ├── home                                        （詳細構成については、completeを参照）
+    │   │   │   ├── reading                                     （詳細構成については、completeを参照）
+    │   │   │   ├── reading_graph                               （詳細構成については、completeを参照）
+    │   │   │   ├── settings                                    （詳細構成については、completeを参照）
+    │   │   │   └── widget_packages.dart                        （challengeディレクトリ用のバレルファイル）
+    │   │   ├── complete
+    │   │   │   ├── home
+    │   │   │   │   ├── components
+    │   │   │   │   │   └── progress                             読書中書籍進捗表示のUIコンポーネントを定義
+    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット
+    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット
+    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット
+    │   │   │   ├── reading
+    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット
+    │   │   │   ├── reading_graph
+    │   │   │   │   ├── components                               読書中書籍進捗グラフ表示のUIコンポーネントを定義
+    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット
+    │   │   │   ├── settings
+    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
+    │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
+    │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
+    │   └── routing                                              GoRouterの Named Routeを定義
+    └── test                                                     Unit test と Widget test を定義
+```
+
+#### ハンズオン・プロジェクトのレイヤ構成
+
+- **関心事のレイヤ構成**  
   - **状態データレイヤ** の依存関係  
     - **[アプリケーションモデル](../lib/src/application/model/application_model.dart)** が、状態データの取得や更新通知のインターフェースを提供するドメインモデルを保持し、  
     - **[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)** が、状態データの値の保持や更新および提供を行うステートモデルを保持して、  
     - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データが依存する DB等の機能を提供するインフラストラクチャを保持して、    
     - **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)）
       [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** が、状態データのカレント値を表す不変データのクラス定義を担い、  
+      - _ValueObject は、  
+        ドメイン駆動設計（DDD）において、値そのものによって同一性を明示する、不変性のオブジェクトです。_  
     - **[インフラストラクチャ](../lib/src/infrastructure/package_info.dart)** が、プラグインによるDB等の基盤機能をラップするオブジェクトを保持します。  
       - _模擬アプリでは、データの永続化などを行いません。  
         このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。  
@@ -135,71 +210,6 @@ _これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** 
 実験的な AI コード生成を行っています。
 
 - 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
-
-#### ハンズオン・プロジェクト全体構成
-```text
-lib
-└── src
-    ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
-    │   └── screen
-    │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
-    │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
-    │       ├── reading_graph  読書中書籍進捗グラフ・ページウィジェット（UIウィジェットのオブジェクトを保持）
-    │       └── settings       設定・ページウィジェット　　　　　　　　（UIウィジェットのオブジェクトを保持）
-    ├── application
-    │   └── model              アプリ・モデル　（ドメインモデルのオブジェクを保持）
-    ├── domain
-    │   └── model              ドメイン・モデル（読書中書籍の状態モデルなどを定義）
-    ├── fundamental
-    │   ├── model              基底基盤モデル　（ValueObjectなどを定義）
-    │   └── ui_widget          基底ウィジェット（ConsumerStagedWidgetなどを定義）
-    ├── infrastructure
-    ├── presentation
-    │   ├── model    （各ViewModelオブジェクトは、状態種別と状態値を保持し、riverpod providerに保持されます）
-    │   │   ├── default
-    │   │   │   ├── reading_books_view_model.dart               （読書中書籍一覧の状態値を定義）
-    │   │   │   ├── reading_progress_animation_view_model.dart  （読書中書籍進捗の状態種別と状態値を定義）
-    │   │   │   ├── reading_support_animation_view_model.dart   （激励一喝の状態種別と状態値を定義）
-    │   │   │   └── view_model_packages.dart    　　　　　　        （defaultディレクトリ用のバレルファイル）
-    │   │   └── view_model_packages.dart　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
-    │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
-    │   │   ├── default
-    │   │   │   ├── home
-    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット
-    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット
-    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット
-    │   │   │   ├── reading
-    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット
-    │   │   │   ├── reading_graph
-    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット
-    │   │   │   ├── settings
-    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
-    │   │   │   └── widget_packages.dart                        （defaultディレクトリ用のバレルファイル）
-    │   │   ├── challenge
-    │   │   │   ├── home                                        （詳細構成については、completeを参照）
-    │   │   │   ├── reading                                     （詳細構成については、completeを参照）
-    │   │   │   ├── reading_graph                               （詳細構成については、completeを参照）
-    │   │   │   ├── settings                                    （詳細構成については、completeを参照）
-    │   │   │   └── widget_packages.dart                        （challengeディレクトリ用のバレルファイル）
-    │   │   ├── complete
-    │   │   │   ├── home
-    │   │   │   │   ├── components
-    │   │   │   │   │   └── progress                             読書中書籍進捗表示のUIコンポーネントを定義
-    │   │   │   │   ├── currently_tasks_widget.dart              読書中書籍一覧表示のUIウィジェット
-    │   │   │   │   ├── reading_progress_animations_widget.dart  読書中書籍進捗表示のUIウィジェット
-    │   │   │   │   └── reading_support_animations_widget.dart   激励一喝表示のUIウィジェット
-    │   │   │   ├── reading
-    │   │   │   │   └── reading_book_widget.dart                 読書中書籍編集表示のUIウィジェット
-    │   │   │   ├── reading_graph
-    │   │   │   │   ├── components                               読書中書籍進捗グラフ表示のUIコンポーネントを定義
-    │   │   │   │   └── reading_book_graph_widget.dart           読書中書籍進捗グラフ表示のUIウィジェット
-    │   │   │   ├── settings
-    │   │   │   │   └── reading_book_settings_widget.dart        設定表示のUIウィジェット
-    │   │   │   └── widget_packages.dart                        （completeディレクトリ用のバレルファイル）
-    │   │   └── widget_packages.dart                            （UIウィジェット全体統括のバレルファイル）
-    │   └── routing                                              GoRouterの Named Routeを定義
-    └── test                                                     Unit test と Widget test を定義
-```
 
 ### 使用プラグイン
 
@@ -325,17 +335,27 @@ Flutter開発環境および Android や iOS 開発のセットアップされ�
 公式サイト [Docs | Flutter](https://docs.flutter.dev/) で説明されている、以下の設定が完了している必要があります。
 
 - Flutterセットアップ  
-  [Set up and test drive Flutter](https://docs.flutter.dev/get-started/quick)
+  _①②のインストール方法があります。_
 
+  - ①基本的なインストール方法  
+    [Install Flutter manually](https://docs.flutter.dev/install/manual)
+
+  - ②VS Code利用のインストール方法  
+    [Set up and test drive Flutter](https://docs.flutter.dev/get-started/quick)
+
+  - _**Flutter SDK バージョンは、最新版にアップグレードしておいてください。**  
+    (2025/11/01 現在) Flutter 3.35.7 channel stable, Dart 3.9.2, DevTools 2.48.0_
+    - _過去のバージョンを使う必要がある場合は、後述の **`fvm`** をご利用ください。_
+
+- モバイル開発セットアップ
   - Android 開発セットアップ  
     [Set up Android development](https://docs.flutter.dev/platform-integration/android/setup)
 
   - iOS 開発セットアップ  
     [Set up iOS development](https://docs.flutter.dev/platform-integration/ios/setup)
 
-  - _**Flutter SDK バージョンは、最新版にアップグレードしておいてください。**  
-    (2025/11/01 現在) Flutter 3.35.7 channel stable, Dart 3.9.2, DevTools 2.48.0_
-    - _過去のバージョンを使う必要がある場合は、後述の **`fvm`** をご利用ください。_
+  - _このハンズオン・プロジェクトは、Flutter Web にも対応しています。  
+    Android や iOS セットアップをされていない場合は、Chromeブラウザを使った動作確認もできます。_
 
 Flutter開発環境(IDE)に `VS Code` や `Android Studio` を使う場合は、  
 公式サイト [Tools | Flutter](https://docs.flutter.dev/tools) で説明されている、以下の設定が完了している必要があります。
@@ -349,14 +369,11 @@ Flutter開発環境(IDE)に `VS Code` や `Android Studio` を使う場合は、
   - VS Code  
     [VS Code | Flutter](https://docs.flutter.dev/tools/vs-code)
 
-_このハンズオン・プロジェクトは、Flutter Web にも対応しています。  
-Android や iOS セットアップをされていない場合は、Chromeブラウザを使った動作確認もできます。_
-
 ### ハンズオン環境構築
 
 ハンズオン・プロジェクトでは、チーム開発のため **[fvm](https://pub.dev/packages/fvm)** を使って Flutter バージョンを統一させており、  
 また [Makefile](../Makefile) を利用して、模擬アプリの起動やユニットテストの実行も簡易化もしていますが、  
-Flutter SDKが最新版（3.35.1 以上）であれば、それらを利用する必要はありません。
+Flutter SDKが開発時最新版の 3.35.1 以上であれば、それらを利用する必要はありません。
 
 **模擬アプリの起動** や **ユニットテストの実行** には、`flutter run` や `flutter test test/` コマンドや、  
 `Android Studio` などの IDE が用意している、アプリ実行やテスト機能をご利用ください。
@@ -514,7 +531,7 @@ _この機能要件は、読書支援アプリが表示されたタイミング�
 ```text
 lib
 └── src
-    ├── app                    アプリ・ウィジェット（ページウィジェットのオブジェクトを保持）
+    ├── app
     │   └── screen
     │       ├── home           読書中書籍一覧・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
     │       ├── reading        読書中書籍編集・ページウィジェット　　　（UIウィジェットのオブジェクトを保持）
@@ -526,8 +543,8 @@ lib
     │   │   │   ├── reading_books_view_model.dart               （読書中書籍一覧の状態値を定義）
     │   │   │   ├── reading_progress_animation_view_model.dart  （読書中書籍進捗の状態種別と状態値を定義）
     │   │   │   ├── reading_support_animation_view_model.dart   （激励一喝の状態種別と状態値を定義）
-    │   │   │   └── view_model_packages.dart    　　　　　　        （defaultディレクトリ用のバレルファイル）
-    │   │   └── view_model_packages.dart　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
+    │   │   │   └── view_model_packages.dart                    （defaultディレクトリ用のバレルファイル）
+    │   │   └── view_model_packages.dart                        （ViewModel全体統括のバレルファイル）
     │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
     │   │   ├── default
     │   │   │   ├── home
@@ -1678,7 +1695,7 @@ unawaited(progressController!.forward());
 `AnimatedSwitcher`は次の引数を利用します。
 - `duration`: トランジションアニメーションの適用時間のミリ秒を指定します。
 - `child`:`AnimatedSwitcher`が監視するウィジェットです。このウィジェットの`key` に渡している値に変化があった場合は「ウィジェットが切り替わった」と判断してアニメーションをトリガーします。今回は完読したかの真偽値がキーです。
-- `child`: 表示メッセージを条件演算子を使って切り替えてます。完読の場合は「完読達成！」メッセージを表示するウィジェットが採用されます。
+- `child`: 表示メッセージを条件演算子を使って切り替えています。完読の場合は「完読達成！」メッセージを表示するウィジェットが採用されます。
 
 **作業対象**
 ```
