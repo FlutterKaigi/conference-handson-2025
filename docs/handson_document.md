@@ -652,7 +652,7 @@ _**ViewModel**は、`default`、`complete`、`challenge`ともに **defaultの�
 ### challenge バレルファイルを有効にする。
 まずはバレルファイルを修正し、虫食いコードが配置されているファイル群をアプリケーション内で参照するようにします。
 
-lib/src/presentation/ui_widget/widget_packages.dart
+[lib/src/presentation/ui_widget/widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart)
 ```dart
 // UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
 
@@ -666,25 +666,33 @@ lib/src/presentation/ui_widget/widget_packages.dart
 export 'challenge/widget_packages.dart';
 ```
 
-現時点のコードは虫食い状態ですが、ビルド可能です。アプリケーションを起動しておくことで後続のハンズオンの動作確認がスムーズになります。
+現時点のコードは虫食い状態ですが、ビルド可能です。  
+アプリケーションを起動しておくことで後続のハンズオンの動作確認がスムーズになります。  
 今のうちに起動しておきましょう。
 
 ### 穴開きカスタムUI コードを完成させる。
-ハンズオン作業はいくつかの工程に分けて進めていきます。各工程ごとに技術の説明と実装を行い、これを繰り返していきます。
+ハンズオン作業はいくつかの工程に分けて進めていきます。  
+各工程ごとに技術の説明と実装を行い、これを繰り返していきます。
 
-実装するコードの完成系が虫食いの近くにコメントで添えてあります。ハンズオンは手入力でご参加いただいても、動作確認を目的にコメント解除で完成系コードを適用しても問題ありません。ご自身の取り組みやすい方法でご参加ください。
+実装するコードの完成系が虫食いの近くにコメントで添えてあります。  
+ハンズオンは手入力でご参加いただいても、動作確認を目的にコメント解除で完成系コードを適用しても問題ありません。  
+ご自身の取り組みやすい方法でご参加ください。
 
 
 ### 装飾を重ねて華やかな演出をする
 このパートでは次の技術要素を扱います。
 
-- `AnimationController`と`Animation`
-- `AnimatedBuilder`と`animation.value`
-- `Stack` と`unawaited`
+- **[AnimationController](https://api.flutter.dev/flutter/animation/AnimationController-class.html)** と **[Animation](https://api.flutter.dev/flutter/animation/Animation-class.html)**
+- **[AnimatedBuilder](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html)** と _(その進捗パラメータの)_ `animation.value`
+- **[Stack](https://api.flutter.dev/flutter/widgets/Stack-class.html)** と **[unawaited](https://api.flutter.dev/flutter/dart-async/unawaited.html)**
 
-`AnimationController`はアニメーションの時間軸を制御し、`Animation`はその進行度を具体的な数値に変換します。`AnimatedBuilder`は、`animation.value`の変化を検知してUIを自動的に再構築し、滑らかな動きを実現します。
+`AnimationController`はアニメーションの時間軸を制御し、`Animation`はその進行度を具体的な数値に変換します。  
+`AnimatedBuilder`は、`animation.value`の変化を検知してUIを自動的に再構築し、滑らかな動きを実現します。
 
-これらの技術を活用して、読書進捗に応じた応援メッセージを画面に表示します。各書籍の読了ページ数を変更し「編集する」ボタンを押下すると一覧ページに遷移します。この時に表示する応援メッセージを華やかにします。現時点では応援メッセージは表示されません。
+各書籍の読了ページ数を変更し「編集する」ボタンを押下すると一覧ページに遷移します。  
+この時、読書進捗率に応じて表示する「応援メッセージ」に、これらの技術を活用して、華やかなアニメーション追加します。
+
+_**現時点では応援メッセージは表示されません**。_
 
 #### ステップ1: アニメーション設定の分割
 - ステップ1からステップ3までの完成例  
