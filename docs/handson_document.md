@@ -73,70 +73,11 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
   `上位レイヤーは、下位レイヤーに公開インターフェース（状態取得 と 状態更新通知）のみを提供する。`により、  
   一方向の依存関係 ⇒ `上位下達の経路フロー`の実現と厳守を行い、設計方針を満足させます。
 
-ビジネスロジックやデータアクセスの本体は、状態データレイヤに、  
-UIウィジェットでの状態データの取得や更新依頼は、プレゼンテーションレイヤに実装することで **関心事の分離** を図ります。  
+ビジネスロジックやデータアクセスの本体は、`状態データレイヤ`に、  
+UIウィジェットでの状態データの取得や更新依頼は、`プレゼンテーションレイヤ`に実装することで **関心事の分離** を図ります。  
 
 _これにより機能要件の追加や変更における、修正範囲の限定化（最小化）と影響範囲の明確化（依存関係制御）を確保して、  
 保守性や拡張性およびコードの見通し（理解性）を向上させます。_
-
-- 関心事のレイヤ構成  
-  - **状態データレイヤ** の依存関係  
-    - **[アプリケーションモデル](../lib/src/application/model/application_model.dart)** が、状態データの取得や更新通知のインターフェースを提供するドメインモデルを保持し、  
-    - **[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)** が、状態データの値の保持や更新および提供を行うステートモデルを保持して、  
-    - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データが依存する DB等の機能を提供するインフラストラクチャを保持して、    
-    - **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)）
-      [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** が、状態データのカレント値を表す不変データのクラス定義を担い、  
-      - _ValueObject は、  
-        ドメイン駆動設計（DDD）において、値そのものによって同一性を明示する、不変性のオブジェクトです。_  
-    - **[インフラストラクチャ](../lib/src/infrastructure/package_info.dart)** が、プラグインによるDB等の基盤機能をラップするオブジェクトを保持します。  
-      - _模擬アプリでは、データの永続化などを行いません。  
-        このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。  
-        これにより読書中書籍一覧が永続化できないので、**ステートモデルの初期化処理では [ダミーデータ](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_books_state_model.dart#L51-L69) を設定** しています。_
-
-  - **プレゼンテーションレイヤ** の依存関係  
-    _ここでは、UIウィジェットを [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) に仮定しています。_  
-    - **ページウィジェット** は、  
-      [ホームページウィジェット](../lib/src/app/screen/home/home_page.dart) が UIウィジェットを保持するので、
-      `状態データ更新とUIウィジェットの表示更新を同期させる`ため、  
-      状態データとViewModelを提供する riverpodプロバイダーの監視と、UIウィジェットへのプロバイダーオブジェクトの  
-      提供を行います。 
-    - **UIウィジェット** は、  
-      [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) であれば、
-      `表示種別に従ったアニメの表示|非表示と書籍名を表示させる`ため、  
-      プロバイダーより提供された状態データ（表示種別）の他に、  
-      [WidgetRef](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/WidgetRef-class.html) を介して
-      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) から表示データ値（読書中書籍情報の書籍名）を取得して描画を行います。  
-    - **プロバイダー** は、  
-      riverpodの [NotifierProvider](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider-class.html) を表し、  
-      [notifierプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider/notifier.html) から
-      対応する [ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) を取得して、
-      [stateプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/AnyNotifier/state.html) の値を状態データとして返します。
-    - **ViewModel** は、  
-      [読書進捗率達成 ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) であれば、
-      状態データとして 読了率 enum を返し、  
-      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) であれば、
-      状態データとして [ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart) を介して  
-      [ステートモデル](../lib/src/domain/model/reading_books_state_model.dart) から
-      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) を取得して返します。
-    - **ValueObject** は、  
-      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) であれば、  
-      読書中書籍情報の一覧として [読書中書籍 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) の一覧を返します。
-
-#### 自動テスト
-**アプリケーションモデル** は、コンストラクタ引数オプションで、  
-ステートモデル（状態データ）をラップする`ドメインモデルのオブジェクトを外部から依存注入できる`ようにしているだけでなく、  
-そして **ドメインモデル** もコンストラクタ引数オプションで、`任意のステータスモデルのオブジェクトを外部から依存注入できる`うえ、  
-さらに **ステートモデル** も、コンストラクタ引数オプションで、`任意のデータ値を外部から依存注入できる`ようにします。  
-
-_これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** や 
-**[Widget test](../test/riverpod_reading_books_widget_test.dart)** で、  
-**任意のデータ値の手動生成とアプリケーションモデルへの依存注入ができる** ようになっています。_
-
-#### AI コード生成実験
-ハンズオンプロジェクトでは、**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、  
-実験的な AI コード生成を行っています。
-
-- 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
 
 #### ハンズオン・プロジェクト全体構成
 ```text
@@ -208,6 +149,67 @@ lib
     │   └── routing                                              GoRouterの Named Routeを定義
     └── test                                                     Unit test と Widget test を定義
 ```
+
+#### ハンズオン・プロジェクトのレイヤ構成
+
+- **関心事のレイヤ構成**  
+  - **状態データレイヤ** の依存関係  
+    - **[アプリケーションモデル](../lib/src/application/model/application_model.dart)** が、状態データの取得や更新通知のインターフェースを提供するドメインモデルを保持し、  
+    - **[ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart)** が、状態データの値の保持や更新および提供を行うステートモデルを保持して、  
+    - **[ステートモデル](../lib/src/domain/model/reading_books_state_model.dart)** が、状態データが依存する DB等の機能を提供するインフラストラクチャを保持して、    
+    - **値オブジェクト（[ValueObject](https://www.google.com/search?q=ValueObject+ddd)）
+      [①](../lib/src/domain/model/reading_book_value_object.dart)[②](../lib/src/domain/model/reading_books_value_object.dart)** が、状態データのカレント値を表す不変データのクラス定義を担い、  
+      - _ValueObject は、  
+        ドメイン駆動設計（DDD）において、値そのものによって同一性を明示する、不変性のオブジェクトです。_  
+    - **[インフラストラクチャ](../lib/src/infrastructure/package_info.dart)** が、プラグインによるDB等の基盤機能をラップするオブジェクトを保持します。  
+      - _模擬アプリでは、データの永続化などを行いません。  
+        このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。  
+        これにより読書中書籍一覧が永続化できないので、**ステートモデルの初期化処理では [ダミーデータ](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_books_state_model.dart#L51-L69) を設定** しています。_
+
+  - **プレゼンテーションレイヤ** の依存関係  
+    _ここでは、UIウィジェットを [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) に仮定しています。_  
+    - **ページウィジェット** は、  
+      [ホームページウィジェット](../lib/src/app/screen/home/home_page.dart) が UIウィジェットを保持するので、
+      `状態データ更新とUIウィジェットの表示更新を同期させる`ため、  
+      状態データとViewModelを提供する riverpodプロバイダーの監視と、UIウィジェットへのプロバイダーオブジェクトの  
+      提供を行います。 
+    - **UIウィジェット** は、  
+      [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) であれば、
+      `表示種別に従ったアニメの表示|非表示と書籍名を表示させる`ため、  
+      プロバイダーより提供された状態データ（表示種別）の他に、  
+      [WidgetRef](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/WidgetRef-class.html) を介して
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) から表示データ値（読書中書籍情報の書籍名）を取得して描画を行います。  
+    - **プロバイダー** は、  
+      riverpodの [NotifierProvider](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider-class.html) を表し、  
+      [notifierプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/NotifierProvider/notifier.html) から
+      対応する [ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) を取得して、
+      [stateプロパティ](https://pub.dev/documentation/flutter_riverpod/latest/flutter_riverpod/AnyNotifier/state.html) の値を状態データとして返します。
+    - **ViewModel** は、  
+      [読書進捗率達成 ViewModel](../lib/src/presentation/model/default/reading_progress_animations_view_model.dart) であれば、
+      状態データとして 読了率 enum を返し、  
+      [読書中書籍一覧 ViewModel](../lib/src/presentation/model/default/reading_books_view_model.dart) であれば、
+      状態データとして [ドメインモデル](../lib/src/domain/model/reading_books_domain_model.dart) を介して  
+      [ステートモデル](../lib/src/domain/model/reading_books_state_model.dart) から
+      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) を取得して返します。
+    - **ValueObject** は、  
+      [読書中書籍一覧 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) であれば、  
+      読書中書籍情報の一覧として [読書中書籍 ValueObject](../lib/src/domain/model/reading_books_value_object.dart) の一覧を返します。
+
+#### 自動テスト
+**アプリケーションモデル** は、コンストラクタ引数オプションで、  
+ステートモデル（状態データ）をラップする`ドメインモデルのオブジェクトを外部から依存注入できる`ようにしているだけでなく、  
+そして **ドメインモデル** もコンストラクタ引数オプションで、`任意のステータスモデルのオブジェクトを外部から依存注入できる`うえ、  
+さらに **ステートモデル** も、コンストラクタ引数オプションで、`任意のデータ値を外部から依存注入できる`ようにします。  
+
+_これにより **[Unit test](../test/riverpod_reading_books_unit_test.dart)** や 
+**[Widget test](../test/riverpod_reading_books_widget_test.dart)** で、  
+**任意のデータ値の手動生成とアプリケーションモデルへの依存注入ができる** ようになっています。_
+
+#### AI コード生成実験
+ハンズオンプロジェクトでは、**[Gemini in Android Studio - Agent mode](https://developer.android.com/studio/gemini/agent-mode)** を取り入れ、  
+実験的な AI コード生成を行っています。
+
+- 【参照】プロンプト設計初期稿 - [Agent 指示プロンプト・メモ](reference_documents/prompt_memo.md)
 
 ### 使用プラグイン
 
