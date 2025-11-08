@@ -543,8 +543,8 @@ lib
     │   │   │   ├── reading_books_view_model.dart               （読書中書籍一覧の状態値を定義）
     │   │   │   ├── reading_progress_animation_view_model.dart  （読書中書籍進捗の状態種別と状態値を定義）
     │   │   │   ├── reading_support_animation_view_model.dart   （激励一喝の状態種別と状態値を定義）
-    │   │   │   └── view_model_packages.dart    　　　　　　        （defaultディレクトリ用のバレルファイル）
-    │   │   └── view_model_packages.dart　　　　　　　　 　　　　　　　（ViewModel全体統括のバレルファイル）
+    │   │   │   └── view_model_packages.dart                    （defaultディレクトリ用のバレルファイル）
+    │   │   └── view_model_packages.dart                        （ViewModel全体統括のバレルファイル）
     │   ├── ui_widget（各UIウィジェットは、状態種別や状態値更新と連動するため providerオブジェクトをバインドします）
     │   │   ├── default
     │   │   │   ├── home
