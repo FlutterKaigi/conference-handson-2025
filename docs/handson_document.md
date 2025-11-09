@@ -54,14 +54,15 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
 
 ## 模擬アプリとしてのハンズオン・プロジェクト
 
-ここから **'<a href="#%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0ui-%E3%82%92%E5%AE%8C%E6%88%90%E3%81%95%E3%81%9B%E3%82%88%E3%81%86">カスタムUI を完成させよう。</a>'** に至るまでの章立て(注①)は、  
+ここから **'<a href="#%E3%82%AB%E3%82%B9%E3%82%BF%E3%83%A0ui-%E3%82%92%E5%AE%8C%E6%88%90%E3%81%95%E3%81%9B%E3%82%88%E3%81%86">カスタムUI を完成させよう。</a>'①** に至るまでの章立て(注)は、  
 **「模擬アプリが、『単なる動作するウィジェットカタログ』とならないようにする。」** ための説明章です。  
 
 _どのようにして`模擬アプリを作っていったのか`や、  
 どのようにして`ベースUIとカスタムUIを切り替え/差し替え可能にしているのか`や、  
 模擬アプリに、`どのような機能があって操作できる`のか、`どのような制限があるのか`の確認にご利用ください。_  
 
-- _注①：ハンズオン作業を行うために必要な、**'<a href="#%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86">ハンズオン開発環境を作ろう。</a>'** を除きます。_
+- _注：ハンズオン作業を行うために必要な、**'<a href="#%E3%83%8F%E3%83%B3%E3%82%BA%E3%82%AA%E3%83%B3%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E3%82%92%E4%BD%9C%E3%82%8D%E3%81%86">ハンズオン開発環境を作ろう。</a>'②** を除きます。_
+- _①②のリンクを開く際は、リンクURLが指定フラグメント・ベースになるため、右クリックして別ウィンドウでお開きください。_
 
 ### 全体方針
 1. 実装詳細を理解してもらうためコード生成を使わない。  
@@ -789,7 +790,7 @@ void _initializeAnimations() {
 }
 ```
 
-----------
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
 `_backgroundController`変数は、グラデーションを5秒間かけて変化させるよう、時間の定義をしています。`duration`を5000ミリ秒（5秒）に設定しています。
 
@@ -904,6 +905,8 @@ Widget build(BuildContext context) {
 }
 ```
 
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
 グラデーション半径と色の透明度を固定値ではなく、`Animation`オブジェクトから受け取れる動的な値に変更します。
 
 - **修正後**  
@@ -985,6 +988,8 @@ child: Stack(
     // ),
 ```
 
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
 Stackにグラデーションのウィジェットを配置します。アニメーションに必要な`Animation`オブジェクトや色情報を引数で渡しています。
 
 - **修正後**  
@@ -1017,6 +1022,8 @@ Future<void> _startAnimationSequence() async {
   // unawaited(_backgroundController.repeat(reverse: true));
 ```
 
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
 `unawaited`により非同期で、_backgroundControllerが制御する背景グラデーションのアニメーションを開始します。
 
 - **修正後**  
@@ -1030,8 +1037,6 @@ Future<void> _startAnimationSequence() async {
 
 - ステップ1からステップ3までの完成例（再掲）  
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
-
-
 
 なお、本サンプルアプリでは、応援メッセージは10秒後に自動的に非表示になるよう実装しています。
 
@@ -1087,6 +1092,8 @@ child: Stack(
     //   secondaryColor: widget.secondaryColor,
     // ),
 ```
+
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
 コメントの解除で波紋アニメーションを配置します。`Stack`を使うことでウィジェットを重ねて表示できます。
 
@@ -1198,6 +1205,8 @@ child: Stack(
     // ),
 ```
 
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
 `Listenable.merge`で複数のコントローラーを監視します。これにより複数のアニメーション値の変化を組み合わせた表現が可能になります。
 
 このステップでは`Listenable.merge`が主題です。ハンズオン負荷軽減のため`builder`以下はコメント解除にて実装してください。
@@ -1296,6 +1305,8 @@ Widget _buildMainContent() {
         // ),
 ```
 
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
 `ProgressCircleWidget`に複数の`Animation`を渡して配置します。これらの`Animation`の値をウィジェット内で利用します。
 
 - **修正後**  
@@ -1335,7 +1346,20 @@ Widget _buildMainContent() {
 
 1. `Transform.scale` を使い円全体を拡大・縮小します。`scale`プロパティに`double`値を指定することで、子ウィジェットのサイズを変更します。ここに`pulseAnimation.value`を適用し、アニメーションの進行に合わせて拡大率を変更させます。`pulseAnimation.value`は0.95〜1.15を往復するよう設定をしています。
     
-    - **修正後**  
+    - **修正前**  
+    **ProgressCircleWidget.build()** 
+    [L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70)
+    ```dart
+     return Transform.scale(
+       // ステップ3: アニメーションの値で動きを実現①
+       scale: 1,
+       // scale: pulseAnimation.value,
+       child: Container(
+    ```
+
+    <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
+   - **修正後**  
       **ProgressCircleWidget.build()** 
       [L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70)
     ```dart
@@ -1347,6 +1371,22 @@ Widget _buildMainContent() {
     
 2. `BoxShadow` を使い影とグロー効果（柔らかい光）を表現します。`blurRadius`プロパティは影のぼかしの度合いを表し、ここに`pulseAnimation.value` を適用し、アニメーションの進行に合わせて影のぼかしを変更させます。
     1. １つ目の`BoxShadow`では影を表現しており、円の拡大縮小に合わせて影のぼかしを連動させます。
+        
+        - **修正前**  
+          **ProgressCircleWidget.build()** 
+          [L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94)
+        ```dart
+        BoxShadow(
+          color: primaryColor.withValues(alpha: 0.6),
+          // ステップ3: アニメーションの値で動きを実現②
+          blurRadius: 25 + 1 * 10,
+          // blurRadius: 25 + pulseAnimation.value * 10,
+          spreadRadius: 8,
+          offset: const Offset(0, 5),
+        ),
+        ```
+        
+        <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
         
         - **修正後**  
           **ProgressCircleWidget.build()** 
@@ -1363,6 +1403,21 @@ Widget _buildMainContent() {
         
     2. ２つ目の`BoxShadow`ではグロー効果を表現しており、円の拡大縮小に合わせて別の色のぼかしを連動させます。
         
+        - **修正前**  
+          **ProgressCircleWidget.build()** 
+          [L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104)
+        ```dart
+        BoxShadow(
+          color: secondaryColor.withValues(alpha: 0.4),
+          // ステップ3: アニメーションの値で動きを実現③
+          blurRadius: 40 + 1 * 15,
+          // blurRadius: 40 + pulseAnimation.value * 15,
+          spreadRadius: 15,
+        ),
+        ```
+        
+        <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+        
         - **修正後**  
           **ProgressCircleWidget.build()** 
           [L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104)
@@ -1376,6 +1431,25 @@ Widget _buildMainContent() {
         ```
         
 3. 進捗円弧を滑らかに表示します。`_Enhanced3DProgressPainter`は進捗に応じた円弧を描画する独自のクラスです。ここに渡す進捗は`progressAnimation.value`を使って計算するようにします。時間経過に応じた進捗を渡し、滑らかな進捗円弧を`drawArc` で描画します。
+    
+    - **修正前**  
+      **ProgressCircleWidget.build()** 
+      [L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129)
+    ```dart
+    child: CustomPaint(
+      painter: _Enhanced3DProgressPainter(
+        // ステップ3: アニメーションの値で動きを実現④
+        progress: 1 * (progressPercent / 100),
+        // progress:
+        //     progressAnimation.value * (progressPercent / 100),
+        primaryColor: primaryColor,
+        secondaryColor: secondaryColor,
+        pulseValue: pulseAnimation.value,
+      ),
+    ),
+    ```
+    
+    <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
     
     - **修正後**  
       **ProgressCircleWidget.build()** 
@@ -1394,6 +1468,27 @@ Widget _buildMainContent() {
     ```
     
 4. `Transform.scale` を使って円の中心に表示するアイコンを拡大・縮小します。円の拡大縮小でも利用している`pulseAnimation.value`を計算に組み込むことで円の動きに合わせて拡大率を変更させます。
+    
+    - **修正前**  
+      **ProgressCircleWidget.build()** 
+      [L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
+    ```dart
+    Transform.scale(
+      // ステップ3: アニメーションの値で動きを実現⑤
+      scale: 1.0 + 1 * 0.2,
+      // scale: 1.0 + pulseAnimation.value * 0.2,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: Colors.white.withValues(alpha: 0.2),
+        ),
+        child: Icon(icon, size: 32, color: Colors.white),
+      ),
+    ),
+    ```
+    
+    <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
     
     - **修正後**  
       **ProgressCircleWidget.build()** 
@@ -1439,7 +1534,7 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
-`xxxAnimation.value`とする部分を全て固定値１にしています。
+アニメーションの動きに緩急を与える部分を全て固定値１にしています。
 
 - **修正前**  
 **ProgressCircleWidget.build()** 
@@ -1448,8 +1543,101 @@ lib
 [L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104),
 [L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129),
 [L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
+```dart
+@override
+Widget build(BuildContext context) {
+  return AnimatedBuilder(
+    animation: pulseAnimation,
+    builder: (BuildContext context, Widget? child) {
+      return Transform.scale(
+        // ステップ3: アニメーションの値で動きを実現①
+        scale: 1,
+        // scale: pulseAnimation.value,
+        child: Container(
+          width: 140,
+          height: 140,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            // RadialGradientで立体感を演出
+            gradient: RadialGradient(
+              colors: <Color>[
+                Colors.white.withValues(alpha: 0.9), // 中心部は明るく
+                primaryColor, // メインカラー
+                secondaryColor, // セカンダリカラー
+                primaryColor.withValues(alpha: 0.8), // 外側は少し暗く
+              ],
+              stops: const <double>[0, 0.3, 0.7, 1],
+            ),
+            // 複数のBoxShadowで立体感と光の表現
+            boxShadow: <BoxShadow>[
+              // メインシャドウ（影の部分）
+              BoxShadow(
+                color: primaryColor.withValues(alpha: 0.6),
+                // ステップ3: アニメーションの値で動きを実現②
+                blurRadius: 25 + 1 * 10,
+                // blurRadius: 25 + pulseAnimation.value * 10,
+                spreadRadius: 8,
+                offset: const Offset(0, 5), // 下方向に影
+              ),
+              // グローエフェクト（光の部分）
+              BoxShadow(
+                color: secondaryColor.withValues(alpha: 0.4),
+                // ステップ3: アニメーションの値で動きを実現③
+                blurRadius: 40 + 1 * 15,
+                // blurRadius: 40 + pulseAnimation.value * 15,
+                spreadRadius: 15,
+              ),
+              // 内側のハイライト（上からの光）
+              BoxShadow(
+                color: Colors.white.withValues(alpha: 0.3),
+                blurRadius: 10,
+                spreadRadius: -5,
+                offset: const Offset(-3, -3), // 左上からのハイライト
+              ),
+            ],
+          ),
+          child: Stack(
+            alignment: Alignment.center,
+            children: <Widget>[
+              // 3Dライクなプログレス表示
+              SizedBox(
+                width: 110,
+                height: 110,
+                child: CustomPaint(
+                  painter: _Enhanced3DProgressPainter(
+                    // ステップ3: アニメーションの値で動きを実現④
+                    progress: 1 * (progressPercent / 100),
+                    // progress:
+                    //     progressAnimation.value * (progressPercent / 100),
+                    primaryColor: primaryColor,
+                    secondaryColor: secondaryColor,
+                    pulseValue: pulseAnimation.value,
+                  ),
+                ),
+              ),
 
-固定値１にしていた修正前のコードはコメントアウトで残しています。コードが長いため、一部省略して掲載しています。
+              // アイコン（パルスと連動してサイズ変化）
+              Transform.scale(
+                // ステップ3: アニメーションの値で動きを実現⑤
+                scale: 1.0 + 1 * 0.2,
+                // scale: 1.0 + pulseAnimation.value * 0.2,
+                child: Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: Colors.white.withValues(alpha: 0.2),
+                  ),
+                  child: Icon(icon, size: 32, color: Colors.white),
+                ),
+              ),
+```
+
+_コードが長いため、一部省略して掲載しています。_
+
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
+固定値１にしていた修正前のコードはコメントアウトで残して、  
+アニメーションの動きに緩急を与えるため、固定値１の指定を`xxxAnimation.value`に修正します。
 
 - **修正後**  
 **ProgressCircleWidget.build()** 
@@ -1568,6 +1756,29 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
+- **修正前**  
+**_ProgressAchievementAnimationState.build()** 
+[L434-L439](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L434-L439),
+[L442-L447](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L442-L447)
+```dart
+// ステップ4: 【おまけ】他のアニメーションを重ねる①
+// if (widget.isCompletion)
+//   ParticleEffectWidget(
+//     animation: _particleController,
+//     color: widget.secondaryColor,
+//   ),
+
+// ステップ4: 【おまけ】他のアニメーションを重ねる②
+// SparkleEffectWidget(
+//   animation: _sparkleAnimation,
+//   primaryColor: widget.primaryColor,
+//   secondaryColor: widget.secondaryColor,
+//   isCompletion: widget.isCompletion,
+// ),
+```
+
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
 粒子が広がる`ParticleEffectWidget`と星が飛び散る`SparkleEffectWidget`を有効化し、演出を重ねます。
 
 - **修正後**  
@@ -1646,6 +1857,8 @@ lib
 // });
 ```
 
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
 円グラフの描画を行う`animateToProgress`メソッドの呼び出しを含むコールバック関数を遅延実行に指定します。
 
 - **修正後**  
@@ -1693,6 +1906,8 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 // progressController!.reset();
 // unawaited(progressController!.forward());
 ```
+
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
 緩急のある動きを定義し、非同期でアニメーションの実行を指示します。
 
@@ -1778,6 +1993,8 @@ return Container(
 );
 ```
 
+<img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
+
 完読時には残ページ数ではなく専用メッセージを表示するように`AnimatedSwitcher`で切り替えます。
 `isCompleted`の値は円グラフが1周すると`true`に変わります。その時に、自動的に表示内容が「残り〇ページ」を示す`ProgressContent`から、「完読達成！」を示す`CompletionContent`へと切り替わります。変化は600ミリ秒かけてトランジションアニメーションを適用します。
 
@@ -1857,11 +2074,11 @@ export 'complete/widget_packages.dart';
 ### 完成版カスタムUI の機能要件表現を確認する。
 
 ui_widget/completeディレクトリ配下の 完成形カスタムUIのコードを参照させるようにしたので、  
-**①[ベースUI を使った機能要件表現を確認する](#%E3%83%99%E3%83%BC%E3%82%B9ui-%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%9F%E6%A9%9F%E8%83%BD%E8%A6%81%E4%BB%B6%E8%A1%A8%E7%8F%BE%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B)** 章の
+**'<a href="#%E3%83%99%E3%83%BC%E3%82%B9ui-%E3%82%92%E4%BD%BF%E3%81%A3%E3%81%9F%E6%A9%9F%E8%83%BD%E8%A6%81%E4%BB%B6%E8%A1%A8%E7%8F%BE%E3%82%92%E7%A2%BA%E8%AA%8D%E3%81%99%E3%82%8B">ベースUI を使った機能要件表現を確認する</a>'①** 章の
 **読了したページの更新に伴う進捗率達成メッセージを表示する。** と  
 **読了したページの進捗をグラフで表示する。** での操作を参考に、完成形カスタムUIでのデザインやアニメーション表現を確認してください。
 
-- _①リンクURLが「ベースUIを使った機能要件表現を確認する」ベースになるため、右クリックして別ウィンドウでお開きください。_
+- _①のリンクを開く際は、リンクURLが指定フラグメント・ベースになるため、右クリックして別ウィンドウでお開きください。_
 - _アニメーション表現は、読了したページ数が 規定の進捗率（10%, 50%, 80%, 100%）に初めて達したときに変化しますので、  
   機能要件表現を確認をされる際は、これら規定の進捗率を考慮しながら読了ページを更新してみてください。_
 
