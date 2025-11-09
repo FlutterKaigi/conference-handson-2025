@@ -697,7 +697,7 @@ export 'challenge/widget_packages.dart';
 アプリケーションを起動しておくことで後続のハンズオンの動作確認がスムーズになります。  
 今のうちに起動しておきましょう。
 
-### 穴開きカスタムUI コードを完成させる。
+## 穴開きカスタムUI コードを完成させる。
 ハンズオン作業はいくつかの工程に分けて進めていきます。  
 各工程ごとに技術の説明と実装を行い、これを繰り返していきます。
 
@@ -713,7 +713,7 @@ export 'challenge/widget_packages.dart';
 - **[AnimatedBuilder](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html)** と _(その進捗パラメータの)_ `animation.value`
 - **[Stack](https://api.flutter.dev/flutter/widgets/Stack-class.html)** と **[unawaited](https://api.flutter.dev/flutter/dart-async/unawaited.html)**
 
-`AnimationController`はアニメーションの時間軸を制御し、`Animation`はその進行度を具体的な数値に変換します。  
+`AnimationController`はアニメーションの進行を制御し、`Animation`はその変化の進行パターンを指定します。  
 `AnimatedBuilder`は、`animation.value`の変化を検知してUIを自動的に再構築し、滑らかな動きを実現します。
 
 各書籍の読了ページ数を変更し「編集する」ボタンを押下すると一覧ページに遷移します。  
@@ -725,21 +725,29 @@ _**現時点では応援メッセージは表示されません**。_
 - ステップ1からステップ3までの完成例  
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
 
-ステップ1では、アニメーションを実現するための「再生時間」と「動き」の設定を用意します。このステップでは二つのオブジェクトを用意します。
+ステップ1では、アニメーションを実現するための「再生時間」と「動き」の設定を行います。  
+このステップでは、次の二つのオブジェクトに設定を追加します。
 
-`AnimationController` はアニメーションの再生時間（`duration`）を制御する役割を担います。コンストラクタでは以下の設定をしています。
+- `AnimationController` に、アニメーションの再生時間（`duration`）の設定を追加します。  
+  コンストラクタでは、以下の設定を行っています。
 
-- `duration`: アニメーションの再生時間を指定します。`Duration`クラスを使って時間を指定します。
-- `vsync`: アニメーションを画面のリフレッシュレートと同期させるための引数です。これにより、アニメーションがカクつかずに、非常に滑らかに見えます。
+  - `duration`: アニメーションの再生時間を指定します。  
+    _`Duration`クラスを使って時間長を指定します。_
+  - `vsync`: アニメーションを画面のリフレッシュレートと同期させるための引数です。  
+     _これにより、アニメーションがカクつかせず、滑らかに変化させます。_
 
-`Animation` は`AnimationController`の進行度を、具体的な動きのパターンに変換します。ここで使用する`CurvedAnimation`はアニメーションの進行に緩急をつけ滑らかな動きにできます。コンストラクタでは以下の設定をしています。
+- `Animation` は`AnimationController`の進行度の変化を、具体的な動きのパターンに変換します。  
+  ここで使用する **[CurvedAnimation](https://api.flutter.dev/flutter/animation/CurvedAnimation-class.html)** はアニメーションの進行に緩急や正転|逆転をつけた動きを行わせるものです。  
+  コンストラクタでは以下の設定を行っています。
 
-- `parent`: アニメーションの「時間軸」となる`AnimationController`を指定します。
-- `curve`: アニメーションの動きを指定します。`Curves.easeInOutSine`は、滑らかに加速して減速するパターンです。これを繰り返すことにより、背景のグラデーションが穏やかに膨張・収縮、を繰り返す波のような効果を生み出します。
-  - _**[Curves](https://api.flutter.dev/flutter/animation/Curves-class.html)クラス** は、「だんだん早く」や「徐々に遅く」など、複数のアニメーションの緩急変化パターンを提供するコンテナです。_
-    - _**[Curves.easeInOutSine](https://api.flutter.dev/flutter/animation/Curves/easeInOutSine-constant.html)** は、ゆっくりと始まり、加速し、ゆっくりと終わるアニメーション・パターンを表します。_
+  - `parent`: アニメーションの「時間軸」となる`AnimationController`を指定します。
+  - `curve`: アニメーションの動きを指定します。`Curves.easeInOutSine`は、滑らかに加速して減速するパターンです。  
+     これを繰り返すことにより、背景のグラデーションが穏やかに膨張・収縮、を繰り返す波のような効果を生み出します。
+    - _**[Curves](https://api.flutter.dev/flutter/animation/Curves-class.html)クラス** は、「だんだん早く」や「徐々に遅く」など、複数のアニメーションの緩急変化パターンを提供するコンテナです。_
+      - _**[Curves.easeInOutSine](https://api.flutter.dev/flutter/animation/Curves/easeInOutSine-constant.html)** は、ゆっくりと始まり、加速し、ゆっくりと終わるアニメーション・パターンを表します。_
 
-このステップではグラデーションのアニメーション表現を代表して実装します。このグラデーションは重ねる装飾のうちの一番下地になります。他の表現についても同様の構造でオブジェクトを用意しています。
+このステップではグラデーションのアニメーション表現を代表して実装します。  
+このグラデーションは重ねる装飾のうちの一番下地になります。他の表現についても同様の構造でオブジェクトを用意しています。
 
 では、グラデーション表現の`AnimationController`と`Animation`を用意します。
 
@@ -1040,7 +1048,7 @@ Future<void> _startAnimationSequence() async {
 
 なお、本サンプルアプリでは、応援メッセージは10秒後に自動的に非表示になるよう実装しています。
 
-### ステップ4: ２層目の波紋
+#### ステップ4: ２層目の波紋
 - ステップ4の完成例  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffect.png" />
 
@@ -1818,7 +1826,7 @@ SparkleEffectWidget(
 
 アニメーションの遅延実行やトランジションを適用したウィジェット切り替えを学習します。
 
-### ステップ1: 画面表示完了後に円グラフ描画を予約
+#### ステップ1: 画面表示完了後に円グラフ描画を予約
 - ステップ1からステップ2までの完成例  
   <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
 
@@ -1873,7 +1881,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
 具体的な描画を行う`animateToProgress`メソッドは後続のステップで確認します。
 
-### ステップ2: 進捗に合わせた終了値を指定し開始
+#### ステップ2: 進捗に合わせた終了値を指定し開始
 前ステップでコールバックに指定した`animateToProgress` メソッド内を修正します。
 
 `Tween`で動作範囲と動きを定義し、`unawaited`内でアニメーションを実行します。
@@ -1937,7 +1945,7 @@ unawaited(progressController!.forward());
 
 
 
-### ステップ3: 完読時には専用メッセージ表示
+#### ステップ3: 完読時には専用メッセージ表示
 - ステップ3の完成例  
   <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
 
