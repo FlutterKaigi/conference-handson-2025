@@ -661,7 +661,24 @@ _**ViewModel**は、`default`、`complete`、`challenge`ともに **defaultの�
 ### challenge バレルファイルを有効にする。
 まずはバレルファイルを修正し、虫食いコードが配置されているファイル群をアプリケーション内で参照するようにします。
 
-[lib/src/presentation/ui_widget/widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart)
+```text
+lib/src/presentation/ui_widget/widget_packages.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── default
+│   │   │   ├── challenge
+│   │   │   ├── complete
+│   │   │   └── widget_packages.dart  // これが対象（UIウィジェット全体統括のバレルファイル）
+```
+
 ```dart
 // UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
 
