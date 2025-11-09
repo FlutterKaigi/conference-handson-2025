@@ -789,6 +789,8 @@ void _initializeAnimations() {
 }
 ```
 
+----------
+
 `_backgroundController`変数は、グラデーションを5秒間かけて変化させるよう、時間の定義をしています。`duration`を5000ミリ秒（5秒）に設定しています。
 
 `_backgroundAnimation`変数は、グラデーションの動きを滑らかに加速と減速を繰り返す波のような動きにするための動きの定義をしています。`CurvedAnimation`を使い、時間軸（`_backgroundController`）に`Curves.easeInOutSine`という緩急パターンを適用しています。
