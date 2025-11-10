@@ -763,11 +763,12 @@ export 'challenge/widget_packages.dart';
   　  
   まずは`中心から外側に向かって波紋のようにグラデーションが拡がる`、**メッセージ背景装飾のアニメーション** を追加します。
 
-このパートでは次の技術要素を扱います。
+このパートでは次の Flutter API を扱います。
 
-- **[AnimationController](https://api.flutter.dev/flutter/animation/AnimationController-class.html)** と **[Animation](https://api.flutter.dev/flutter/animation/Animation-class.html)**
-- **[AnimatedBuilder](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html)** と _(その進捗パラメータの)_ `animation.value`
-- **[Stack](https://api.flutter.dev/flutter/widgets/Stack-class.html)** と **[unawaited](https://api.flutter.dev/flutter/dart-async/unawaited.html)**
+- **[AnimationController class](https://api.flutter.dev/flutter/animation/AnimationController-class.html)** と **[Animation class](https://api.flutter.dev/flutter/animation/Animation-class.html)**
+  - _**[Animation class](https://api.flutter.dev/flutter/animation/Animation-class.html)** は、**[AnimationController class](https://api.flutter.dev/flutter/animation/AnimationController-class.html)** の super class であることに注意してください。_
+- **[AnimatedBuilder ウィジェット](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html)** と、その進捗パラメータ animation の値 ⇒ **[Animation.value](https://api.flutter.dev/flutter/animation/Animation/value.html)**
+- **[Stack ウィジェット](https://api.flutter.dev/flutter/widgets/Stack-class.html)** と **[unawaited() function](https://api.flutter.dev/flutter/dart-async/unawaited.html)**
 
 `AnimationController`はアニメーションの進行を制御し、`Animation`はその変化の進行パターンを指定します。  
 `AnimatedBuilder`は、`animation.value`の変化を検知してUIを自動的に再構築し、滑らかな動きを実現します。
@@ -1203,10 +1204,12 @@ child: Stack(
   　  
   次は、`メッセージが飛び出し、イメージが拡大縮小してお祝いする`、**メッセージと装飾のアニメーション** を追加します。
 
-このパートでは次の技術要素を扱います。
+このパートでは次の Flutter API を扱います。
 
-- `Listenable.merge`
-- 複数の`animation.value`
+- **[Listenable.merge(Iterable<Listenable?> listenables) named constructor](https://api.flutter.dev/flutter/foundation/Listenable-class.html)** と、複数の **[Animation.value](https://api.flutter.dev/flutter/animation/Animation/value.html)**  
+  - _**[Listenable class](https://api.flutter.dev/flutter/foundation/Listenable-class.html)** は、**[Animation class](https://api.flutter.dev/flutter/animation/Animation-class.html)** の super class です。_  
+    _つまり、**[AnimatedBuilder ウィジェット](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html)** の進捗パラメータ animation の値 ⇒ **[Animation.value](https://api.flutter.dev/flutter/animation/Animation/value.html)** が、複数束ねられることを示します。_  
+    _また、**[Animation class](https://api.flutter.dev/flutter/animation/Animation-class.html)** は、**[AnimationController class](https://api.flutter.dev/flutter/animation/AnimationController-class.html)** の super class であることにも注意してください。_
 
 複数のアニメーションを協調させて複雑な演出を作り出します。Listenable.mergeを使うことで、複数の独立したAnimationControllerを一つにまとめて監視できます。
 
@@ -1891,11 +1894,12 @@ SparkleEffectWidget(
   グラフ表示画面を開けば、読書進捗率が円グラフで表示されます。  
   ここに`読書進捗率までグラフが進んでいき、読了ならお祝いメセージを追加する`、**円グラフのアニメーション** を追加しましょう。
 
-このパートでは次の技術要素を扱います。
+このパートでは次の Flutter API を扱います。
 
-- `WidgetsBinding.instance.addPostFrameCallback`
-- `Tween`
-- `AnimatedSwitcher`
+- **[WidgetsBinding.instance.addPostFrameCallback() method](https://api.flutter.dev/flutter/scheduler/SchedulerBinding/addPostFrameCallback.html)**
+  - _**[WidgetsBinding.instance](https://api.flutter.dev/flutter/widgets/WidgetsBinding/instance.html)** は、**[WidgetsBinding mixin](https://api.flutter.dev/flutter/widgets/WidgetsBinding-mixin.html)** の Static property です。_  
+- **[Tween class](https://api.flutter.dev/flutter/animation/Tween-class.html)**
+- **[AnimatedSwitcher class](https://api.flutter.dev/flutter/widgets/AnimatedSwitcher-class.html)**
 
 アニメーションの遅延実行やトランジションを適用したウィジェット切り替えを学習します。
 
