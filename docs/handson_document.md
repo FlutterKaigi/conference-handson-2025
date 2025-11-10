@@ -1155,10 +1155,18 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
 - ステップ4の完成例  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffect.png" />
 
-アニメーションを重ねていることを体験するために、もう一つ重ねます。前ステップの放射グラデーションの上に波紋の表現を重ねます。
+アニメーションを重ねて表示していることを体験するために、もう一つ重ねます。  
+前ステップの放射グラデーションの上に波紋の表現を重ねましょう。
 
-波紋を表すウィジェットは作成済みです。canvas.drawCircleでの円の描画を、繰り返し処理で0.25秒ずらして4回行っています。詳細はファイルの内容をご確認ください。
-（lib/src/presentation/ui_widget/enhanced_progress/home/components/ripple_effect_widget.dart）
+波紋を表す **[RippleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart)** は作成済みです。  
+このウィジェットの中では、**[CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html)** から派生させた
+**[_RippleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart#L65-L129)** で、
+**[CustomPainter.paint() method](https://api.flutter.dev/flutter/rendering/CustomPainter/paint.html)** をオーバライドして、  
+**[Canvas](https://api.flutter.dev/flutter/dart-ui/Canvas-class.html)** に
+**[Canvas .drawCircle() method](https://api.flutter.dev/flutter/dart-ui/Canvas/drawCircle.html)** を使い、円の描画を 0.25秒づつずらして 4回行なうことで波紋を表現します。
+
+詳細はファイルの内容をご確認ください。  
+_[lib/src/presentation/ui_widget/enhanced_progress/home/components/ripple_effect_widget.dart](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart)_
 
 ```
 lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart
@@ -1206,7 +1214,8 @@ child: Stack(
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-コメントの解除で波紋アニメーションを配置します。`Stack`を使うことでウィジェットを重ねて表示できます。
+コメントの解除で波紋アニメーションを配置します。  
+`Stack`ウィジェットを使うことで、子ウィジェットをレイヤのように重ねて表示させています。
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
@@ -1234,10 +1243,20 @@ child: Stack(
 - ステップ4の完成例（再掲）  
   <img width="300" alt="波紋の表示" src="./images/hands-on_RippleEffect.png" />
 
-#### まとめ
-この工程では、アニメーションの「時間」と「動き」を、`AnimationController`と`Animation`で個別に定義することで、複雑な演出を構造的に管理できることを確認しました。`AnimatedBuilder`ではアニメーション値に応じて変化する表現を実装しました。さらに、`Stack`ウィジェットを利用して、複数の装飾を重ねて華やかなアニメーションを実装する手法を学びました。
+_hot restart を実行してから、ここまでの作業を再確認しましょう。_
 
-この章で学んだ技術は、単一のアニメーションを実装するだけでなく、複数のアニメーションを協調させてリッチな表現を作り出すための基礎となります。
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
+
+#### まとめ
+この工程では、アニメーションの「再生時間」と「動き」を  
+`AnimationController`と`Animation`で個別に定義することで、複雑な演出を構造的に管理できることを確認しました。  
+
+また`AnimatedBuilder`と`Animation`を使って、アニメーション値に応じて変化するUI表現ができること、  
+さらに、`Stack`ウィジェットを利用して、複数の装飾を重ねて華やかなアニメーションを実装する手法を学びました。
+
+この章で学んだ技術は、単一のアニメーションを実装するだけでなく、  
+複数のアニメーションを協調させてリッチな表現を作り出すための基礎となります。
 
 <br/>
 <br/>
