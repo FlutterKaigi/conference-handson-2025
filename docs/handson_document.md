@@ -434,7 +434,25 @@ Android Studio なら `pubspec.yaml`を開き、画面上部にある `Pub get` 
 
 UIウィジェット・パッケージ全体のバレルファイル [lib/src/presentation/ui_widget/widget_packages.dart](../lib/src/presentation/ui_widget/widget_packages.dart) を開いて、  
 デフォルト設定(`default/widget_packages.dart`)の export 行のコメントアウトのみを外して、  
-他の export 行がコメントアウトされていることを確認します。  
+他の export 行がコメントアウトされていることを確認しましょう。  
+
+```text
+lib/src/presentation/ui_widget/widget_packages.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── default
+│   │   │   ├── challenge
+│   │   │   ├── complete
+│   │   │   └── widget_packages.dart  // これが対象（UIウィジェット全体統括のバレルファイル）
+```
 
 ```dart
 // UI Widget として各ページごとの任意のパッケージをインポートできるようにするバレルパッケージです。
