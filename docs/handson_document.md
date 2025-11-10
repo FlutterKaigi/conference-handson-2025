@@ -800,7 +800,8 @@ _**現時点では応援メッセージは表示されません**。_
   - `parent`: アニメーションの「時間軸」となる`AnimationController`を指定します。
   - `curve`: アニメーションの動きを指定します。`Curves.easeInOutSine`は、滑らかに加速して減速するパターンです。  
      これを繰り返すことにより、背景のグラデーションが穏やかに膨張・収縮、を繰り返す波のような効果を生み出します。
-    - _**[Curves](https://api.flutter.dev/flutter/animation/Curves-class.html)クラス** は、「だんだん早く」や「徐々に遅く」など、複数のアニメーションの緩急変化パターンを提供するコンテナです。_
+    - _**[Curves](https://api.flutter.dev/flutter/animation/Curves-class.html)クラス** は、「だんだん早く」や「徐々に遅く」など、  
+      複数のアニメーションの緩急変化パターンを提供するコンテナです。_
       - _**[Curves.easeInOutSine](https://api.flutter.dev/flutter/animation/Curves/easeInOutSine-constant.html)** は、ゆっくりと始まり、加速し、ゆっくりと終わるアニメーション・パターンを表します。_
 
 このステップではグラデーションのアニメーション表現を代表して実装します。  
@@ -1208,7 +1209,7 @@ child: Stack(
 
 - **[Listenable.merge(Iterable<Listenable?> listenables) named constructor](https://api.flutter.dev/flutter/foundation/Listenable-class.html)** と、複数の **[Animation.value](https://api.flutter.dev/flutter/animation/Animation/value.html)**  
   - _**[Listenable class](https://api.flutter.dev/flutter/foundation/Listenable-class.html)** は、**[Animation class](https://api.flutter.dev/flutter/animation/Animation-class.html)** の super class です。_  
-    _つまり、**[AnimatedBuilder ウィジェット](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html)** の進捗パラメータ animation の値 ⇒ **[Animation.value](https://api.flutter.dev/flutter/animation/Animation/value.html)** が、複数束ねられることを示します。_  
+    _つまり、**[AnimatedBuilder ウィジェット](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html)** の進捗パラメータ animation の値 ⇒ **[Animation.value](https://api.flutter.dev/flutter/animation/Animation/value.html)** は、複数束ねられます。_  
     _また、**[Animation class](https://api.flutter.dev/flutter/animation/Animation-class.html)** は、**[AnimationController class](https://api.flutter.dev/flutter/animation/AnimationController-class.html)** の super class であることにも注意してください。_
 
 複数のアニメーションを協調させて複雑な演出を作り出します。Listenable.mergeを使うことで、複数の独立したAnimationControllerを一つにまとめて監視できます。
@@ -1899,7 +1900,7 @@ SparkleEffectWidget(
 - **[WidgetsBinding.instance.addPostFrameCallback() method](https://api.flutter.dev/flutter/scheduler/SchedulerBinding/addPostFrameCallback.html)**
   - _**[WidgetsBinding.instance](https://api.flutter.dev/flutter/widgets/WidgetsBinding/instance.html)** は、**[WidgetsBinding mixin](https://api.flutter.dev/flutter/widgets/WidgetsBinding-mixin.html)** の Static property です。_  
 - **[Tween class](https://api.flutter.dev/flutter/animation/Tween-class.html)**
-- **[AnimatedSwitcher class](https://api.flutter.dev/flutter/widgets/AnimatedSwitcher-class.html)**
+- **[AnimatedSwitcher ウィジェット](https://api.flutter.dev/flutter/widgets/AnimatedSwitcher-class.html)**
 
 アニメーションの遅延実行やトランジションを適用したウィジェット切り替えを学習します。
 
@@ -1956,7 +1957,8 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 });
 ```
 
-具体的な描画を行う`animateToProgress`メソッドは後続のステップで確認します。
+具体的な描画を行う`animateToProgress`メソッドは後続のステップで確認します。  
+_(注) controllers 変数には、後述の [DonutAnimationState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L97-L197) クラスのオブジェクトが入ります。_
 
 #### ステップ2: 進捗に合わせた終了値を指定し開始
 前ステップでコールバックに指定した`animateToProgress` メソッド内を修正します。
