@@ -22,6 +22,8 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
 - 読了ページ更新の進捗達成リアクション表現（ベース表現） ⇒ アニメーション＋デコレーション表現  
   <img width="800" alt="読了ページ進捗達成のリアクション" src="./images/hands-on_sample_2.png" />
 
+<br/>
+<br/>
 
 ----------
 
@@ -49,6 +51,9 @@ FlutterKaigi 2025 ハンズオンのメインテーマは、 **「魅力のあ�
 **導入するプラグインは、基本的な状態管理や画面遷移に留める** ことなどの制限をいれました。
 
 - 【参照】アプリ要件初期稿 - [ハンズオン・アプリ要件](reference_documents/requirements.md)
+
+<br/>
+<br/>
 
 ----------
 
@@ -288,6 +293,9 @@ riverpod を使う上で不変データの保証が必須です。
     **[build](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L44-L78)** メソッドの state パラメータに内部状態オブジェクトが提供されるので、  
     各メソッドごとに必要な処理を実装します。  
 
+<br/>
+<br/>
+
 ----------
 
 ## ベースUI とカスタムUI のコードや見栄えの比較ができる工夫
@@ -330,6 +338,9 @@ _今回の使い方では、default、complete、challenge 何れかの UIコー
 `評価値ごとの UIウィジェット構築定義 ⇒ build関数を複数定義できるようにする` **build 〜 build19 メソッド** を追加しています。
 
 - 【参照】プロジェクトでの実装解説 - **[ConsumerStagedWidget 解説ガイド](fundamental/ui_widget/consumer_staged_widget_guide.md)**
+
+<br/>
+<br/>
 
 ----------
 
@@ -405,6 +416,9 @@ Android Studio なら `pubspec.yaml`を開き、画面上部にある `Pub get` 
 - _何らかの理由で、`fvm` をお使いの場合は、`fvm flutter pub get`をご利用ください。_
 - _Android Studio をお使いで、Markdownファイルのコードフェンス・エラー([画像](./images/hands-on_setup_show_problems_in_code_fences.png))が気になる場合は、  
   赤い電球アイコンを右クリックして `hide problems in code fences fix`([画像](./images/hands-on_setup_hide_problems_in_code_fences.png))をお試しください。_
+
+<br/>
+<br/>
 
 ----------
 
@@ -650,6 +664,9 @@ _**ViewModel**は、`default`、`complete`、`challenge`ともに **defaultの�
     - **defaultディレクトリ用**  
       [view_model_packages.dart](../lib/src/presentation/model/default/view_model_packages.dart)
 
+<br/>
+<br/>
+
 ----------
 
 ## カスタムUI を完成させよう。
@@ -696,6 +713,9 @@ export 'challenge/widget_packages.dart';
 現時点のコードは虫食い状態ですが、ビルド可能です。  
 アプリケーションを起動しておくことで後続のハンズオンの動作確認がスムーズになります。  
 今のうちに起動しておきましょう。
+
+<br/>
+<br/>
 
 ## 穴開きカスタムUI コードを完成させる。
 ハンズオン作業はいくつかの工程に分けて進めていきます。  
@@ -1154,6 +1174,8 @@ child: Stack(
 
 この章で学んだ技術は、単一のアニメーションを実装するだけでなく、複数のアニメーションを協調させてリッチな表現を作り出すための基礎となります。
 
+<br/>
+<br/>
 
 ### 複数アニメーションを連動させる
 
@@ -1842,6 +1864,9 @@ SparkleEffectWidget(
 
 この工程では、複数のアニメーションを協調させて複雑な演出を作り出すための技術を学習しました。`Listenable.merge`を使うことで、複数の独立した`AnimationController`を一つにまとめました。これにより、異なる時間軸で動く複数のアニメーションを監視できます。これらの技術を用いることで、よりリッチで説得力のあるUIを構築できるようになります。
 
+<br/>
+<br/>
+
 ### 遅延実行とトランジションで滑らかな表現をする
 
 - **この章でやること**  
@@ -2060,7 +2085,6 @@ return AnimatedSwitcher(
 #### まとめ
 アニメーションの遅延実行やトランジションアニメーションを適用したウィジェット切り替えを学習しました。これらの技術を通じて、単なる静的なUIではなく、ユーザーの操作に自然に応答する動的なUIを構築できます。
 
-
 ### 完成させたカスタムUI の機能要件表現を確認する。
 ハンズオンお疲れ様でした。これでカスタムUIの虫食い実装は完了です。作成したカスタムUIの要件について改めて確認します。
 
@@ -2073,6 +2097,8 @@ return AnimatedSwitcher(
 
 シンプルなUIでも機能は満たせますが、アニメーションを実装することで、ユーザーへの印象づけや動機づけなど、体験の向上ができます。
 
+<br/>
+<br/>
 
 ----------
 
@@ -2168,6 +2194,9 @@ lib
   - **読書中書籍進捗グラフ表示**  
     [インタラクティブドーナツチャート実装ガイド](./ui_widget/interactive_donut_chart_guide.md)
 
+<br/>
+<br/>
+
 ----------
 
 ## 宿題
@@ -2178,8 +2207,14 @@ lib
 この機能要件については、ハンズオンチームでのカスタムUI実装をしていないので、  
 これは、ハンズオンに参加してくださったみなさまへの宿題とさせていただきます。
 
+<br/>
+<br/>
+
 ----------
 
 ## お疲れ様でした。
+
+<br/>
+<br/>
 
 ----------
