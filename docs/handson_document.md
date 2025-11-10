@@ -915,12 +915,12 @@ void _initializeAnimations() {
     _`Alignment.center`で中央に配置しています。_
   - `radius:` グラデーションが広がる半径を定義します。  
     _今回は`0.8 + animation.value * 0.4`の式を指定して、  
-    `animation.value`（`0.0`から`1.0`に変化）に応じて、  
-    グラデーションの半径が`0.8`から`1.2`まで動的に変化するようにします。_
+    `animation.value`（`0.0`から`1.0`に変化）に応じて、グラデーションの半径が`0.8`から`1.2`まで動的に変化するようにします。_
   - `colors:` グラデーションを構成する色のリストです。  
     _リストの最初の色がグラデーションの中心の色となり、リストの最後の色がグラデーションの最も外側の色になります。  
     グラデーションに使用する4つの色と、それぞれの透明度を定義します。  
-    今回は`withValues`を使用して `Color` オブジェクトの値を`animation.value`の値の変化に応じて動的に変化するようにしています。  
+    今回は`withValues`を使用して、  
+    `Color` オブジェクトの値を`animation.value`の値の変化に応じて動的に変化するようにしています。  
     `primaryColor.withValues(alpha: 0.15 + animation.value * 0.1)` のように `alpha`（透明度）を動的に変更しています。_
   - `stops:` `colors` リストの色がグラデーションのどの位置（中心からの距離）で変化するかを制御します。  
     _要素の順番は`colors` の順番に対応しています。 0.0が中心に近く、1.0は最も外側になります。  
@@ -1040,10 +1040,11 @@ Widget build(BuildContext context) {
 
 #### ステップ3: アニメーションの配置と実行
 ここまでに作成した放射グラデーションを画面表示します。  
-`Stack` の`children` に前のステップで操作した [DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80) を配置します。
+`Stack` の`children` に前のステップで操作した [DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80) を配置しましょう。
 
-`DynamicBackgroundWidget`のコンストラクタ引数 animation に、アニメーションの値をもつ`Animation`オブジェクトと色を渡しています。  
-_なお、build()で進捗に応じて適用する色を変えるように作り込まれています。_
+`DynamicBackgroundWidget`のコンストラクタ引数 animation には、  
+バックグラウンド用アニメーションの進捗変化をもつ`Animation`オブジェクトと色を渡します。  
+_なお、`DynamicBackgroundWidget.build()`では、進捗に応じて適用する色を変えるように作り込まれています。_
 
 **作業対象**
 ```
@@ -1086,7 +1087,7 @@ child: Stack(
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
 Stackウィジェットにグラデーションのウィジェットを配置します。  
-アニメーションに必要な`Animation`オブジェクトや色情報を引数で渡しています。
+バックグラウンド用アニメーションに必要な`Animation`オブジェクトや色情報を引数で渡しています。
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
@@ -1113,7 +1114,7 @@ _`unawaited()` は、非同期処理の完了を待たなくてよい場合に�
 ここでは、`_backgroundController.repeat` が返す`Future` を待つ必要がないことを明示的に示しています。_
 
 アニメーションは、コントローラーが持つメソッドを実行することで開始されます。  
-今回は`_backgroundController.repeat(reverse: true)`を実行し、繰り返し再生させます。
+今回は`_backgroundController.repeat(reverse: true)`を実行し、繰り返し再生させています。
 
 修正前はグラデーションの開始がコメントアウトされています。
 
@@ -1128,7 +1129,7 @@ Future<void> _startAnimationSequence() async {
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-`unawaited`により非同期で、_backgroundControllerが制御する背景グラデーションのアニメーションを開始します。
+`unawaited`により非同期で、`_backgroundController`が制御する背景グラデーションのアニメーションを開始します。
 
 - **修正後**  
 **_ProgressAchievementAnimationState._startAnimationSequence()** 
