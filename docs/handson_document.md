@@ -1820,7 +1820,6 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
 
 <img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
 <br/>
-<br/>
 
 #### ステップ4: 【おまけ】他のアニメーションを重ねる
 - ステップ4の完成例  
