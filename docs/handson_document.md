@@ -951,7 +951,7 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
-この **[DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80)** では、
+この **[DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80)** では、  
 [BoxDecoration](https://api.flutter.dev/flutter/painting/BoxDecoration-class.html) のコンストラクタ引数 `gradient`に
 [RadialGradient](https://api.flutter.dev/flutter/painting/RadialGradient-class.html) を指定して放射状グラデーションを描画させ、  
 `Stack`の子ウィジェットが配置される場所を制御する [Positioned ウィジェット](https://api.flutter.dev/flutter/widgets/Positioned-class.html) を使って放射状グラデーションを配置します。
