@@ -889,7 +889,8 @@ void _initializeAnimations() {
 ```
 
 #### ステップ2: １層目の放射グラデーション
-重ね合わせるアニメーション表現の一番下層の放射グラデーションを用意します。このグラデーションは時間の進行に合わせて動くようにします。
+重ね合わせるアニメーション表現の一番下層の放射グラデーションを用意します。  
+このグラデーションは時間の進行に合わせて動くようにします。
 
 `AnimatedBuilder` はアニメーションを動かすための再描画機能です。引数で指定した`animation`の値が変化するたびに、`builder`メソッド内のUIを再構築します。引数は次の通りです。
 
@@ -1335,7 +1336,7 @@ child: Stack(
 
 このステップでは応援メッセージの中心を担うウィジェットを配置します。技術的に新しいものはないので、コメントを解除して実装します。
 
-ここで配置する`ProgressCircleWidget`には、引数で２つの`Animation`オブジェクトを渡しています。これらの`_progressAnimation`と`_pulseAnimation` は前ステップの`Listenable.merge`で監視している`_progressController`と`_pulseController`を利用しています。
+ここで配置する **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** には、引数で２つの`Animation`オブジェクトを渡しています。これらの`_progressAnimation`と`_pulseAnimation` は前ステップの`Listenable.merge`で監視している`_progressController`と`_pulseController`を利用しています。
 
 次のステップでは、`ProgressCircleWidget`の中で各アニメーション値を利用した実装をします。
 
@@ -1419,7 +1420,31 @@ Widget _buildMainContent() {
 - ステップ3の完成例  
   <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
 
-応援メッセージを表す`ProgressCircleWidget`内で、アニメーション値を利用して動きをつけます。
+**作業対象**
+```
+lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart
+
+lib
+├── src
+│   ├── app
+│   ├── application
+│   ├── domain
+│   ├── fundamental
+│   ├── infrastructure
+│   ├── presentation
+│   │   ├── ui_widget
+│   │   │   ├── challenge
+│   │   │   │   ├── home
+│   │   │   │   │   ├── components
+│   │   │   │   │   │   └── progress
+│   │   │   │   │   │       ├── progress_circle_widget.dart  // これが対象
+│   │   │   │   │   │       ├── その他ウィジェット
+│   │   │   │   │   ├── currently_tasks_widget.dart
+│   │   │   │   │   ├── reading_progress_animations_widget.dart
+│   │   │   │   │   └── reading_support_animations_widget.dart
+```
+
+応援メッセージを表す **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** 内で、アニメーション値を利用して動きをつけます。
 
 コード内の５箇所でアニメーション値を利用しています。
 
@@ -1587,35 +1612,19 @@ Widget _buildMainContent() {
     ),
     ```
 
-ここまで見てきたようにProgressCircleWidget内では、pulseAnimation.valueやprogressAnimation.valueといった複数の異なるアニメーション値を利用し、１つの応援メッセージの中に異なる時間軸で管理された値を取り入れた複雑な動きのアニメーションを実現しています。
+<br/>
 
-**作業対象**
-```
-lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart
+**ステップ３ 修正箇所確認**
 
-lib
-├── src
-│   ├── app
-│   ├── application
-│   ├── domain
-│   ├── fundamental
-│   ├── infrastructure
-│   ├── presentation
-│   │   ├── ui_widget
-│   │   │   ├── challenge
-│   │   │   │   ├── home
-│   │   │   │   │   ├── components
-│   │   │   │   │   │   └── progress
-│   │   │   │   │   │       ├── progress_circle_widget.dart  // これが対象
-│   │   │   │   │   │       ├── その他ウィジェット
-│   │   │   │   │   ├── currently_tasks_widget.dart
-│   │   │   │   │   ├── reading_progress_animations_widget.dart
-│   │   │   │   │   └── reading_support_animations_widget.dart
-```
+ここまで見てきたように`ProgressCircleWidget`内では、  
+pulseAnimation.value や progressAnimation.value といった複数の異なるアニメーション値を利用し、  
+１つの応援メッセージの中に異なる時間軸で管理された値を取り入れた複雑な動きのアニメーションを実現しています。
 
-アニメーションの動きに緩急を与える部分を全て固定値１にしています。
+それでは、ステップ３で `ProgressCircleWidget.build()` に入れた５ヶ所の修正を一括して確認しましょう。
 
-- **修正前**  
+修正前は、アニメーションの動きに緩急を与える部分を全て固定値１にしていました。
+
+- **修正前：全ステップ**  
 **ProgressCircleWidget.build()** 
 [L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70),
 [L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94),
@@ -1716,9 +1725,9 @@ _コードが長いため、一部省略して掲載しています。_
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
 固定値１にしていた修正前のコードはコメントアウトで残して、  
-アニメーションの動きに緩急を与えるため、固定値１の指定を`xxxAnimation.value`に修正します。
+アニメーションの動きに緩急を与えるため、固定値１の指定を`xxxAnimation.value`に修正しています。
 
-- **修正後**  
+- **修正後：全ステップ**  
 **ProgressCircleWidget.build()** 
 [L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70),
 [L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94),
@@ -1803,9 +1812,15 @@ Widget build(BuildContext context) {
   <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
 
 
+_hot restart を実行してから、ここまでの作業を再確認しましょう。_
+
 異なる時間軸の動きが協調して、中央の円が大きくなったり小さくなったり、進捗プログレスもじわっと描画されようになりました。
 
 これで応援アニメーションの主要な実装は完了しました。次のステップでは、おまけとして他のアニメーション表現を重ねます。
+
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
+<br/>
 
 #### ステップ4: 【おまけ】他のアニメーションを重ねる
 - ステップ4の完成例  
