@@ -861,7 +861,7 @@ void _initializeAnimations() {
 `_backgroundController`変数は、グラデーションを5秒間かけて変化させるよう、時間の定義をしています。  
 `duration`に、5000ミリ秒（5秒）を設定しています。
 
-`_backgroundAnimation`変数は、グラデーションの動きを滑らかに加速と減速を繰り返す波のような動きにするための動きの定義をしています。  
+`_backgroundAnimation`変数は、グラデーションに滑らかに加速と減速を繰り返す波のような表現にするための動きの定義をしています。  
 `CurvedAnimation`を使い、時間軸（`_backgroundController`）に`Curves.easeInOutSine`という緩急パターンを適用しています。
 
 - **修正後**  
@@ -888,24 +888,45 @@ void _initializeAnimations() {
  }
 ```
 
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
+
 #### ステップ2: １層目の放射グラデーション
-重ね合わせるアニメーション表現の一番下層の放射グラデーションを用意します。  
+重ね合わせるアニメーション表現の一番下層の放射グラデーションを追加しましょう。  
 このグラデーションは時間の進行に合わせて動くようにします。
 
-`AnimatedBuilder` はアニメーションを動かすための再描画機能です。引数で指定した`animation`の値が変化するたびに、`builder`メソッド内のUIを再構築します。引数は次の通りです。
+- [AnimatedBuilder](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html) はアニメーションを動かすための再描画機能です。  
+  引数で指定した`animation`の値が変化するたびに、`builder`メソッド内のUIを再構築します。  
+  引数は次の通りです。
 
-- `animation`: アニメーションの変化を監視する`Animation`オブジェクトを指定します。前ステップで作成した`Animation`オブジェクトを指定します。`Animation`オブジェクトは時間軸の変化に合わせて0.0から1.0まで変化する値を持ちます。
-- `builder`: `Animation`オブジェクトの現在の値（`animation.value`）を使ってUIを構築するための関数です。Animationの値が更新されるたびに呼び出されUIを再構築します。ここで放射グラデーションの表現を組み立てます。
+  - `animation`: アニメーションの変化を監視する`Animation`オブジェクトを指定します。  
+    _前ステップで作成した`Animation`オブジェクトを指定します。_  
+    _`Animation`オブジェクトは時間軸の変化に合わせて 0.0 から 1.0 まで範囲で変化する値を持ちます。_
 
-放射グラデーションは`RadialGradient` を使います。中心から外側に向かって色が放射状に変化するグラデーションを定義できます。引数は次の通りです。
+  - `builder`: `Animation`オブジェクトの現在の値（`animation.value`）を使ってUIを構築するための関数を指定します。  
+    _Animationの値が更新されるたびに呼び出され UIを再構築します。_  
+    _ここで放射グラデーションの表現を組み立てます。_
 
-- `center:` グラデーションの中心点を指定します。`Alignment.center`で中央に配置しています。
-- `radius:` グラデーションが広がる半径を定義します。今回は`0.8 + animation.value * 0.4`の式を指定し、`animation.value`（`0.0`から`1.0`に変化）に応じてグラデーションの半径が`0.8`から`1.2`まで動的に変化します。
-- `colors:` グラデーションを構成する色のリストです。リストの最初の色がグラデーションの中心の色となり、リストの最後の色がグラデーションの最も外側の色になります。
-グラデーションに使用する4つの色と、それぞれの透明度を定義します。今回は`witchValues`を使用し`Color` オブジェクトの値を`animation.value`の値の変化に応じて動的に変化するようにしています。`primaryColor.withValues(alpha: 0.15 + animation.value * 0.1)`のように`alpha` （透明度）を動的に変更しています。
-- `stops:` `colors` リストの色がグラデーションのどの位置（中心からの距離）で変化するかを制御します。要素の順番は`colors` の順番に対応しています。0.0が中心に近く、1.0は最も外側です。それぞれの色が、グラデーションのどこで完全にその色になるかを指定します。
+- 放射グラデーションには、[RadialGradient](https://api.flutter.dev/flutter/painting/RadialGradient-class.html) を使います。  
+  中心から外側に向かって色が放射状に変化するグラデーションを定義できます。  
+  引数は次の通りです。
 
-では、グラデーションの動きをanimation.valueで動的な表現にしていきましょう。
+  - `center:` グラデーションの中心点を指定します。  
+    _`Alignment.center`で中央に配置しています。_
+  - `radius:` グラデーションが広がる半径を定義します。  
+    _今回は`0.8 + animation.value * 0.4`の式を指定して、  
+    `animation.value`（`0.0`から`1.0`に変化）に応じて、  
+    グラデーションの半径が`0.8`から`1.2`まで動的に変化するようにします。_
+  - `colors:` グラデーションを構成する色のリストです。  
+    _リストの最初の色がグラデーションの中心の色となり、リストの最後の色がグラデーションの最も外側の色になります。  
+    グラデーションに使用する4つの色と、それぞれの透明度を定義します。  
+    今回は`withValues`を使用して `Color` オブジェクトの値を`animation.value`の値の変化に応じて動的に変化するようにしています。  
+    `primaryColor.withValues(alpha: 0.15 + animation.value * 0.1)` のように `alpha`（透明度）を動的に変更しています。_
+  - `stops:` `colors` リストの色がグラデーションのどの位置（中心からの距離）で変化するかを制御します。  
+    _要素の順番は`colors` の順番に対応しています。 0.0が中心に近く、1.0は最も外側になります。  
+    それぞれの色が、グラデーションのどこで完全にその色になるかを指定します。_
+
+それでは、グラデーションの動きを animation.value を使って動的な表現にしていきましょう。
 
 **作業対象**
 ```
@@ -931,7 +952,7 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
-修正前の時点ではanimation.valueとする部分が全て固定値１になっています。
+修正前の時点では、animation.value とする部分が全て固定値１になっています。
 
 - **修正前**  
 **DynamicBackgroundWidget.build()** 
@@ -1014,10 +1035,15 @@ Widget build(BuildContext context) {
 }
 ```
 
-#### ステップ3: アニメーションの配置と実行
-ここまでに作成した放射グラデーションを画面表示します。`Stack` の`children` に前のステップで操作した`DynamicBackgroundWidget`を配置します。
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
 
-`DynamicBackgroundWidget`の引数にはアニメーションの値をもつ`Animation`オブジェクトと色を渡しています。なお、進捗に応じて適用する色を変えるように裏側で作り込まれています。
+#### ステップ3: アニメーションの配置と実行
+ここまでに作成した放射グラデーションを画面表示します。  
+`Stack` の`children` に前のステップで操作した [DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80) を配置します。
+
+`DynamicBackgroundWidget`のコンストラクタ引数 animation に、アニメーションの値をもつ`Animation`オブジェクトと色を渡しています。  
+_なお、build()で進捗に応じて適用する色を変えるように作り込まれています。_
 
 **作業対象**
 ```
@@ -1059,7 +1085,8 @@ child: Stack(
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-Stackにグラデーションのウィジェットを配置します。アニメーションに必要な`Animation`オブジェクトや色情報を引数で渡しています。
+Stackウィジェットにグラデーションのウィジェットを配置します。  
+アニメーションに必要な`Animation`オブジェクトや色情報を引数で渡しています。
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
@@ -1076,9 +1103,17 @@ child: Stack(
     ),
 ```
 
-続いて`unawaited()`を使ってアニメーションを開始します。アニメーションはアプリの動作を阻害しないよう非同期で動作します。`unawaited()` は、非同期処理の完了を待たない場合に発生する警告を抑制するために使用されます。ここでは、`_backgroundController.repeat` が返す`Future` を待つ必要がないことを明示的に示しています。
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
 
-コントローラーが持つメソッドを実行することで開始されます。今回は`_backgroundController.repeat(reverse: true)`を実行し、繰り返し再生させます。
+続いて`unawaited()`を使ってアニメーションを開始します。  
+これによりアニメーションは、アプリの動作と平行に非同期で動作します。  
+
+_`unawaited()` は、非同期処理の完了を待たなくてよい場合に使用されます。  
+ここでは、`_backgroundController.repeat` が返す`Future` を待つ必要がないことを明示的に示しています。_
+
+アニメーションは、コントローラーが持つメソッドを実行することで開始されます。  
+今回は`_backgroundController.repeat(reverse: true)`を実行し、繰り返し再生させます。
 
 修正前はグラデーションの開始がコメントアウトされています。
 
@@ -1107,7 +1142,12 @@ Future<void> _startAnimationSequence() async {
 - ステップ1からステップ3までの完成例（再掲）  
   <img width="300" alt="グラデーションのみ表示" src="./images/hands-on_DynamicBackground.png" />
 
+_hot restart を実行してから、ここまでの作業を再確認しましょう。_
+
 なお、本サンプルアプリでは、応援メッセージは10秒後に自動的に非表示になるよう実装しています。
+
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
 
 #### ステップ4: ２層目の波紋
 - ステップ4の完成例  
