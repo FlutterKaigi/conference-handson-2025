@@ -807,7 +807,7 @@ _**現時点では応援メッセージは表示されません**。_
 このステップではグラデーションのアニメーション表現を代表して実装します。  
 このグラデーションは重ねる装飾のうちの一番下地になります。他の表現についても同様の構造でオブジェクトを用意しています。
 
-では、グラデーション表現の`AnimationController`と`Animation`を用意します。
+それでは、グラデーション表現の`AnimationController`と`Animation`を用意しましょう。
 
 **作業対象**
 ```
@@ -858,9 +858,11 @@ void _initializeAnimations() {
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-`_backgroundController`変数は、グラデーションを5秒間かけて変化させるよう、時間の定義をしています。`duration`を5000ミリ秒（5秒）に設定しています。
+`_backgroundController`変数は、グラデーションを5秒間かけて変化させるよう、時間の定義をしています。  
+`duration`に、5000ミリ秒（5秒）を設定しています。
 
-`_backgroundAnimation`変数は、グラデーションの動きを滑らかに加速と減速を繰り返す波のような動きにするための動きの定義をしています。`CurvedAnimation`を使い、時間軸（`_backgroundController`）に`Curves.easeInOutSine`という緩急パターンを適用しています。
+`_backgroundAnimation`変数は、グラデーションの動きを滑らかに加速と減速を繰り返す波のような動きにするための動きの定義をしています。  
+`CurvedAnimation`を使い、時間軸（`_backgroundController`）に`Curves.easeInOutSine`という緩急パターンを適用しています。
 
 - **修正後**  
 **_ProgressAchievementAnimationState._initializeAnimations()** 
