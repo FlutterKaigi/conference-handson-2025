@@ -1164,7 +1164,7 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
 前ステップの放射グラデーションの上に波紋の表現を重ねましょう。
 
 波紋を表す **[RippleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart)** は作成済みです。  
-このウィジェットの中では、**[CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html)** から派生させた
+ウィジェットの中では、**[CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html)** から派生させた
 **[_RippleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart#L65-L129)** で、
 **[CustomPainter.paint() method](https://api.flutter.dev/flutter/rendering/CustomPainter/paint.html)** をオーバライドして、  
 **[Canvas](https://api.flutter.dev/flutter/dart-ui/Canvas-class.html)** に
