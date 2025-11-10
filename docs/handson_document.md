@@ -904,8 +904,7 @@ void _initializeAnimations() {
     _`Animation`オブジェクトは時間軸の変化に合わせて 0.0 から 1.0 まで範囲で変化する値を持ちます。_
 
   - `builder`: `Animation`オブジェクトの現在の値（`animation.value`）を使ってUIを構築するための関数を指定します。  
-    _Animationの値が更新されるたびに呼び出され UIを再構築します。_  
-    _ここで放射グラデーションの表現を組み立てます。_
+    _Animationの値が更新されるたびに呼び出され UIを再構築します。 ここで放射グラデーションの表現を組み立てます。_
 
 - 放射グラデーションには、[RadialGradient](https://api.flutter.dev/flutter/painting/RadialGradient-class.html) を使います。  
   中心から外側に向かって色が放射状に変化するグラデーションを定義できます。  
@@ -1107,14 +1106,14 @@ child: Stack(
 <img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
 <br/>
 
-続いて`unawaited()`を使ってアニメーションを開始します。  
-これによりアニメーションは、アプリの動作と平行に非同期で動作します。  
+続いて`unawaited()`を使ってアニメーションを開始させます。  
+これによりアニメーションは、アプリの動作と平行に非同期で動作するようになります。  
 
-_`unawaited()` は、非同期処理の完了を待たなくてよい場合に使用されます。  
-ここでは、`_backgroundController.repeat` が返す`Future` を待つ必要がないことを明示的に示しています。_
+_`unawaited()` は、非同期処理の完了を待たなくてよい場合に使用します。  
+ここでは、`_backgroundController.repeat` が返す`Future` を待つ必要がないことを明示的に示します。_
 
 アニメーションは、コントローラーが持つメソッドを実行することで開始されます。  
-今回は`_backgroundController.repeat(reverse: true)`を実行し、繰り返し再生させています。
+今回は`_backgroundController.repeat(reverse: true)`を実行し、繰り返し再生させます。
 
 修正前はグラデーションの開始がコメントアウトされています。
 
@@ -1129,7 +1128,7 @@ Future<void> _startAnimationSequence() async {
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-`unawaited`により非同期で、`_backgroundController`が制御する背景グラデーションのアニメーションを開始します。
+`unawaited`により非同期で、`_backgroundController`が制御する背景グラデーションのアニメーションを開始させます。
 
 - **修正後**  
 **_ProgressAchievementAnimationState._startAnimationSequence()** 
