@@ -2150,7 +2150,8 @@ _**現時点では読書進捗率円グラフは表示されません**。_
 今回の進捗率円グラフは画面表示の瞬間に描画するのではなく、  
 背景のグレーの円を含む画面表示の完了後に、それをなぞる様に遅延実行させて、進捗率円グラフのアニメーションを表現しましょう。
 
-**[WidgetsBinding.instance.addPostFrameCallback() method](https://api.flutter.dev/flutter/scheduler/SchedulerBinding/addPostFrameCallback.html)** は、画面の描画が完了した直後に一度だけ実行されるコールバック関数を登録します。  
+**[WidgetsBinding.instance.addPostFrameCallback() method](https://api.flutter.dev/flutter/scheduler/SchedulerBinding/addPostFrameCallback.html)** は、  
+画面の描画が完了した直後に一度だけ実行されるコールバック関数を登録します。  
 このメソッドを使い、コールバック関数に進捗率円グラフを描画する処理関数を渡すことで、画面表示後にアニメーションを行わせます。
 
 ```
@@ -2185,7 +2186,8 @@ lib
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-円グラフの描画を行う`controllers.animateToProgress()`メソッドを画面描画の完了直後に実行されるコールバック関数でコールされるようにします。
+円グラフの描画を行う`controllers.animateToProgress()`メソッドを  
+画面描画の完了直後に実行されるコールバック関数でコールされるようにします。
 - _`controllers`変数には、後述の [DonutAnimationState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L97-L197) クラスのオブジェクトが入ります。_  
   - _このため `controllers.animateToProgress()`は、[DonutAnimationState.animateToProgress()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L150-L177) メソッドがコールされます。_
 
@@ -2213,15 +2215,17 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 - **[Tween class](https://api.flutter.dev/flutter/animation/Tween-class.html)** は、  
   アニメーション表現のために変化するデータの値範囲とアニメーション進捗率の 0.0 〜 1.0 を対応させるマッパーです。  
   `Tween`により、`AnimationController`のアニメーション値から、対応するアニメーション表現のデータ値が取得できるようになります。
-  - ここでは円グラフの描画が、以前の読書進捗値（`animatedProgress`）から、新しい読書進捗率（`progress`）まで変化するよう設定します。
+  - ここでは円グラフの描画が、  
+    以前の読書進捗値（`animatedProgress`）から、新しい読書進捗率（`progress`）まで変化するよう設定します。
   - さらに`progressController`を時間軸として使用し、[Curves.easeOutCubic](https://api.flutter.dev/flutter/animation/Curves/easeInOutCubic-constant.html) という緩急変化を適用します。  
-  - これらにより円グラフ描画のアニメーションが、以前の値から滑らかに加速したあと徐々に減速し、自然な動きで新しい値に到達します。  
+  - これらにより円グラフ描画のアニメーションが、  
+    以前の値から滑らかに加速したあと徐々に減速し、自然な動きで新しい値に到達します。  
     _ただし今回の実装では、円グラフ画面が破棄されるため `animatedProgress` が保持されず、常に0% 始まりとなります。_
 
 - **[AnimationController](https://api.flutter.dev/flutter/animation/AnimationController-class.html).[reset()](https://api.flutter.dev/flutter/animation/AnimationController/reset.html)** を表す`progressController!.reset()`は、  
   アニメーションを停止し(進行中の場合)、初期状態にリセットする命令です。新しいアニメーションを開始できるようにします。
 
-- **[unawaited() function](https://api.flutter.dev/flutter/dart-async/unawaited.html)** で`progressController!.forward()`を実行させることにより、
+- **[unawaited() function](https://api.flutter.dev/flutter/dart-async/unawaited.html)** で`progressController!.forward()`を実行させることにより、  
   新しいアニメーションを非同期平行に実行させます。
 
 修正前は、アニメーションの定義とアニメーションの実行はコメントアウトされています。
