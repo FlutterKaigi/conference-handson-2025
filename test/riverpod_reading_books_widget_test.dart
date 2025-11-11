@@ -7,8 +7,6 @@ import 'package:conference_handson_2025/src/domain/model/reading_books_domain_mo
 import 'package:conference_handson_2025/src/domain/model/reading_books_state_model.dart';
 import 'package:conference_handson_2025/src/domain/model/reading_books_value_object.dart';
 import 'package:conference_handson_2025/src/fundamental/debug/debug_logger.dart';
-import 'package:conference_handson_2025/src/presentation/ui_widget/morphing_button/reading/reading_book_widget.dart'
-    as custom;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -227,28 +225,6 @@ void main() {
 
       // 「編集する」ボタンをタップして読書中書籍を更新＋ホーム画面への復帰を待機
       await tester.tap(find.text('編集する'));
-      await tester.pumpAndSettle();
-    } else if (find
-        .byKey(custom.ReadingBookWidget.morphingButtonKey)
-        .evaluate()
-        .isNotEmpty) {
-      // 読書中書籍編集画面の「編集」モーフィングボタンをタップする場合
-      // カスタム UI では、アニメーション表示のためにボタンを CustomPaint で描画します。
-      // このため 通常の find.text(ラベル名) を使ったヒット処理が行えないので、
-      // Key を使った、カスタム UI 専用のテスト処理を行います。
-
-      // Keyを使ってモーフィングボタンが見える位置までスクロールする
-      await tester.ensureVisible(
-        find.byKey(custom.ReadingBookWidget.morphingButtonKey),
-      );
-      await tester.pumpAndSettle();
-
-      // Keyを使ってモーフィングボタンを検索し、タップする
-      await tester.tap(find.byKey(custom.ReadingBookWidget.morphingButtonKey));
-
-      // 編集中のアニメーションの Future<void>.delayed() で処理が停止するため、
-      // 編集終了時の _navigateBack ⇒ Navigator.pop() を待たず、強制的にホーム画面に戻る。
-      await tester.pageBack();
       await tester.pumpAndSettle();
     } else {
       throw UnsupportedError('Unknown ReadingBookWidget Edit button');

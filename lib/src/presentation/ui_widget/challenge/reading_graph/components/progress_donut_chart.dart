@@ -1,8 +1,8 @@
-import 'package:conference_handson_2025/src/presentation/ui_widget/interactive_donut_chart/reading_graph/components/progress_donut_chart_painter.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../../domain/model/reading_book_value_object.dart';
+import '../../../complete/reading_graph/components/progress_donut_chart_painter.dart';
 import '../../widget_packages.dart';
 import 'background_glow.dart';
 import 'donut_chart_center_content.dart';
