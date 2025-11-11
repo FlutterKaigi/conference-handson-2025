@@ -1,5 +1,12 @@
 # conference_handson_2025
 
+![FlutterKaigi 2025 ハンズオンリポジトリ](./docs/images/FlutterKaigi_2025_hanson_ripository_cover.png)
+
+FlutterKaigi 2025 ハンズオン・プロジェクトのリポジトリです。  
+このREADMEページは、プロジェクト開発環境構築及びプロジェクト全体についての説明となっていますので、  
+ハンズオンの説明や作業についてのドキュメントは、こちらの [ハンズオン説明ドキュメント](./docs/handson_document.md) を御参照下さい。
+
+
 ## 機能要件
 
 ## 基本機能
@@ -31,25 +38,29 @@ riverpod で状態値のグローバルアクセスおよび UI更新を行い�
   _Version 16.2_
 
 ### Flutter/Dart バージョン
-- Flutter stable 3.32.8
+- Flutter stable 3.35.1
     - Channel stable
-- Dart stable 3.8.1
-    - Dart SDK version: 3.9.1 (stable)  
-- DevTools 2.45.1
+- Dart stable 3.9.0
+    - Dart SDK version: 3.9.0 (stable)  
+- DevTools 2.48.0
 
 ### fvm
 このプロジェクトでは、Flutter SDK バージョンを統一するため `fvm` を利用しています。
 - fvm 3.2.1  
 　https://pub.dev/packages/fvm
 
-プロジェクトリポジトリには、SDK 3.32.8 を指定した `.fvmrc` が配置されているので、
+プロジェクトリポジトリには、SDK 3.35.1 を指定した `.fvmrc` が配置されているので、
 プロジェクトのルートディレクトリで、`fvm use`を実行すれば SDK がインストールされ、
-fvm コマンドで Flutter SDK 3.32.8 が利用できるようになります。
+fvm コマンドで Flutter SDK 3.35.1 が利用できるようになります。
 
 fvm をインストールされていない方は、下記のツールのインストールを実行しておいてください。
 - fvm ツールのインストールコマンド（Linux/macOS）
 ```bash
 curl -fsSL https://fvm.app/install.sh | bash
+```
+- fvm ツールのインストールコマンド（Windows）
+```powershell
+choco install fvm
 ```
 
 ### Makefile
@@ -62,7 +73,8 @@ curl -fsSL https://fvm.app/install.sh | bash
 プロジェクトのルートにある `Makefile`の中を見ていただければ、
 どんなコマンドで何ができるのかすぐに理解できると思います。
 
-`make`コマンドは、macOS であれば標準で組み込まれているのでインストールする必要はありません。
+`make`コマンドは、macOS/Linux であれば標準で組み込まれているのでインストールする必要はありません。  
+Windows の場合は、`Makefile`の中身を見て`fvm flutter run`などのコマンド実態を実行してください。  
 
 ### Android Studio 設定
 プロジェクトへの fvm 設定が終わり、プロジェクトで使う Flutter/Dart バージョンが定まったら、    
@@ -77,8 +89,8 @@ Android Studio の Flutter/Dart 関連の設定を行います。
    ⇒ プロジェクトの .fvm/flutter_sdk/bin/cache/dart-sdk① になります。  
    Android Studio は絶対パス指定を要求するので具体的な①パスは、以下の ①のようにになることと、  
    設定後はシンボリックリンクの実態先② に変わることに注意してください。
-- ①/Users/rie/yumemi/code_check/search_repositories_on_github/.fvm/flutter_sdk/bin/cache/dart-sdk
-- ②/Users/rie/fvm/versions/3.27.3/bin/cache/dart-sdk
+   - ①/Users/rie/projects/sample/.fvm/flutter_sdk/bin/cache/dart-sdk
+   - ②/Users/rie/fvm/versions/3.27.3/bin/cache/dart-sdk
 
 3. Flutter SDK 設定  
    Settings > Languages & Frameworks > Flutter > SDK (current project only) >  
@@ -86,32 +98,79 @@ Android Studio の Flutter/Dart 関連の設定を行います。
    ⇒ プロジェクトの .fvm/flutter_sdk/bin/cache/dart-sdk① になります。  
    Android Studio は絶対パス指定を要求するので具体的な①パスは、以下の ①のようにになることと、  
    設定後はシンボリックリンクの実態先② に変わることに注意してください。
-- ①/Users/rie/yumemi/code_check/search_repositories_on_github/.fvm/flutter_sdk
-- ②/Users/rie/fvm/versions/3.27.3
+   - ①/Users/rie/projects/sample/.fvm/flutter_sdk
+   - ②/Users/rie/fvm/versions/3.27.3
 
 4. Dart フォーマット設定  
    フォーマット桁数を Flutter lint 想定に合わせるため 80桁に指定してください。
-- Settings > Editor > Code Style > Dart > Editor > Line length [80]  
-  （dart format に合わせたフォーマット桁数）
+   - Settings > Editor > Code Style > Dart > Editor > Line length [80]  
+     （dart format に合わせたフォーマット桁数）
 
 5. Flutter フォーマット設定  
    ファイルセーブごとにインポートの修正とフォーマットを適用するため以下の設定を行ってください。
-- Settings > Languages & Frameworks > Flutter > Editor > [v] Format code on save
-- Settings > Languages & Frameworks > Flutter > Editor > [v] Organize imports on save
+   - Settings > Languages & Frameworks > Flutter > Editor > [v] Format code on save
+   - Settings > Languages & Frameworks > Flutter > Editor > [v] Organize imports on save
 
 **補足 Format 関係の設定について**  
 Flutter lint は、analysis_options.yaml に設定されたルールに従いますが、  
 このルールは、dart format コマンドでフォーマットされたコードを想定しており、  
 現在の dart format コマンドは、フォーマット桁数を 80 に限定しているため 80桁に指定します。  
-将来の Dart 3.7 からは、analysis_options.yaml に format: セクションが追加され、  
-フォーマット桁数の指定ができるようになります。
+Dart 3.7 からは、analysis_options.yaml に format: セクションが追加され、  
+フォーマット桁数の指定ができるようになっています。
+
+
+### Gemini CLI 設定
+Flutter 3.35 / Dart 3.9 から、`Dart and MCP Server` が利用できるようになりました。  
+`Dart and Flutter MCP Server`は、Dartと Flutterの開発ツールのアクションを AIアシスタントに公開します。  
+そこで開発支援のためにプロジェクトで `Gemini CLI`から `Dart and Flutter MCP Server`を使えるようにします。
+
+- Flutter のバージョンを 3.35 以上にするため、プロジェクト内の .fvmrc 設定を 3.35 以上にしています。  
+
+- ローカルプロジェクト内で `Dart and Flutter MCP Server` + `Gemini CLI` を利用するため、  
+  プロジェクト内の `.gemini/settings.json` ファイルに Dart and Flutter MCP サーバーを追加しています。
+```json
+{
+  "mcpServers": {
+    "dart": {
+      "command": "dart",
+      "args": [
+        "mcp-server",
+        "--experimental-mcp-server"
+      ]
+    }
+  }
+}
+
+```
+
+- Gemini CLI 最新バージョンのインストール（および更新）は、  
+  npx や npm ツールが使えるのであれば、以下の何れかのコマンドでできます。  
+  `$ npx @google/gemini-cli`   
+  `$ npm install -g @google/gemini-cli@latest`
+
+
+
+**参考資料**  
+
+- Dart and Flutter MCP サーバー
+    - [Dart and Flutter MCP server](https://dart.dev/tools/mcp-server)  
+      [https://dart.dev/tools/mcp-server](https://dart.dev/tools/mcp-server)
+
+- Gemini CLI インストール
+    - [Quick Install](https://github.com/google-gemini/gemini-cli/tree/main?tab=readme-ov-file#quick-install)  
+      [https://github.com/google-gemini/gemini-cli/tree/main?tab=readme-ov-file#quick-install](https://github.com/google-gemini/gemini-cli/tree/main?tab=readme-ov-file#quick-install)
+
+- Gemini CLI で Dart and Flutter MCP サーバを利用する設定
+    - [MCP servers with the Gemini CLI - How to set up your MCP server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)  
+      [https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server](https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server)
+
 
 ## プロジェクトリポジトリの設定について
 - デフォルトブランチは、`develop`となっています。
 
 ### Issues テンプレートの設定
 
-### Pull Reauest テンプレートの設定
+### Pull Request テンプレートの設定
 
 ### dependabot 設定
 
@@ -129,7 +188,7 @@ MaterialApp プロパティの theme /darkTheme 用の Theme を設定し、
 このプロジェクトでは、FlutterKaigi 2024 公式アプリの `analysis_options.yaml`をベースに、独自のルールを適用しています。
 
 ### 宣言型画面遷移対応
-画面遷移に go_router の Type-safe Route を利用しています。
+画面遷移に go_router の Named routes を利用しています。
 
 ### アプリケーションレベルのエラーハンドリング対応
 
@@ -148,5 +207,5 @@ test/ディレクトリ配下にユニットテストを追加しています。
 ## アプリ画像
 
 ## 要件定義書
-- [`docs/requirements.md`](./docs/requirements.md)  
-  [要件定義書](./docs/requirements.md)
+- [`docs/requirements.md`](docs/reference_documents/requirements.md)  
+  [要件定義書](docs/reference_documents/requirements.md)
