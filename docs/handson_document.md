@@ -1411,7 +1411,7 @@ child: Stack(
 _hot restart を実行してから、ここまでの作業を再確認しましょう。_
 
 `書籍名`、`応援メッセージ`が表示されました。  
-_ここで表示されていない`進捗率とアイコンを納めた円形イメージ`は、後続のステップで表示せせます。_
+_ここで表示されていない`進捗率とアイコンを納めた円形イメージ`は、後続のステップで表示させます。_
 
 `builder`での記述に登場する`_fadeAnimation`、`_scaleAnimation`、`_bounceAnimation`は、  
 いずれも`_mainController`で管理されており、同じ時間軸のなかで動いています。
@@ -1432,7 +1432,7 @@ _ここで表示されていない`進捗率とアイコンを納めた円形イ
 技術的に新しいものはないので、コメントを解除して実装しましょう。
 
 ここで扱う **[_buildMainContent()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L455-L494)** は、`書籍名`、`応援メッセージ`、`進捗率とアイコンを納めた円形イメージ`の配置を担います。  
-_進捗率とアイコンを納めた円形イメージの表示は、`ProgressCircleWidget`ウィジェットが担います。_
+_進捗率とアイコンを納めた円形イメージの表示は、追加配置する`ProgressCircleWidget`ウィジェットが担います。_
 
 追加配置する **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** には、
 引数で２つの`Animation`オブジェクト `_progressAnimation`と`_pulseAnimation`を渡します。  
