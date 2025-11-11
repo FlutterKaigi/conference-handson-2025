@@ -1976,7 +1976,6 @@ _このため上記の修正後コードでは、ここで何をしているの�
 - ステップ3の完成例（再掲）  
   <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
 
-
 _hot restart を実行してから、ここまでの作業を再確認しましょう。_
 
 異なる時間軸の動きが協調して、中央の円が大きくなったり小さくなったり、進捗プログレスもじわっと描画されようになりました。
@@ -1991,7 +1990,8 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
   <img width="300" alt="完成した応援のメインコンテンツ" src="./images/hands-on_MainContent_4.png" />
 
 
-おまけに他のアニメーション表現のウィジェットも`Stack` に追加します。コメントを解除して適用してください。より華やかな演出になります。
+紙吹雪や花火のようなアニメーション表現のウィジェットも`Stack` に追加しましょう。  
+コメントを解除してアニメーションを適用すれば、より華やかな演出になります。
 
 **作業対象**
 ```
@@ -2037,7 +2037,19 @@ lib
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-粒子が広がる`ParticleEffectWidget`と星が飛び散る`SparkleEffectWidget`を有効化し、演出を重ねます。
+花火のように粒子が広がる`ParticleEffectWidget`と、紙吹雪のように星が舞う`SparkleEffectWidget`を有効化し、演出を重ねます。  
+
+- _[ParticleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/particle_effect_widget.dart#L6-L51) は、  
+  [CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html) から派生させた
+  [_ParticleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/particle_effect_widget.dart#L53-L158) で、  
+  花火のようにぱぁっと粒子が広がるアニメーションを表現します。_
+
+- _[SparkleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/sparkle_effect_widget.dart#L6-L70) は、  
+  [CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html) から派生させた
+  [_SparkleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/sparkle_effect_widget.dart#L72-L170) で、  
+  紙吹雪のようにひらひらと星が舞うアニメーションを表現します。_
+
+<br/>
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
@@ -2063,9 +2075,38 @@ SparkleEffectWidget(
 - ステップ4の完成例（再掲）  
   <img width="300" alt="完成した応援のメインコンテンツ" src="./images/hands-on_MainContent_4.png" />
 
+_hot restart を実行してから、ここまでの作業を再確認しましょう。_
+
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
+
 #### まとめ
 
-この工程では、複数のアニメーションを協調させて複雑な演出を作り出すための技術を学習しました。`Listenable.merge`を使うことで、複数の独立した`AnimationController`を一つにまとめました。これにより、異なる時間軸で動く複数のアニメーションを監視できます。これらの技術を用いることで、よりリッチで説得力のあるUIを構築できるようになります。
+この工程では、複数のアニメーションを協調させて複雑な演出を作り出すための技術を学習しました。  
+`Listenable.merge`を使うことで、複数の独立した`AnimationController`を一つにまとめました。  
+これにより、`AnimationBuilder`で、異なる時間軸で動く複数のアニメーションが使えるようになります。
+
+これらの技術を用いることで、よりリッチで魅力のあるUIが構築できるでしょう。
+
+- **【補足】進捗率達成メッセージ・アニメーション構成概要**  
+  読書進捗率に応じて表示する「進捗達成メッセージ」に追加したアニメーションは、  
+  以下のような、いくつものアニメーションエフェクトを積み重ねた構成になっています。
+```text
+ReadingProgressAnimationsWidget           進捗率達成メッセージのアニメーションウィジェット
+└── Stack
+    ├── DynamicBackgroundWidget           放射状にグローが広がる背景エフェクト
+    ├── RippleEffectWidget                波紋が広がるような背景エフェクト
+    │                                     
+    ├── AnimationBuilder                  (コンテンツに複数のアニメーションを適用)
+    │   └── _buildMainContent()           (進捗率達成メッセージコンテンツ)
+    │       └── Column
+    │           ├── ProgressCircleWidget  進捗率とアイコンを納めた円イメージ
+    │           ├── TitleTextWidget       書籍名
+    │           └── MessageTextWidget     応援メッセージ
+    │                                     
+    ├── ParticleEffectWidget              花火のように粒子が広がる前景エフェクト
+    └── SparkleEffectWidget               ひらひらと星が舞う前景エフェクト
+```
 
 <br/>
 <br/>
