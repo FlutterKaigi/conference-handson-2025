@@ -179,7 +179,7 @@ lib
     - **[インフラストラクチャ](../lib/src/infrastructure/package_info.dart)** が、プラグインによるDB等の基盤機能をラップするオブジェクトを保持します。  
       - _模擬アプリでは、データの永続化などを行いません。  
         このためプロジェクトのインフラストラクチャのレイヤは、利用されないので空実装（空ディレクトリ）になっています。  
-        これにより読書中書籍一覧が永続化できないので、**ステートモデルの初期化処理では [ダミーデータ](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_books_state_model.dart#L51-L69) を設定** しています。_
+        これにより読書中書籍一覧が永続化できないので、**ステートモデルの初期化処理では [ダミーデータ](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/domain/model/reading_books_state_model.dart#L51-L69) を設定** しています。_
 
   - **プレゼンテーションレイヤ** の依存関係  
     _ここでは、UIウィジェットを [読書進捗率達成アニメーション表示](../lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart) に仮定しています。_  
@@ -260,15 +260,15 @@ riverpod を使う上で不変データの保証が必須です。
   **[ReadingBooksValueObject](../lib/src/domain/model/reading_books_value_object.dart)** の実装コードを確認下さい。  
 
   - 具体的には、  
-    **[props](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L108-L115)** に `値オブジェクトのプロパティ名一覧` を定義し、  
-    **[hashCode](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L97-L98)** と
-    **[operator ==](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L100-L106)** にボイラープレートコードを記述して、  
-    **[copyWith](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L81-L95)** を新規追加して、各プロパティの名前付引数と値指定時の更新ロジックを実装します。  
-    _props は、値オブジェクト派生元の **[ValueObject](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/fundamental/model/base_objects_model.dart#L191-L268) 抽象基盤クラス** により提供されます_
+    **[props](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/domain/model/reading_book_value_object.dart#L108-L115)** に `値オブジェクトのプロパティ名一覧` を定義し、  
+    **[hashCode](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/domain/model/reading_book_value_object.dart#L97-L98)** と
+    **[operator ==](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/domain/model/reading_book_value_object.dart#L100-L106)** にボイラープレートコードを記述して、  
+    **[copyWith](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/domain/model/reading_book_value_object.dart#L81-L95)** を新規追加して、各プロパティの名前付引数と値指定時の更新ロジックを実装します。  
+    _props は、値オブジェクト派生元の **[ValueObject](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/fundamental/model/base_objects_model.dart#L191-L268) 抽象基盤クラス** により提供されます_
 
   - 併せてこれらの不変データクラスで `JSON serialize | deserialize`を担う、  
-    **[toJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L64-L72)** と
-    **[fromJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/domain/model/reading_book_value_object.dart#L29-L37)** のコードも確認ください。
+    **[toJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/domain/model/reading_book_value_object.dart#L64-L72)** と
+    **[fromJson()](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/domain/model/reading_book_value_object.dart#L29-L37)** のコードも確認ください。
 
 #### StatefulWidget ラッパー作成
 ウィジェットのサブツリー内で ListView 一覧表示を行う場合、ウィジェット内部状態に ScrollController が必要になるときもあります。  
@@ -284,13 +284,13 @@ riverpod を使う上で不変データの保証が必須です。
 
   - 具体的には、  
     ウィジェット内部状態型 **T** を 
-    [_App<**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/app/app.dart#L9-L10) 
-    または [_CurrentlyTasksWidget<R,**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L10-L11) のように、  
+    [_App<**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/app/app.dart#L9-L10) 
+    または [_CurrentlyTasksWidget<R,**T**>_](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L10-L11) のように、  
     派生先ウィジェットのジェネリクスで指定し、
-    **[createWidgetState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L28-L30)** で `内部状態オブジェクト` を定義すれば、  
-    **[initState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L32-L36)** や
-    **[disposeState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L38-L42)** や
-    **[build](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L44-L78)** メソッドの state パラメータに内部状態オブジェクトが提供されるので、  
+    **[createWidgetState](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L28-L30)** で `内部状態オブジェクト` を定義すれば、  
+    **[initState](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L32-L36)** や
+    **[disposeState](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L38-L42)** や
+    **[build](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/default/home/currently_tasks_widget.dart#L44-L78)** メソッドの state パラメータに内部状態オブジェクトが提供されるので、  
     各メソッドごとに必要な処理を実装します。  
 
 <br/>
@@ -400,7 +400,7 @@ Flutter SDKが開発時最新版の 3.35.1 以上であれば、それらを利�
 `Android Studio` などの IDE が用意している、アプリ実行やテスト機能をご利用ください。
 
 _**何らかの理由で、Flutter SDKを 3.35.1 未満にする必要がある場合**は、  
-**[開発環境前提](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/README.md#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E5%89%8D%E6%8F%90)** を参照して、
+**[開発環境前提](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/README.md#%E9%96%8B%E7%99%BA%E7%92%B0%E5%A2%83%E5%89%8D%E6%8F%90)** を参照して、
 `fvm` と `Makefile`の`make run`や`make unit-test`コマンドをご利用ください。_
 
 - 【参照】プロジェクト開発環境構築 - [README.md](../README.md)
@@ -839,8 +839,8 @@ lib
 
 - **修正前**  
 **_ProgressAchievementAnimationState._initializeAnimations()** 
-[L284-L288](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L284-L288),
-[L332-L336](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L332-L336)
+[L284-L288](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L284-L288),
+[L332-L336](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L332-L336)
 ```dart
 void _initializeAnimations() {
   // 省略（他のコントローラー）
@@ -871,8 +871,8 @@ void _initializeAnimations() {
 
 - **修正後**  
 **_ProgressAchievementAnimationState._initializeAnimations()** 
-[L284-L288](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L284-L288),
-[L332-L336](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L332-L336)
+[L284-L288](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L284-L288),
+[L332-L336](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L332-L336)
 ```dart
 void _initializeAnimations() {
   // 省略（他のコントローラー）
@@ -956,7 +956,7 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
-この **[DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80)** では、  
+この **[DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80)** では、  
 [BoxDecoration](https://api.flutter.dev/flutter/painting/BoxDecoration-class.html) のコンストラクタ引数 `gradient`に
 [RadialGradient](https://api.flutter.dev/flutter/painting/RadialGradient-class.html) を指定して放射状グラデーションを描画させ、  
 `Stack`の子ウィジェットが配置される場所を制御する [Positioned ウィジェット](https://api.flutter.dev/flutter/widgets/Positioned-class.html) を使って放射状グラデーションを配置します。
@@ -965,9 +965,9 @@ lib
 
 - **修正前**  
 **DynamicBackgroundWidget.build()** 
-[L57-L59](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L57-L59),
-[L61-L62](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L61-L62),
-[L63-L68](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L63-L68)
+[L57-L59](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L57-L59),
+[L61-L62](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L61-L62),
+[L63-L68](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L63-L68)
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -1010,9 +1010,9 @@ Widget build(BuildContext context) {
 
 - **修正後**  
 **DynamicBackgroundWidget.build()** 
-[L57-L59](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L57-L59),
-[L61-L62](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L61-L62),
-[L63-L68](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L63-L68)
+[L57-L59](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L57-L59),
+[L61-L62](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L61-L62),
+[L63-L68](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L63-L68)
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -1049,7 +1049,7 @@ Widget build(BuildContext context) {
 
 #### ステップ3: アニメーションの配置と実行
 ここまでに作成した放射グラデーションを画面表示します。  
-`Stack` の`children` に前のステップで操作した [DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80) を配置しましょう。
+`Stack` の`children` に前のステップで操作した [DynamicBackgroundWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/dynamic_background_widget.dart#L4-L80) を配置しましょう。
 
 `DynamicBackgroundWidget`のコンストラクタ引数 animation には、  
 バックグラウンド用アニメーションの進捗変化をもつ`Animation`オブジェクトと色を渡します。  
@@ -1080,7 +1080,7 @@ lib
 
 - **修正前**  
 **_ProgressAchievementAnimationState.build()** 
-[L399-L404](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L399-L404)
+[L399-L404](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L399-L404)
 ```dart
 child: Stack(
   alignment: Alignment.center,
@@ -1100,7 +1100,7 @@ Stackウィジェットにグラデーションのウィジェットを配置し
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
-[L399-L404](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L399-L404)
+[L399-L404](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L399-L404)
 ```dart
 child: Stack(
   alignment: Alignment.center,
@@ -1131,7 +1131,7 @@ _`unawaited()` は、非同期処理の完了を待たなくてよい場合に�
 
 - **修正前**  
 **_ProgressAchievementAnimationState._startAnimationSequence()** 
-[L341-L342](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L341-L342)
+[L341-L342](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L341-L342)
 ```dart
 Future<void> _startAnimationSequence() async {
   // ステップ3: アニメーションの配置と実行
@@ -1144,7 +1144,7 @@ Future<void> _startAnimationSequence() async {
 
 - **修正後**  
 **_ProgressAchievementAnimationState._startAnimationSequence()** 
-[L341-L342](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L341-L342)
+[L341-L342](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L341-L342)
 ```dart
 Future<void> _startAnimationSequence() async {
   // ステップ3: アニメーションの配置と実行
@@ -1168,15 +1168,15 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
 アニメーションを重ねて表示していることを体験するために、もう一つ重ねます。  
 前ステップの放射グラデーションの上に波紋の表現を重ねましょう。
 
-波紋を表す **[RippleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart)** は作成済みです。  
+波紋を表す **[RippleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart)** は作成済みです。  
 ウィジェットの中では、**[CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html)** から派生させた
-**[_RippleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart#L65-L129)** で、
+**[_RippleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart#L65-L129)** で、
 **[CustomPainter.paint() method](https://api.flutter.dev/flutter/rendering/CustomPainter/paint.html)** をオーバライドして、  
 **[Canvas](https://api.flutter.dev/flutter/dart-ui/Canvas-class.html)** に
 **[Canvas .drawCircle() method](https://api.flutter.dev/flutter/dart-ui/Canvas/drawCircle.html)** を使い、円の描画を 0.25秒づつずらして 4回行なうことで波紋を表現します。
 
 詳細はファイルの内容をご確認ください。  
-_[lib/src/presentation/ui_widget/enhanced_progress/home/components/ripple_effect_widget.dart](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart)_
+_[lib/src/presentation/ui_widget/enhanced_progress/home/components/ripple_effect_widget.dart](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/ripple_effect_widget.dart)_
 
 ```
 lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart
@@ -1202,7 +1202,7 @@ lib
 
 - **修正前**  
 **_ProgressAchievementAnimationState.build()** 
-[L407-L412](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L407-L412)
+[L407-L412](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L407-L412)
 ```dart
 child: Stack(
   alignment: Alignment.center,
@@ -1229,7 +1229,7 @@ child: Stack(
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
-[L407-L412](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L407-L412)
+[L407-L412](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L407-L412)
 ```dart
 child: Stack(
   alignment: Alignment.center,
@@ -1310,7 +1310,7 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
 コンストラクタパラメータの複数の`AnimationController`を一つのリスナーとして統合します。
 
 ここでは、`_mainController`, `_progressController`, `_pulseController`を監視させ、  
-[_startAnimationSequence()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L339-L369) で、
+[_startAnimationSequence()](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L339-L369) で、
 それぞれのアニメーションの再生順番や再生方法を指定することにより、  
 メッセージが飛び出してきたような表現や、そのあとでイメージが拡大縮小を繰り返すような表現を行なうように制御します。
 
@@ -1343,7 +1343,7 @@ lib
 
 - **修正前**  
 **_ProgressAchievementAnimationState.build()** 
-[L415-L431](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L415-L431)
+[L415-L431](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L415-L431)
 ```dart
 child: Stack(
   alignment: Alignment.center,
@@ -1387,7 +1387,7 @@ _また [Transform ウィジェット](https://api.flutter.dev/flutter/widgets/T
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
-[L415-L431](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L415-L431)
+[L415-L431](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L415-L431)
 ```dart
 child: Stack(
   alignment: Alignment.center,
@@ -1427,7 +1427,7 @@ _ここで表示されていない`進捗率とアイコンを納めた円形イ
 いずれも`_mainController`で管理されており、同じ時間軸のなかで動いています。
 
 ですので `Listenable.merge`の特徴はまだ発揮されていません。  
-統合した他のコントローラーの値を利用しているのは [_buildMainContent()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L455-L494) の中です。
+統合した他のコントローラーの値を利用しているのは [_buildMainContent()](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L455-L494) の中です。
 
 これは、後続のステップで修正します。
 
@@ -1441,10 +1441,10 @@ _ここで表示されていない`進捗率とアイコンを納めた円形イ
 このステップでは、進捗率とアイコンを納めた円形イメージの表示を担うウィジェットを配置します。  
 技術的に新しいものはないので、コメントを解除して実装しましょう。
 
-ここで扱う **[_buildMainContent()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L455-L494)** は、`書籍名`、`応援メッセージ`、`進捗率とアイコンを納めた円形イメージ`の配置を担います。  
+ここで扱う **[_buildMainContent()](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L455-L494)** は、`書籍名`、`応援メッセージ`、`進捗率とアイコンを納めた円形イメージ`の配置を担います。  
 _進捗率とアイコンを納めた円形イメージの表示は、追加配置する`ProgressCircleWidget`ウィジェットが担います。_
 
-追加配置する **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** には、
+追加配置する **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** には、
 引数で２つの`Animation`オブジェクト `_progressAnimation`と`_pulseAnimation`を渡します。  
 _これらは、前ステップの`Listenable.merge`で監視している`_progressController`と`_pulseController`を利用しています。_
 
@@ -1473,7 +1473,7 @@ lib
 
 - **修正前**  
 **_ProgressAchievementAnimationState._buildMainContent()** 
-[L468-L476](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L468-L476)
+[L468-L476](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L468-L476)
 ```dart
 Widget _buildMainContent() {
   return SizedBox(
@@ -1500,7 +1500,7 @@ _これらの`Animation`の値の利用を設定するのは、次のステッ�
 
 - **修正後**  
 **_ProgressAchievementAnimationState._buildMainContent()** 
-[L468-L476](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L468-L476)
+[L468-L476](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L468-L476)
 ```dart
 Widget _buildMainContent() {
   return SizedBox(
@@ -1559,7 +1559,7 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
-進捗率とアイコンを納めた円形イメージを表す **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** 内で、アニメーション値を利用して動きをつけます。
+進捗率とアイコンを納めた円形イメージを表す **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** 内で、アニメーション値を利用して動きをつけます。
 
 コード内の５箇所でアニメーション値を利用しています。
 
@@ -1570,7 +1570,7 @@ lib
     
     - **修正前**  
     **ProgressCircleWidget.build()** 
-    [L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70)
+    [L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70)
     ```dart
      return Transform.scale(
        // ステップ3: アニメーションの値で動きを実現①
@@ -1583,7 +1583,7 @@ lib
 
    - **修正後**  
       **ProgressCircleWidget.build()** 
-      [L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70)
+      [L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70)
     ```dart
     return Transform.scale(
       // ステップ3: アニメーションの値で動きを実現①
@@ -1598,7 +1598,7 @@ lib
         
         - **修正前**  
           **ProgressCircleWidget.build()** 
-          [L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94)
+          [L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94)
         ```dart
         BoxShadow(
           color: primaryColor.withValues(alpha: 0.6),
@@ -1614,7 +1614,7 @@ lib
         
         - **修正後**  
           **ProgressCircleWidget.build()** 
-          [L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94)
+          [L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94)
         ```dart
         BoxShadow(
           color: primaryColor.withValues(alpha: 0.6),
@@ -1629,7 +1629,7 @@ lib
         
         - **修正前**  
           **ProgressCircleWidget.build()** 
-          [L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104)
+          [L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104)
         ```dart
         BoxShadow(
           color: secondaryColor.withValues(alpha: 0.4),
@@ -1644,7 +1644,7 @@ lib
         
         - **修正後**  
           **ProgressCircleWidget.build()** 
-          [L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104)
+          [L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104)
         ```dart
         BoxShadow(
           color: secondaryColor.withValues(alpha: 0.4),
@@ -1657,13 +1657,13 @@ lib
 3. 進捗円弧を滑らかに表示します。  
    ここでは、[CustomPaint](https://api.flutter.dev/flutter/widgets/CustomPaint-class.html) と
    [CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html) を使った独自の描画を行います。  
-   [_Enhanced3DProgressPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L191-L285) は、`CustomPainter`から派生させた `進捗に応じた円弧を描画する独自のクラス`です。  
+   [_Enhanced3DProgressPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L191-L285) は、`CustomPainter`から派生させた `進捗に応じた円弧を描画する独自のクラス`です。  
    ここに渡す進捗は`progressAnimation.value`を使って計算するようにします。  
    時間経過に応じた進捗を渡し、滑らかな進捗円弧を`drawArc` で描画します。
     
     - **修正前**  
       **ProgressCircleWidget.build()** 
-      [L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129)
+      [L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129)
     ```dart
     child: CustomPaint(
       painter: _Enhanced3DProgressPainter(
@@ -1682,7 +1682,7 @@ lib
     
     - **修正後**  
       **ProgressCircleWidget.build()** 
-      [L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129)
+      [L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129)
     ```dart
     child: CustomPaint(
       painter: _Enhanced3DProgressPainter(
@@ -1701,7 +1701,7 @@ lib
     
     - **修正前**  
       **ProgressCircleWidget.build()** 
-      [L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
+      [L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
     ```dart
     Transform.scale(
       // ステップ3: アニメーションの値で動きを実現⑤
@@ -1722,7 +1722,7 @@ lib
     
     - **修正後**  
       **ProgressCircleWidget.build()** 
-      [L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
+      [L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
     ```dart
     Transform.scale(
       // ステップ3: アニメーションの値で動きを実現⑤
@@ -1752,11 +1752,11 @@ pulseAnimation.value や progressAnimation.value といった複数の異なる�
 
 - **修正前：全ステップ**  
 **ProgressCircleWidget.build()** 
-[L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70),
-[L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94),
-[L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104),
-[L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129),
-[L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
+[L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70),
+[L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94),
+[L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104),
+[L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129),
+[L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -1855,11 +1855,11 @@ _コードが長いため、一部省略して掲載しています。_
 
 - **修正後：全ステップ**  
 **ProgressCircleWidget.build()** 
-[L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70),
-[L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94),
-[L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104),
-[L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129),
-[L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
+[L68-L70](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L68-L70),
+[L92-L94](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L92-L94),
+[L102-L104](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L102-L104),
+[L126-L129](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L126-L129),
+[L140-L142](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L140-L142)
 ```dart
 @override
 Widget build(BuildContext context) {
@@ -1980,7 +1980,7 @@ Widget build(BuildContext context) {
 }
 ```
 
-_ステップ３の修正では、[build()メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L61-L188) の末尾にあるプログレス進捗数値の表示が省略されています。_  
+_ステップ３の修正では、[build()メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L61-L188) の末尾にあるプログレス進捗数値の表示が省略されています。_  
 _このため上記の修正後コードでは、ここで何をしているのかを紹介するためメソッドの全コードを記載しました。_
 
 - ステップ3の完成例（再掲）  
@@ -2026,8 +2026,8 @@ lib
 
 - **修正前**  
 **_ProgressAchievementAnimationState.build()** 
-[L434-L439](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L434-L439),
-[L442-L447](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L442-L447)
+[L434-L439](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L434-L439),
+[L442-L447](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L442-L447)
 ```dart
 // ステップ4: 【おまけ】他のアニメーションを重ねる①
 // if (widget.isCompletion)
@@ -2049,22 +2049,22 @@ lib
 
 花火のように粒子が広がる`ParticleEffectWidget`と、紙吹雪のように星が舞う`SparkleEffectWidget`を有効化し、演出を重ねます。  
 
-- _[ParticleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/particle_effect_widget.dart#L6-L51) は、  
+- _[ParticleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/particle_effect_widget.dart#L6-L51) は、  
   [CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html) から派生させた
-  [_ParticleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/particle_effect_widget.dart#L53-L158) で、  
+  [_ParticleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/particle_effect_widget.dart#L53-L158) で、  
   花火のようにぱぁっと粒子が広がるアニメーションを表現します。_
 
-- _[SparkleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/sparkle_effect_widget.dart#L6-L70) は、  
+- _[SparkleEffectWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/sparkle_effect_widget.dart#L6-L70) は、  
   [CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html) から派生させた
-  [_SparkleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/sparkle_effect_widget.dart#L72-L170) で、  
+  [_SparkleEffectPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/components/progress/sparkle_effect_widget.dart#L72-L170) で、  
   紙吹雪のようにひらひらと星が舞うアニメーションを表現します。_
 
 <br/>
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
-[L434-L439](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L434-L439),
-[L442-L447](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L442-L447)
+[L434-L439](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L434-L439),
+[L442-L447](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L442-L447)
 ```dart
 // ステップ4: 【おまけ】他のアニメーションを重ねる①
 if (widget.isCompletion)
@@ -2176,7 +2176,7 @@ lib
 
 - **修正前**  
 **ReadingBookGraphWidget.build()** 
-[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
+[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
 ```dart
 // ステップ1: 画面表示完了後に円グラフ描画を予約
 // WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -2188,14 +2188,14 @@ lib
 
 円グラフの描画を行う`controllers.animateToProgress()`メソッドを  
 画面描画の完了直後に実行されるコールバック関数でコールされるようにします。
-- _`controllers`変数には、後述の [DonutAnimationState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L97-L197) クラスのオブジェクトが入ります。_  
-  - _このため `controllers.animateToProgress()`は、[DonutAnimationState.animateToProgress()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L150-L177) メソッドがコールされます。_
+- _`controllers`変数には、後述の [DonutAnimationState](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L97-L197) クラスのオブジェクトが入ります。_  
+  - _このため `controllers.animateToProgress()`は、[DonutAnimationState.animateToProgress()](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L150-L177) メソッドがコールされます。_
 
 <br/>
 
 - **修正後**  
 **ReadingBookGraphWidget.build()** 
-[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
+[L57-L60](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L57-L60)
 ```dart
 // ステップ1: 画面表示完了後に円グラフ描画を予約
 WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -2232,8 +2232,8 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
 - **修正前**  
 **DonutAnimationState.animateToProgress()** 
-[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
-[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
+[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
+[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
 ```dart
 // ステップ2: 進捗に合わせた終了値を指定し開始
 // progressAnimation =
@@ -2257,8 +2257,8 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
 - **修正後**  
 **DonutAnimationState.animateToProgress()** 
-[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
-[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
+[L161-L171](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L161-L171),
+[L174-L175](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L174-L175)
 ```dart
 // ステップ2: 進捗に合わせた終了値を指定し開始
 progressAnimation =
@@ -2329,7 +2329,7 @@ lib
 
 - **修正前**  
 **DonutChartCenterContent.build()** 
-[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
+[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
 ```dart
 // ステップ3: 完読時には専用メッセージ表示
 // return AnimatedSwitcher(
@@ -2356,14 +2356,14 @@ return Container(
 - ここでの AnimatedSwitcher では、
   - トランジションアニメーションを 600ミリ秒適用します。
   - 読書完了を示す `isCompleted` bool 値により、何れかの子ウィジェットに切り替えます。  
-    - true: [CompletionContent ウィジェット](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L53-L79)、「完読達成！」を表示します。
-    - false: [ProgressContent ウィジェット](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L81-L124)、「残りページ」を表示します。
+    - true: [CompletionContent ウィジェット](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L53-L79)、「完読達成！」を表示します。
+    - false: [ProgressContent ウィジェット](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L81-L124)、「残りページ」を表示します。
 
 <br/>
 
 - **修正後**  
 **DonutChartCenterContent.build()** 
-[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
+[L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/main/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
 ```dart
 // ステップ3: 完読時には専用メッセージ表示
 return AnimatedSwitcher(
