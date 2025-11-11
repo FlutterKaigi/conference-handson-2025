@@ -1292,6 +1292,9 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
 そして、１つのUI表現のなかで複数の異なる時間軸のアニメーション値（animation.value）を順番に適用させることで、  
 応援メッセージの中心となるコンテンツに複数の変化を与えるようにします。
 
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
+
 #### ステップ1: 複数のコントローラーを統合的に監視
 - ステップ1の完成例  
   <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
@@ -1379,6 +1382,8 @@ child: Stack(
 _ちなみに [FadeTransition ウィジェット](https://api.flutter.dev/flutter/widgets/FadeTransition-class.html) は、子ウィジェットの不透明度を変化(遷移)させるアニメーション表現を行います。_  
 _また [Transform ウィジェット](https://api.flutter.dev/flutter/widgets/Transform-class.html) は、子ウィジェットを変形させるアニメーション表現を担い、  
 [Transform.scale() named constructor](https://api.flutter.dev/flutter/widgets/Transform/Transform.scale.html) で拡大縮小を行います。_
+
+<br/>
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
@@ -2381,7 +2386,7 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
 <br/>
 
 #### まとめ
-アニメーションの遅延実行やトランジションアニメーションを適用したウィジェット切り替えを学習しました。  
+表示完了後のアニメーションやトランジションアニメーションを適用したウィジェット切り替えを学習しました。  
 これらの技術を通じて、単なる静的なUIではなく、ユーザーの操作に自然に応答する動的なUIを構築できます。
 
 ### 完成させたカスタムUI の機能要件表現を確認する。
