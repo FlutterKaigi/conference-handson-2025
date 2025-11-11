@@ -1549,11 +1549,14 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
-応援メッセージを表す **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** 内で、アニメーション値を利用して動きをつけます。
+進捗率とアイコンを納めた円形イメージを表す **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** 内で、アニメーション値を利用して動きをつけます。
 
 コード内の５箇所でアニメーション値を利用しています。
 
-1. `Transform.scale` を使い円全体を拡大・縮小します。`scale`プロパティに`double`値を指定することで、子ウィジェットのサイズを変更します。ここに`pulseAnimation.value`を適用し、アニメーションの進行に合わせて拡大率を変更させます。`pulseAnimation.value`は0.95〜1.15を往復するよう設定をしています。
+1. `Transform.scale` を使い円全体を拡大・縮小します。  
+   `scale`プロパティに`double`値を指定することで、子ウィジェットのサイズを変更します。  
+   ここに`pulseAnimation.value`を適用し、アニメーションの進行に合わせて拡大率を変更させます。  
+   `pulseAnimation.value`は0.95〜1.15を往復するよう設定をしています。  
     
     - **修正前**  
     **ProgressCircleWidget.build()** 
@@ -1578,7 +1581,9 @@ lib
       child: Container(
     ```
     
-2. `BoxShadow` を使い影とグロー効果（柔らかい光）を表現します。`blurRadius`プロパティは影のぼかしの度合いを表し、ここに`pulseAnimation.value` を適用し、アニメーションの進行に合わせて影のぼかしを変更させます。
+2. `BoxShadow` を使い影とグロー効果（柔らかい光）を表現します。  
+   `blurRadius`プロパティは影のぼかしの度合いを表し、ここに`pulseAnimation.value` を適用して、  
+   アニメーションの進行に合わせて影のぼかしを変更させます。
     1. １つ目の`BoxShadow`では影を表現しており、円の拡大縮小に合わせて影のぼかしを連動させます。
         
         - **修正前**  
@@ -1639,7 +1644,12 @@ lib
         ),
         ```
         
-3. 進捗円弧を滑らかに表示します。`_Enhanced3DProgressPainter`は進捗に応じた円弧を描画する独自のクラスです。ここに渡す進捗は`progressAnimation.value`を使って計算するようにします。時間経過に応じた進捗を渡し、滑らかな進捗円弧を`drawArc` で描画します。
+3. 進捗円弧を滑らかに表示します。  
+   ここでは、[CustomPaint](https://api.flutter.dev/flutter/widgets/CustomPaint-class.html) と
+   [CustomPainter](https://api.flutter.dev/flutter/rendering/CustomPainter-class.html) を使った独自の描画を行います。  
+   [_Enhanced3DProgressPainter](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L191-L285) は、`CustomPainter`から派生させた `進捗に応じた円弧を描画する独自のクラス`です。  
+   ここに渡す進捗は`progressAnimation.value`を使って計算するようにします。  
+   時間経過に応じた進捗を渡し、滑らかな進捗円弧を`drawArc` で描画します。
     
     - **修正前**  
       **ProgressCircleWidget.build()** 
@@ -1676,7 +1686,8 @@ lib
     ),
     ```
     
-4. `Transform.scale` を使って円の中心に表示するアイコンを拡大・縮小します。円の拡大縮小でも利用している`pulseAnimation.value`を計算に組み込むことで円の動きに合わせて拡大率を変更させます。
+4. `Transform.scale` を使って円の中心に表示するアイコンを拡大・縮小します。  
+   円の拡大縮小でも利用している`pulseAnimation.value`を計算に組み込むことで円の動きに合わせて拡大率を変更させます。
     
     - **修正前**  
       **ProgressCircleWidget.build()** 
