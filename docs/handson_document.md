@@ -1556,7 +1556,7 @@ lib
 1. `Transform.scale` を使い円全体を拡大・縮小します。  
    `scale`プロパティに`double`値を指定することで、子ウィジェットのサイズを変更します。  
    ここに`pulseAnimation.value`を適用し、アニメーションの進行に合わせて拡大率を変更させます。  
-   `pulseAnimation.value`は0.95〜1.15を往復するよう設定をしています。  
+   _`pulseAnimation.value`の値は、0.95〜1.15 を往復するように設定しています。_  
     
     - **修正前**  
     **ProgressCircleWidget.build()** 
@@ -1866,7 +1866,13 @@ Widget build(BuildContext context) {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             gradient: RadialGradient(
-              // 省略
+              colors: <Color>[
+                Colors.white.withValues(alpha: 0.9), // 中心部は明るく
+                primaryColor, // メインカラー
+                secondaryColor, // セカンダリカラー
+                primaryColor.withValues(alpha: 0.8), // 外側は少し暗く
+              ],
+              stops: const <double>[0, 0.3, 0.7, 1],
             ),
             boxShadow: <BoxShadow>[
               BoxShadow(
@@ -1885,7 +1891,10 @@ Widget build(BuildContext context) {
                 spreadRadius: 15,
               ),
               BoxShadow(
-                // 省略
+                color: Colors.white.withValues(alpha: 0.3),
+                blurRadius: 10,
+                spreadRadius: -5,
+                offset: const Offset(-3, -3), // 左上からのハイライト
               ),
             ],
           ),
@@ -1922,7 +1931,47 @@ Widget build(BuildContext context) {
                   child: Icon(icon, size: 32, color: Colors.white),
                 ),
               ),
+
+              // プログレス数値表示
+              Positioned(
+                bottom: 5,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 8,
+                    vertical: 2,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.9),
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: <BoxShadow>[
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.2),
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                  ),
+                  child: Text(
+                    '${(progressPercent * progressAnimation.value).toInt()}%',
+                    style: TextStyle(
+                      color: primaryColor,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+}
 ```
+
+_ステップ３の修正では、[build()メソッド](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L61-L188) の末尾にあるプログレス進捗数値の表示が省略されています。_  
+_このため上記の修正後コードでは、ここで何をしているのかを紹介するためメソッドの全コードを記載しました。_
 
 - ステップ3の完成例（再掲）  
   <img width="300" alt="動く応援のメインコンテンツ" src="./images/hands-on_MainContent_3.png" />
