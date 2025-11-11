@@ -1281,22 +1281,33 @@ _hot restart を実行してから、ここまでの作業を再確認しまし�
     _つまり、**[AnimatedBuilder ウィジェット](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html)** の進捗パラメータ animation の値 ⇒ **[Animation.value](https://api.flutter.dev/flutter/animation/Animation/value.html)** は、複数束ねられます。_  
     _また、**[Animation class](https://api.flutter.dev/flutter/animation/Animation-class.html)** は、**[AnimationController class](https://api.flutter.dev/flutter/animation/AnimationController-class.html)** の super class であることにも注意してください。_
 
-複数のアニメーションを協調させて複雑な演出を作り出します。Listenable.mergeを使うことで、複数の独立したAnimationControllerを一つにまとめて監視できます。
+ここでは、複数のアニメーションを協調させて複雑な演出を作り出します。  
 
-１つのUI表現のなかで複数の異なる時間軸のアニメーション値（animation.value）を利用し、応援メッセージの中心となるコンテンツを作成します。
+`Listenable.merge`を使うことで、複数の独立した`AnimationController`を一つにまとめて監視できます。  
+そして、１つのUI表現のなかで複数の異なる時間軸のアニメーション値（animation.value）を順番に適用させることで、  
+応援メッセージの中心となるコンテンツに複数の変化を与えるようにします。
 
 #### ステップ1: 複数のコントローラーを統合的に監視
 - ステップ1の完成例  
   <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
 
 
-複数のアニメーションを組み合わせた統合的な制御を行うよう設定をします。
+複数のアニメーションを組み合わせた統合的な制御を行うよう設定しましょう。
 
-これまでの放射グラデーションなどでは、`AnimatedBuilder` の引数には単一の`Animation` オブジェクトを渡していました。これは時間経過によるUI更新を渡した`Animation`に紐づいた単一の`AnimationController`を監視することにより実現していました。
+これまでの放射グラデーションなどでは、`AnimatedBuilder` の引数には単一の`Animation` オブジェクトを渡していました。  
+これは時間経過によるUI更新を渡した`Animation`に紐づいた単一の`AnimationController`を監視することにより実現していました。
 
-今回は、複数の時間軸によるアニメーション値の変化を利用します。`AnimatedBuilder`の`animation`引数に`Listenable.merge`を指定します。`Listenable.merge`は、複数の`AnimationController`を一つのリスナーとして統合します。
+今回は、複数の時間軸によるアニメーション値の変化を利用します。  
+`AnimatedBuilder`の`animation`引数に`Listenable.merge`を指定することで、  
+コンストラクタパラメータの複数の`AnimationController`を一つのリスナーとして統合します。
 
-ここでは、`_mainController`, `_progressController`, `_pulseController`のいずれかの値が変更されるたびに、`AnimatedBuilder`が子ウィジェットを再構築するようになります。これにより複数のアニメーションを連動させたUI構築が可能になります。
+ここでは、`_mainController`, `_progressController`, `_pulseController`を監視させ、  
+[_startAnimationSequence()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L339-L369) で、
+それぞれのアニメーションの再生順番や再生方法を指定することにより、  
+メッセージが飛び出してきたような表現や、そのあとでイメージが拡大縮小を繰り返すような表現を行なうように制御します。
+
+`AnimatedBuilder`は、再生中のアニメーション値が変化するごとに 子ウィジェットの再構築を行うだけですが、  
+これにより複数のアニメーションを連動させたUI構築が可能になります。
 
 **作業対象**
 ```
@@ -1319,7 +1330,8 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
-修正前の時点では、`Stack`でグラデーションと波紋のウィジェットを重ねて配置しています。その上に応援メッセージの中心となるコンテンツを配置します。
+修正前の時点では、`Stack`でグラデーションと波紋のウィジェットを重ねて配置しています。  
+その上に応援メッセージの中心となるコンテンツを配置しましょう。
 
 - **修正前**  
 **_ProgressAchievementAnimationState.build()** 
@@ -1353,9 +1365,15 @@ child: Stack(
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-`Listenable.merge`で複数のコントローラーを監視します。これにより複数のアニメーション値の変化を組み合わせた表現が可能になります。
+`Listenable.merge`で複数のコントローラーを監視します。  
+これにより複数のアニメーション値の変化を組み合わせた表現が可能になります。
 
-このステップでは`Listenable.merge`が主題です。ハンズオン負荷軽減のため`builder`以下はコメント解除にて実装してください。
+このステップでは`Listenable.merge`が主題です。  
+ハンズオン負荷軽減のため`builder`以下はコメント解除にて実装してください。
+
+_ちなみに [FadeTransition ウィジェット](https://api.flutter.dev/flutter/widgets/FadeTransition-class.html) は、子ウィジェットの不透明度を変化(遷移)させるアニメーション表現を行います。_  
+_また [Transform ウィジェット](https://api.flutter.dev/flutter/widgets/Transform-class.html) は、子ウィジェットを変形させるアニメーション表現を担い、  
+[Transform.scale() named constructor](https://api.flutter.dev/flutter/widgets/Transform/Transform.scale.html) で拡大縮小を行います。_
 
 - **修正後**  
 **_ProgressAchievementAnimationState.build()** 
@@ -1390,21 +1408,35 @@ child: Stack(
 - ステップ1の完成例（再掲）  
   <img width="300" alt="応援のメインコンテンツ" src="./images/hands-on_MainContent_1.png" />
 
+_hot restart を実行してから、ここまでの作業を再確認しましょう。_
 
-`builder`での記述に登場する`_fadeAnimation`、`_scaleAnimation`、`_bounceAnimation`はいずれも`_mainController`で管理されており、同じ時間軸のなかで動いています。
+`書籍名`、`応援メッセージ`が表示されました。  
+_ここで表示されていない`進捗率とアイコンを納めた円形イメージ`は、後続のステップで表示せせます。_
 
-よって`Listenable.merge`の特徴はまだ発揮されていません。他のコントローラーの値を利用しているのは`_buildMainContent()`の中です。後続のステップで修正します。
+`builder`での記述に登場する`_fadeAnimation`、`_scaleAnimation`、`_bounceAnimation`は、  
+いずれも`_mainController`で管理されており、同じ時間軸のなかで動いています。
 
-#### ステップ2: 応援メッセージを配置
+ですので `Listenable.merge`の特徴はまだ発揮されていません。  
+統合した他のコントローラーの値を利用しているのは [_buildMainContent()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L455-L494) の中です。
+
+これは、後続のステップで修正します。
+
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
+
+#### ステップ2: プログレス円とアイコンを配置
 - ステップ2の完成例  
   <img width="300" alt="動きのないメインコンテンツ" src="./images/hands-on_MainContent_2.png" />
 
+このステップでは、進捗率とアイコンを納めた円形イメージの表示を担うウィジェットを配置します。  
+技術的に新しいものはないので、コメントを解除して実装しましょう。
 
-このステップでは応援メッセージの中心を担うウィジェットを配置します。技術的に新しいものはないので、コメントを解除して実装します。
+ここで扱う **[_buildMainContent()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/reading_progress_animations_widget.dart#L455-L494)** は、`書籍名`、`応援メッセージ`、`進捗率とアイコンを納めた円形イメージ`の配置を担います。  
+_進捗率とアイコンを納めた円形イメージの表示は、`ProgressCircleWidget`ウィジェットが担います。_
 
-ここで配置する **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** には、引数で２つの`Animation`オブジェクトを渡しています。これらの`_progressAnimation`と`_pulseAnimation` は前ステップの`Listenable.merge`で監視している`_progressController`と`_pulseController`を利用しています。
-
-次のステップでは、`ProgressCircleWidget`の中で各アニメーション値を利用した実装をします。
+追加配置する **[ProgressCircleWidget](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/home/components/progress/progress_circle_widget.dart#L6-L189)** には、
+引数で２つの`Animation`オブジェクト `_progressAnimation`と`_pulseAnimation`を渡します。  
+_これらは、前ステップの`Listenable.merge`で監視している`_progressController`と`_pulseController`を利用しています。_
 
 **作業対象**
 ```
@@ -1427,7 +1459,7 @@ lib
 │   │   │   │   │   └── reading_support_animations_widget.dart
 ```
 
-修正前は応援メッセージの中心を構成する`ProgressCircleWidget`の配置がコメントアウトされています。
+修正前は、進捗率とアイコンを納めた円形イメージを表示する`ProgressCircleWidget`の配置がコメントアウトされています。
 
 - **修正前**  
 **_ProgressAchievementAnimationState._buildMainContent()** 
@@ -1440,7 +1472,7 @@ Widget _buildMainContent() {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        // ステップ2: 応援メッセージを配置
+        // ステップ2: プログレス円とアイコンを配置
         // ProgressCircleWidget(
         //   progressAnimation: _progressAnimation,
         //   pulseAnimation: _pulseAnimation,
@@ -1453,7 +1485,8 @@ Widget _buildMainContent() {
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-`ProgressCircleWidget`に複数の`Animation`を渡して配置します。これらの`Animation`の値をウィジェット内で利用します。
+`ProgressCircleWidget`に複数の`Animation`を渡して配置しましょう。  
+_これらの`Animation`の値の利用を設定するのは、次のステップになります。_
 
 - **修正後**  
 **_ProgressAchievementAnimationState._buildMainContent()** 
@@ -1466,7 +1499,7 @@ Widget _buildMainContent() {
       mainAxisSize: MainAxisSize.min,
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        // ステップ2: 応援メッセージを配置
+        // ステップ2: プログレス円とアイコンを配置
         ProgressCircleWidget(
           progressAnimation: _progressAnimation,
           pulseAnimation: _pulseAnimation,
@@ -1480,7 +1513,13 @@ Widget _buildMainContent() {
 - ステップ2の完成例（再掲）  
   <img width="300" alt="動きのないメインコンテンツ" src="./images/hands-on_MainContent_2.png" />
 
-中央に表示されたコンテンツが`ProgressCircleWidget`です。現時点ではサイズは固定、進捗プログレスも動かない状態ですが、次のステップで修正します。
+_hot restart を実行してから、ここまでの作業を再確認しましょう。_
+
+`書籍名`、`応援メッセージ`、`進捗率とアイコンを納めた円形イメージ`が表示されました。  
+現時点ではサイズは固定、応援メッセージも円形イメージも動かない状態ですが、次のステップで修正します。
+
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
 
 #### ステップ3: アニメーションの値で動きを実現
 - ステップ3の完成例  
