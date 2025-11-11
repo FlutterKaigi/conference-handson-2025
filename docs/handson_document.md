@@ -2111,11 +2111,11 @@ ReadingProgressAnimationsWidget           進捗率達成メッセージのア�
 <br/>
 <br/>
 
-### 遅延実行とトランジションで滑らかな表現をする
+### 表示完了後コールバックとトランジションアニメーション表現
 
 - **この章でやること**  
   グラフ表示画面を開けば、読書進捗率が円グラフで表示されます。  
-  ここに`読書進捗率までグラフが進んでいき、読了ならお祝いメセージを追加する`、**円グラフのアニメーション** を追加しましょう。
+  ここに`読書進捗率までグラフが進んでいき、読了なら更にお祝いメセージを追加する`、**円グラフのアニメーション** を追加しましょう。
 
 このパートでは次の Flutter API を扱います。
 
@@ -2126,14 +2126,19 @@ ReadingProgressAnimationsWidget           進捗率達成メッセージのア�
 
 アニメーションの遅延実行やトランジションを適用したウィジェット切り替えを学習します。
 
+_hot restart を実行してから、現在の状況を確認しましょう。_
+
+_**現時点では読書進捗率円グラフは表示されません**。_
+
 #### ステップ1: 画面表示完了後に円グラフ描画を予約
 - ステップ1からステップ2までの完成例  
   <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
 
+今回の進捗率円グラフは画面表示の瞬間に描画するのではなく、  
+背景のグレーの円を含む画面表示の完了後に、それをなぞる様に遅延実行させて、進捗率円グラフのアニメーションを表現しましょう。
 
-今回の進捗円グラフは画面表示の瞬間に描画するのではなく、背景のグレーの円を含む画面表示の完了後に、それをなぞる様に遅延実行し、進捗円グラフの描画をします。
-
-`WidgetsBinding.instance.addPostFrameCallback` メソッドは画面の描画が完了した直後に一度だけ実行されるコールバック関数を登録します。ここに進捗円グラフを描画する処理を渡します。
+**[WidgetsBinding.instance.addPostFrameCallback() method](https://api.flutter.dev/flutter/scheduler/SchedulerBinding/addPostFrameCallback.html)** は、画面の描画が完了した直後に一度だけ実行されるコールバック関数を登録します。  
+このメソッドを使い、コールバック関数に進捗率円グラフを描画する処理関数を渡すことで、画面表示後にアニメーションを行わせます。
 
 ```
 lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart
@@ -2153,7 +2158,7 @@ lib
 │   │   │   │   │   └── reading_book_graph_widget.dart  // これが対象
 ```
 
-修正前は進捗円グラフの描画処理がコメントアウトされています。
+修正前は、進捗率円グラフの描画処理がコメントアウトされています。
 
 - **修正前**  
 **ReadingBookGraphWidget.build()** 
@@ -2167,7 +2172,11 @@ lib
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-円グラフの描画を行う`animateToProgress`メソッドの呼び出しを含むコールバック関数を遅延実行に指定します。
+円グラフの描画を行う`controllers.animateToProgress()`メソッドを画面描画の完了直後に実行されるコールバック関数でコールされるようにします。
+- _`controllers`変数には、後述の [DonutAnimationState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L97-L197) クラスのオブジェクトが入ります。_  
+  - _このため `controllers.animateToProgress()`は、[DonutAnimationState.animateToProgress()](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L150-L177) メソッドがコールされます。_
+
+<br/>
 
 - **修正後**  
 **ReadingBookGraphWidget.build()** 
@@ -2179,21 +2188,30 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 });
 ```
 
-具体的な描画を行う`animateToProgress`メソッドは後続のステップで確認します。  
-_(注) controllers 変数には、後述の [DonutAnimationState](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/reading_book_graph_widget.dart#L97-L197) クラスのオブジェクトが入ります。_
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
 
 #### ステップ2: 進捗に合わせた終了値を指定し開始
-前ステップでコールバックに指定した`animateToProgress` メソッド内を修正します。
+前ステップで画面描画の完了直後にコールされるようにした`animateToProgress` メソッド内を修正します。
 
-`Tween`で動作範囲と動きを定義し、`unawaited`内でアニメーションを実行します。
+**[Tween class](https://api.flutter.dev/flutter/animation/Tween-class.html)** で円グラフ描画の値範囲と変化の緩急を定義し、
+**[unawaited() function](https://api.flutter.dev/flutter/dart-async/unawaited.html)** で非同期並行でアニメーションを実行させましょう。
 
-`Tween`は、アニメーションがどの値からどの値まで変化するかを定義します。ここでは、現在の進捗値（`animatedProgress`）から最終的な目標の進捗値（`progress`）まで変化するよう設定しています。
-`.animate()`は、生成した`Tween`を`AnimationController`に紐づけ、アニメーションの動きのパターンを適用しています。`progressController`を時間軸として使用し、`Curves.easeOutCubic`というカーブ（緩急）を適用しています。これにより、アニメーションが滑らかに加速してから徐々に減速し、自然な動きで目標値に到達します。
+- **[Tween class](https://api.flutter.dev/flutter/animation/Tween-class.html)** は、  
+  アニメーション表現のために変化するデータの値範囲とアニメーション進捗率の 0.0 〜 1.0 を対応させるマッパーです。  
+  `Tween`により、`AnimationController`のアニメーション値から、対応するアニメーション表現のデータ値が取得できるようになります。
+  - ここでは円グラフの描画が、以前の読書進捗値（`animatedProgress`）から、新しい読書進捗率（`progress`）まで変化するよう設定します。
+  - さらに`progressController`を時間軸として使用し、[Curves.easeOutCubic](https://api.flutter.dev/flutter/animation/Curves/easeInOutCubic-constant.html) という緩急変化を適用します。  
+  - これらにより円グラフ描画のアニメーションが、以前の値から滑らかに加速したあと徐々に減速し、自然な動きで新しい値に到達します。  
+    _ただし今回の実装では、円グラフ画面が破棄されるため `animatedProgress` が保持されず、常に0% 始まりとなります。_
 
-`progressController!.reset()`は、コントローラーの値を`0.0`にリセットする命令です。新しいアニメーションを開始する前に、前の状態をクリアしています。
-`unawaited()` にコントローラーの`forward()` メソッドの呼び出しを指定し、アニメーションを実行しています。
+- **[AnimationController](https://api.flutter.dev/flutter/animation/AnimationController-class.html).[reset()](https://api.flutter.dev/flutter/animation/AnimationController/reset.html)** を表す`progressController!.reset()`は、  
+  アニメーションを停止し(進行中の場合)、初期状態にリセットする命令です。新しいアニメーションを開始できるようにします。
 
-修正前は動きの定義と実行それぞれコメントアウトされています。
+- **[unawaited() function](https://api.flutter.dev/flutter/dart-async/unawaited.html)** で`progressController!.forward()`を実行させることにより、
+  新しいアニメーションを非同期平行に実行させます。
+
+修正前は、アニメーションの定義とアニメーションの実行はコメントアウトされています。
 
 - **修正前**  
 **DonutAnimationState.animateToProgress()** 
@@ -2218,7 +2236,7 @@ _(注) controllers 変数には、後述の [DonutAnimationState](https://github
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-緩急のある動きを定義し、非同期でアニメーションの実行を指示します。
+円グラフ描画のアニメーションを定義し、非同期並行でアニメーションの実行を指示します。
 
 - **修正後**  
 **DonutAnimationState.animateToProgress()** 
@@ -2244,18 +2262,30 @@ unawaited(progressController!.forward());
 - ステップ1からステップ2までの完成例（再掲）  
   <img width="300" alt="進捗円グラフ" src="./images/hands-on_DonutChart_1.png" />
 
+_hot restart を実行してから、ここまでの作業を再確認しましょう。_
 
+円グラフが表示され、以前の読書進捗率から新しい読書進捗率へグラフが伸びながら遷移します。
+
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
 
 #### ステップ3: 完読時には専用メッセージ表示
 - ステップ3の完成例  
   <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
 
-完読時は円グラフの中央にお祝いメッセージが表示されるように修正します。表示するウィジェットを切り替える際にトランジションアニメーションを適用するように`AnimatedSwitcher`を利用します。
+完読時は円グラフの中央にお祝いメッセージが表示されるように修正します。  
+表示するウィジェットを切り替える際にトランジションアニメーションを適用するように`AnimatedSwitcher`を利用します。
 
-`AnimatedSwitcher`は次の引数を利用します。
-- `duration`: トランジションアニメーションの適用時間のミリ秒を指定します。
-- `child`:`AnimatedSwitcher`が監視するウィジェットです。このウィジェットの`key` に渡している値に変化があった場合は「ウィジェットが切り替わった」と判断してアニメーションをトリガーします。今回は完読したかの真偽値がキーです。
-- `child`: 表示メッセージを条件演算子を使って切り替えています。完読の場合は「完読達成！」メッセージを表示するウィジェットが採用されます。
+- **[AnimatedSwitcher ウィジェット](https://api.flutter.dev/flutter/widgets/AnimatedSwitcher-class.html)** は、以前の子ウィジェットから新しい子ウィジェットへの表示切り替えを  
+  任意の遷移方法を使った、滑らかなアニメーションで表示遷移（トランジション）させてくれるウィジェットです。  
+  - 主なコンストラクタ引数
+    - `duration` トランジションアニメーションの適用時間を指定します。
+    - `transitionBuilder`: 新旧の子ウィジェットの表示切替描画方法を定義します。
+    - `layoutBuilder`: 新旧の子ウィジェットのレイアウト切替描画方法を定義します。
+    - `switchInCurve`: 新旧の子ウィジェットが切り替わる前までの緩急変化を指定します。
+    - `switchOutCurve`: 新旧の子ウィジェットが切り替わった後からの緩急変化を指定します。
+    - `child` 子ウィジェットを指定します。  
+      _(注) 新旧の子ウィジェットで型やレイアウトが変わる場合は、`Key`を指定して区別できるようにしてください。_
 
 **作業対象**
 ```
@@ -2281,7 +2311,7 @@ lib
 作業前の時点では仮の実装があります。ここでは残ページ数を表示するウィジェットを指定しています。
 
 - **修正前**  
-**DonutAnimationState.animateToProgress()** 
+**DonutChartCenterContent.build()** 
 [L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
 ```dart
 // ステップ3: 完読時には専用メッセージ表示
@@ -2305,10 +2335,17 @@ return Container(
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
 完読時には残ページ数ではなく専用メッセージを表示するように`AnimatedSwitcher`で切り替えます。
-`isCompleted`の値は円グラフが1周すると`true`に変わります。その時に、自動的に表示内容が「残り〇ページ」を示す`ProgressContent`から、「完読達成！」を示す`CompletionContent`へと切り替わります。変化は600ミリ秒かけてトランジションアニメーションを適用します。
+
+- ここでの AnimatedSwitcher では、
+  - トランジションアニメーションを 600ミリ秒適用します。
+  - 読書完了を示す `isCompleted` bool 値により、何れかの子ウィジェットに切り替えます。  
+    - true: [CompletionContent ウィジェット](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L53-L79)、「完読達成！」を表示します。
+    - false: [ProgressContent ウィジェット](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L81-L124)、「残りページ」を表示します。
+
+<br/>
 
 - **修正後**  
-**DonutAnimationState.animateToProgress()** 
+**DonutChartCenterContent.build()** 
 [L34-L49](https://github.com/FlutterKaigi/conference-handson-2025/blob/develop/lib/src/presentation/ui_widget/challenge/reading_graph/components/donut_chart_center_content.dart#L34-L49)
 ```dart
 // ステップ3: 完読時には専用メッセージ表示
@@ -2327,9 +2364,17 @@ return AnimatedSwitcher(
 - ステップ3の完成例（再掲）  
   <img width="300" alt="進捗円グラフに完読メッセージ" src="./images/hands-on_DonutChart_2.png" />
 
+_hot restart を実行してから、ここまでの作業を再確認しましょう。_
+
+読書進捗率が 100% 未満なら、円グラフ描画の後も「残りページ数」が表示され、  
+読書進捗率が 100% になれば、円グラフ描画の後に「残りページ数」から「完読達成！」への表示遷移がおこります。
+
+<img width="256" alt="ハンズオン次作業へ" src="./images/hands-on_challenge_to_next.png" />
+<br/>
 
 #### まとめ
-アニメーションの遅延実行やトランジションアニメーションを適用したウィジェット切り替えを学習しました。これらの技術を通じて、単なる静的なUIではなく、ユーザーの操作に自然に応答する動的なUIを構築できます。
+アニメーションの遅延実行やトランジションアニメーションを適用したウィジェット切り替えを学習しました。  
+これらの技術を通じて、単なる静的なUIではなく、ユーザーの操作に自然に応答する動的なUIを構築できます。
 
 ### 完成させたカスタムUI の機能要件表現を確認する。
 ハンズオンお疲れ様でした。これでカスタムUIの虫食い実装は完了です。作成したカスタムUIの要件について改めて確認します。
