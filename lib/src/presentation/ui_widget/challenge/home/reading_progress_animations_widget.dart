@@ -465,7 +465,7 @@ class _ProgressAchievementAnimationState
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
           // FIXME コードを完成させてください。
-          // ステップ2: 応援メッセージを配置
+          // ステップ2: プログレス円とアイコンを配置
           // ProgressCircleWidget(
           //   progressAnimation: _progressAnimation,
           //   pulseAnimation: _pulseAnimation,
