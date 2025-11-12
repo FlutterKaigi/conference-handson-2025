@@ -799,7 +799,7 @@ _**現時点では応援メッセージは表示されません**。_
      _これにより、アニメーションがカクつかせず、滑らかに変化させます。_
 
 - `Animation` は`AnimationController`の進行度の変化を、具体的な動きのパターンに変換します。  
-  ここで使用する **[CurvedAnimation](https://api.flutter.dev/flutter/animation/CurvedAnimation-class.html)** はアニメーションの進行に緩急や正転|逆転をつけた動きを行わせるものです。  
+  ここで使用する **[CurvedAnimation](https://api.flutter.dev/flutter/animation/CurvedAnimation-class.html)** はアニメーションの進行に正転|逆転の緩急を指定するものです。  
   コンストラクタでは以下の設定を行っています。
 
   - `parent`: アニメーションの「時間軸」となる`AnimationController`を指定します。
