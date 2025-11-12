@@ -799,11 +799,11 @@ _**現時点では応援メッセージは表示されません**。_
      _これにより、アニメーションがカクつかせず、滑らかに変化させます。_
 
 - `Animation` は`AnimationController`の進行度の変化を、具体的な動きのパターンに変換します。  
-  ここで使用する **[CurvedAnimation](https://api.flutter.dev/flutter/animation/CurvedAnimation-class.html)** はアニメーションの進行に緩急や正転|逆転をつけた動きを行わせるものです。  
+  ここで使用する **[CurvedAnimation](https://api.flutter.dev/flutter/animation/CurvedAnimation-class.html)** はアニメーションの進行に正転|逆転の緩急を指定するものです。  
   コンストラクタでは以下の設定を行っています。
 
   - `parent`: アニメーションの「時間軸」となる`AnimationController`を指定します。
-  - `curve`: アニメーションの動きを指定します。`Curves.easeInOutSine`は、滑らかに加速して減速するパターンです。  
+  - `curve`: アニメーションの正転の動きを指定します。`Curves.easeInOutSine`は、滑らかに加速して減速するパターンです。  
      これを繰り返すことにより、背景のグラデーションが穏やかに膨張・収縮、を繰り返す波のような効果を生み出します。
     - _**[Curves](https://api.flutter.dev/flutter/animation/Curves-class.html)クラス** は、「だんだん早く」や「徐々に遅く」など、  
       複数のアニメーションの緩急変化パターンを提供するコンテナです。_
@@ -863,11 +863,11 @@ void _initializeAnimations() {
 
 <img width="256" alt="ハンズオン作業" src="./images/hands-on_challenge_work.png" />
 
-`_backgroundController`変数は、グラデーションを5秒間かけて変化させるよう、時間の定義をしています。  
-`duration`に、5000ミリ秒（5秒）を設定しています。
+`_backgroundController`変数は、グラデーションを5秒間かけて変化させるよう、再生時間を定義します。  
+`duration`に、5000ミリ秒（5秒）を設定します。
 
-`_backgroundAnimation`変数は、グラデーションに滑らかに加速と減速を繰り返す波のような表現にするための動きの定義をしています。  
-`CurvedAnimation`を使い、時間軸（`_backgroundController`）に`Curves.easeInOutSine`という緩急パターンを適用しています。
+`_backgroundAnimation`変数は、グラデーションに滑らかに加速と減速を繰り返す波のような表現にするための動きの定義します。  
+`CurvedAnimation`を使い、時間軸（`_backgroundController`）に`Curves.easeInOutSine`という緩急パターンを適用します。
 
 - **修正後**  
 **_ProgressAchievementAnimationState._initializeAnimations()** 
@@ -900,13 +900,14 @@ void _initializeAnimations() {
 重ね合わせるアニメーション表現の一番下層の放射グラデーションを追加しましょう。  
 このグラデーションは時間の進行に合わせて動くようにします。
 
-- [AnimatedBuilder](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html) はアニメーションを動かすための再描画機能です。  
+- [AnimatedBuilder](https://api.flutter.dev/flutter/widgets/AnimatedBuilder-class.html) はアニメーションを動かすための描画機能を担います。  
   引数で指定した`animation`の値が変化するたびに、`builder`メソッド内のUIを再構築します。  
   引数は次の通りです。
 
   - `animation`: アニメーションの変化を監視する`Animation`オブジェクトを指定します。  
     _前ステップで作成した`Animation`オブジェクトを指定します。_  
     _`Animation`オブジェクトは時間軸の変化に合わせて 0.0 から 1.0 まで範囲で変化する値を持ちます。_
+    _この値は、１セットのアニメーション描画に対する進捗を表します。_ 
 
   - `builder`: `Animation`オブジェクトの現在の値（`animation.value`）を使ってUIを構築するための関数を指定します。  
     _Animationの値が更新されるたびに呼び出され UIを再構築します。 ここで放射グラデーションの表現を組み立てます。_
